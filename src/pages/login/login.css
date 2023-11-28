@@ -1,0 +1,123 @@
+.loginContainer{
+    height: 100vh;
+    width: 100vw;
+    background-color: #f0f2f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.loginWrapper{
+    height: 70%;
+    width: 70%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+}
+
+.loginLeft,.loginRight{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.loginLeft{
+    margin-bottom: 111px;
+}
+
+
+.loginLogo{
+    /* text-align: center; */
+    color: #1877f2;
+    font-size:80px;
+    margin-bottom: 10px;
+    /* font-weight: 650; */
+}
+
+.loginDesc{
+    font-size: 19px;
+    margin-right: 50px;
+    font-weight: 350;
+}
+
+.loginRight{
+    /* width: 400px; */
+    margin-left: 50px;
+
+}
+
+.loginBox{
+    height: 300px;
+    width: 400px;
+    padding: 5%;
+    display: flex;
+    flex-direction: column;
+    justify-content:space-between;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: -1px -1px 10px 0px rgba(0,0,0,0.31);
+
+}
+
+.loginInput{
+    height: 50px;
+    font-size: 15px;
+    padding-left: 15px;
+    border: 1px solid #dddfe2;
+    border-radius: 10px;
+    /* box-shadow: inset 0px 3px 5px black; */
+    /* padding: 5px 5px; */
+}
+
+.loginInput:focus{
+    outline: none;
+}
+
+.loginButton{
+    height: 50px;
+    background-color: #1877f2;
+    color: white;
+    border-radius: 10px;
+    border: none;
+    font-size: 20px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.createButton,.loginButton:focus{
+    outline: none;
+}
+
+.createButton,.loginButton:disabled{
+    cursor: not-allowed;
+}
+
+
+
+.forgotpassword{
+    text-align: center;
+    color: #1877f2;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.forgotpassword:hover{
+    text-decoration:underline;
+}
+
+.createButton{
+    height: 50px;
+    margin: 0 20%;
+    background-color: #42b72a;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.createButton:hover{
+    background-color: #36a120;
+}

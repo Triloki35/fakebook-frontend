@@ -1,0 +1,27 @@
+.conversationSearchBox{
+    margin-top: 15px;
+    display: flex;
+    align-items: center;
+    position: relative;
+    padding: 0px 15px;
+}
+
+.searchConversation{
+    height: 35px;
+    padding-left: 36px;
+    border-radius: 15px;
+    border: none;
+    background: #f0f2f5;
+    width: 100%;
+}
+
+.searchInput:focus{
+    outline: none;
+}
+
+.searchLabel{
+    position: absolute;
+    top: 5px;
+    left: 20px;
+    color: gray;
+}

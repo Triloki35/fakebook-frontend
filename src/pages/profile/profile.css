@@ -1,0 +1,102 @@
+.profileContainer{
+    display: flex;
+}
+
+.profileRight{
+    flex: 9;
+}
+
+.profileRightTop{
+    display: flex;
+    flex-direction: column;
+}
+
+.coverContainer{
+    width: auto;
+    height: 23rem;
+    position: relative;
+}
+
+.coverPic{
+    width: 100%;
+    height: 20rem;
+    object-fit: cover;
+}
+
+.profilePic{
+    height: 7rem;
+    width: 7rem;
+    object-fit: cover;
+    border-radius: 50%;
+    border: 3px solid white;
+    position: absolute;
+    left: 0px;
+    right: 0px;
+    margin: auto;
+    top: 15rem;
+}
+
+.profileInfo{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.profileDesc{
+    font-weight: 300;
+}
+
+.profileRightBottom{
+    display: flex;
+}
+
+.profileRightBottomLeft{
+    flex: 8;
+}
+
+.profileRightBottomRight{
+    flex:4
+}
+
+.unfriendBtn{
+    background-color: #e4e6eb;
+}
+
+.unfriendBtn:hover{
+    background-color: #d7dadf;
+}
+
+.friendBtn{
+    background-color: #1877f2;
+    color: white;
+}
+
+.friendBtn:hover{
+    background-color: #096cee;
+}
+
+.editBtn{
+    background-color: #1877f2;
+    color: white;
+}
+
+.editBtn:hover{
+    background-color: #096cee;
+}
+
+.btn{
+    margin-top: 10px;
+    padding: 5px 15px;
+    border-radius: 10px;
+    border: none;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+}
+
+.btn:hover{
+    outline: none;
+}

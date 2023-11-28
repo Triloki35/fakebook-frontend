@@ -1,0 +1,136 @@
+.friendRequestContainer{
+    position: absolute;
+    top: 28px;
+    right: 80px;
+    background-color: white;
+    color: black;
+    box-shadow: 0px 0px 20px -10px rgba(0, 0, 0, 0.55);
+    z-index: 2;
+    border-radius: 8px;
+    padding: 20px 0px;
+  }
+  
+  .fr-wrapper{
+    width: 300px;
+    max-height: calc(100vh - 200px);
+    padding: 0px 20px;
+    overflow-y: scroll;
+  }
+  
+  
+  .fr-list{
+    list-style: none;
+      padding: 0;
+    
+  }
+  
+  .fr-list-item{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 15px 0px;
+    padding: 5px 5px;
+    border-radius: 5px;
+  }
+  
+  .fr-list-item:hover{
+    background-color: #F2F2F2;
+  }
+  
+  .fr-img-container{
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+    color: black;
+    font-weight: 400;
+  }
+  
+  .fr-title{
+    margin: 5px 0px;
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .fr-more{
+    color: gray;
+  }
+  
+  .fr-more:hover{
+    /* border: 1px solid black; */
+    border-radius: 50%;
+    cursor: pointer;
+    background-color: #E4E6EB;
+  }
+  
+  .fr-img{
+    /* flex: 2; */
+    height: 30px;
+    width: 30px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  .fr-name{
+    margin-left: 5px;
+  }
+  .fr-btn-container{
+    /* flex: 6; */
+  }
+  .fr-btn-container button{
+    border: none;
+    border-radius: 5px;
+    padding: 5px 10px;
+    font-weight: 500;
+  }
+  .fr-confirm{
+    background-color: #0866FF;
+    color: white;
+  }
+  .fr-confirm:hover{
+    background-color: #387cec;
+    cursor: pointer;
+  }
+  
+  .fr-delete{
+    margin-left: 5px;
+    background-color: #E4E6EB;
+  }
+  .fr-delete:hover{
+    cursor: pointer;
+    background-color: #dcdfe8;
+  }
+
+  .fr-loading{
+    color: gray;
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  @media screen and (max-width: 768px) {
+    .friendRequestContainer {
+      top: 60px; /* Adjust the position on smaller screens */
+      right: -20px;
+    }
+  
+    .fr-wrapper {
+      max-height: calc(100vh - 60px); /* Adjust the maximum height */
+    }
+  
+    .fr-img {
+      height: 20px; /* Adjust image size on smaller screens */
+      width: 20px;
+    }
+  
+    .fr-name {
+      font-size: 14px; /* Adjust font size on smaller screens */
+    }
+  
+    .fr-btn-container {
+    }
+  
+    .fr-btn-container button {
+      margin-top: 5px; /* Add spacing between buttons */
+    }
+  }
+  

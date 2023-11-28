@@ -1,0 +1,31 @@
+.homeContainer {
+  display: flex;
+  /* background-color: #F0F2F5; */
+}
+
+.swipeBtn {
+  border: none;
+  /* opacity: .9; */
+  height: 50px;
+  width: 30px;
+  position: fixed;
+  top: 50%;
+  transform: translate(0, -50%);
+  z-index: 1000; 
+  padding: 5px;
+  color: lightgray;
+  background: white;
+  /* border-top-right-radius: 50%; */
+}
+
+.left{
+  border-top-right-radius: 50%;
+  border-bottom-right-radius: 50%;
+}
+
+
+.right {
+  right: 0;
+  border-top-left-radius: 50%;
+  border-bottom-left-radius: 50%;
+}

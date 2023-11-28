@@ -1,0 +1,131 @@
+.suggestionContainer {
+}
+
+.suggestionTitle {
+  margin-bottom: 10px;
+}
+
+.suggestionListContainer {
+  height: 300px; 
+  overflow-y: auto; 
+}
+
+.suggestionListContainer::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+.suggestionList {
+  list-style: none;
+  /* margin-top: 15px; */
+  padding: 0;
+}
+
+.suggestionList li {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  justify-content: space-between;
+  padding: 5px 5px;
+}
+
+.suggestionList li:hover {
+  cursor: pointer;
+  background-color: #f2f2f2;
+  border-radius: 5px;
+}
+
+.suggestionList li img {
+  margin-right: 10px;
+  height: 40px;
+  width: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.suggestionList li span {
+}
+
+.suggestionProgress {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.fs-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.fs-btn-container {
+  display: flex;
+}
+
+.fs-btn-container button {
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  font-weight: 500;
+}
+.fs-confirm {
+  background-color: #0866ff;
+  color: white;
+}
+.fs-confirm:hover {
+  background-color: #387cec;
+  cursor: pointer;
+}
+
+.fs-delete {
+  margin-left: 5px;
+  background-color: #e4e6eb;
+}
+.fs-delete:hover {
+  cursor: pointer;
+  background-color: #dcdfe8;
+}
+
+.popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+  z-index: 1000;
+  text-align: center;
+  border-radius: 10px;
+}
+
+.popup-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.popup p {
+  margin: 10px;
+}
+
+.popup button {
+  padding: 5px;
+  border: none;
+  cursor: pointer;
+  background: none;
+  border-radius: 50%;
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.popup button:hover {
+  background-color: #ddecfd;
+}
+
+@media screen and (max-width: 768px){
+  /* .suggestionContainer{
+    maxheight: auto;
+  } */
+}

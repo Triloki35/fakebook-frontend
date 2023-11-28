@@ -1,0 +1,113 @@
+.registerContainer{
+    height: 100vh;
+    width: 100vw;
+    background-color: #f0f2f5;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.registerWrapper{
+    height: 70%;
+    width: 70%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    
+}
+
+.registerLeft,.registerRight{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.registerLeft{
+    margin-bottom: 111px;
+}
+
+
+.registerLogo{
+    /* text-align: center; */
+    color: #1877f2;
+    font-size:80px;
+    margin-bottom: 10px;
+    /* font-weight: 650; */
+}
+
+.registerDesc{
+    font-size: 19px;
+    margin-right: 50px;
+    font-weight: 350;
+}
+
+.registerRight{
+    /* width: 400px; */
+    margin-left: 50px;
+
+}
+
+.registerBox{
+    height: 400px;
+    width: 400px;
+    padding: 5%;
+    display: flex;
+    flex-direction: column;
+    justify-content:space-between;
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: -1px -1px 10px 0px rgba(0,0,0,0.31);
+
+}
+
+.registerInput{
+    height: 50px;
+    font-size: 15px;
+    padding-left: 15px;
+    border: 1px solid #dddfe2;
+    border-radius: 10px;
+    /* box-shadow: inset 0px 3px 5px black; */
+    /* padding: 5px 5px; */
+}
+
+.registerInput:focus{
+    outline: none;
+}
+
+.registerButton{
+    height: 50px;
+    background-color: #1877f2;
+    color: white;
+    border-radius: 10px;
+    border: none;
+    font-size: 20px;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.already{
+    text-align: center;
+    color: #1877f2;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+.already:hover{
+    text-decoration:underline;
+}
+
+.createButton{
+    height: 50px;
+    margin: 0 20%;
+    background-color: #42b72a;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 20px;
+    font-weight: 500;
+}
+
+.createButton:hover{
+    background-color: #36a120;
+}

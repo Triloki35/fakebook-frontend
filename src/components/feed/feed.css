@@ -1,0 +1,14 @@
+.feed{
+    flex: 5.5;
+   
+}
+
+.feedWrapper{
+    padding: 10px 20px;
+}
+
+@media screen and (max-width: 768px) {
+    .feed{
+        width: 100vw;
+    }
+}

@@ -1,0 +1,106 @@
+/* .rightbar {
+  flex: 3.5;
+  height: 90vh;
+  overflow-y: scroll;
+  position: sticky;
+  top: 50px;
+} */
+
+.rightbar::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+}
+
+.rightbarWrapper {
+  padding: 20px 15px 0px 0px;
+}
+
+.birthdayContainer {
+  display: flex;
+  align-items: center;
+}
+
+.birthdayImg {
+  height: 30px;
+  width: 30px;
+  margin-right: 10px;
+}
+
+.birthdayText {
+  font-weight: 300;
+  font-size: 15px;
+}
+
+.advertisement{
+    margin: 20px 0px;
+}
+
+.adImg{
+    width: 100%;
+    border-radius: 5px;
+}
+
+
+/* for profile page */
+.rightBarTitle{
+  margin-bottom: .55rem;
+}
+
+.rightBarInfo{
+  margin-bottom: .8rem;
+  list-style: none;
+  padding: 0;
+}
+
+.rightBarInfoItems{
+  margin-bottom: .2rem;
+  display: flex;
+  align-items: center;
+}
+
+.rightBarInfoKey{
+  font-weight: 450;
+  font-size:medium;
+  color: #555;
+}
+
+.rightBarInfoValue{
+  font-weight: 300;
+  font-size: medium;
+}
+
+.friendProfilePic{
+  height: 100px;
+  width: 100px;
+  border-radius: 5px;
+  object-fit: cover;
+  /* cursor: pointer; */
+}
+
+.rightBarFriends{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;  
+}
+
+.rightBarFriend{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 10px;
+  cursor: pointer;
+  text-decoration: none;
+  color: black;
+}
+
+.friendName{
+  margin: 5px 0px;
+  font-weight: 500;
+  font-size: small;
+}
+
+@media screen and (max-width: 768px){
+  .rightbarWrapper{
+    padding-left: 5px;
+  }
+}

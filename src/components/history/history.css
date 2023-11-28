@@ -1,0 +1,49 @@
+.history{
+    display: flex;
+    padding-left: 15px;
+    margin: 20px 0px ;
+}
+
+.history:hover{
+    cursor: pointer;
+}
+
+.historyContainer{
+    display: flex;
+    flex-direction: column;
+    margin-left: 20px;
+    width: 70%;
+}
+
+
+.historyImg{
+    height: 40px;
+    width: 40px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.lastMsg{
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    margin-top: 3px;
+    color: gray;
+    font-weight: 400
+}
+
+.time{
+    /* position: absolute; */
+}
+
+.lastMsg .dot{
+    position: absolute;
+    right: 60px;
+    bottom: 3px;
+    font-weight: 900;
+}
+
+.historyName{
+    font-weight: 600;
+    font-size: 14px;
+}
