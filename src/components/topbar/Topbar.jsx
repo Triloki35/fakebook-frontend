@@ -76,7 +76,7 @@ const Topbar = ({ socket }) => {
 
       // updating notification in frontend
       setNotification((prev) =>
-        [...prev, newNotification].sort((a, b) => b.createdAt - a.createdAt)
+        [...prev, newNotification].sort((a, b) => a.createdAt - b.createdAt)
       );
 
       // api call to post new notification
@@ -129,7 +129,6 @@ const Topbar = ({ socket }) => {
   const handleLogout = () => {
     localStorage.clear();
     window.location.href = "/";
-    window.location.reload();
   };
 
   // console.log(notification);
