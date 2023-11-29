@@ -1,12 +1,18 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
 import "./post.css";
-import { MoreVert, Send } from "@mui/icons-material";
+import {
+  BookmarkBorder,
+  Delete,
+  MoreHoriz,
+  MoreVert,
+  Send,
+} from "@mui/icons-material";
 import axios from "axios";
 import * as timeago from "timeago.js";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 
-const Post = ({ post , socket}) => {
+const Post = ({ post, socket }) => {
   // console.log(socket);
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const { user: currentUser } = useContext(AuthContext);
@@ -21,6 +27,11 @@ const Post = ({ post , socket}) => {
   const [comment, setComment] = useState("");
   const [prevComment, setPrevComment] = useState([]);
 
+  // for delete and save post
+  const [optionBtn, setOptionBtn] = useState(false);
+  const isDeleteButtonDisabled = currentUser._id !== user._id;
+
+
   // fetching user
   useEffect(() => {
     const fetchUser = async () => {
@@ -32,23 +43,23 @@ const Post = ({ post , socket}) => {
   }, [post.userId]);
 
   // like
-  const likeHandeler = async() => {
+  const likeHandeler = async () => {
     try {
       const res = await axios.put("/posts/" + post._id + "/like", {
         userId: currentUser._id,
       });
 
-      if(res.data === "liked"){
-        (currentUser._id !== post.userId) && socket?.emit("Notification",{
-          postId : post._id,
-          senderName : currentUser.username,
-          senderProfilePicture : currentUser.profilePicture,
-          receiverId : post.userId,
-          type:"liked",
-          status:false
-        });
+      if (res.data === "liked") {
+        currentUser._id !== post.userId &&
+          socket?.emit("Notification", {
+            postId: post._id,
+            senderName: currentUser.username,
+            senderProfilePicture: currentUser.profilePicture,
+            receiverId: post.userId,
+            type: "liked",
+            status: false,
+          });
       }
-  
     } catch (error) {
       console.log(error);
     }
@@ -64,7 +75,7 @@ const Post = ({ post , socket}) => {
   };
 
   useEffect(() => {
-    const fetchComment = async () => {    
+    const fetchComment = async () => {
       try {
         const res = await axios.get(`posts/comments/${post._id}`);
         setPrevComment(res.data);
@@ -74,9 +85,7 @@ const Post = ({ post , socket}) => {
       }
     };
     fetchComment();
-  }, [post])
-  
- 
+  }, [post]);
 
   const postComment = async () => {
     console.log("comment=" + comment);
@@ -89,21 +98,39 @@ const Post = ({ post , socket}) => {
       });
       setComment("");
       setPrevComment((prev) => [...prev, res.data]);
-      
-      // socket event
-      (currentUser._id !== post.userId) && socket?.emit("Notification",{
-        postId : post._id,
-        senderName : currentUser.username,
-        senderProfilePicture : currentUser.profilePicture,
-        receiverId : post.userId,
-        type:"commented",
-        status:false
-      });
 
+      // socket event
+      currentUser._id !== post.userId &&
+        socket?.emit("Notification", {
+          postId: post._id,
+          senderName: currentUser.username,
+          senderProfilePicture: currentUser.profilePicture,
+          receiverId: post.userId,
+          type: "commented",
+          status: false,
+        });
     } catch (error) {
       console.log(error);
     }
   };
+
+  //delete and save
+
+  const handleDeletePost = async() => {
+    console.log(post.userId);
+    console.log(currentUser._id);
+    try {
+      const res = await axios.delete(`posts/${post._id}/${currentUser._id}`);
+      console.log(res.data);
+      window.location.reload();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const handleSavePost = () => {
+    console.log("save post");
+  }
 
   return (
     <div className="post">
@@ -132,9 +159,28 @@ const Post = ({ post , socket}) => {
             </Link>
             <span className="postDate">{timeago.format(post.createdAt)}</span>
           </div>
-          <div className="postTopRight">
-            <MoreVert />
+
+          <div
+            className="postTopRight"
+          >
+            {optionBtn && (
+              <div className="postOptionBtnContainer">
+                <div className="postSaveBtn" onClick={handleSavePost}>
+                  <BookmarkBorder />
+                  <span>Save</span>
+                </div>
+                <div
+                  className={ isDeleteButtonDisabled ? "disabledStyle" : "postDeleteBtn"}
+                  onClick={handleDeletePost}
+                >
+                  <Delete />
+                  <span>Delete</span>
+                </div>
+              </div>
+            )}
+            <MoreHoriz className="postTopRightIcon" onClick={() => setOptionBtn(!optionBtn)}/>
           </div>
+
         </div>
         <div className="postCenter">
           <span className="postText">{post?.desc}</span>
@@ -161,7 +207,7 @@ const Post = ({ post , socket}) => {
             <span
               className="postCommentText"
               onClick={() => {
-                setCommentBox(!commentBox)
+                setCommentBox(!commentBox);
               }}
             >
               {prevComment?.length > 0 && prevComment.length} comments{" "}

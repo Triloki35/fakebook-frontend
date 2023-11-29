@@ -13,8 +13,9 @@
   transform: translate(0, -50%);
   z-index: 1000; 
   padding: 5px;
-  color: lightgray;
+  color: gray;
   background: white;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
   /* border-top-right-radius: 50%; */
 }
 
@@ -25,7 +26,6 @@
 
 
 .right {
-  right: 0;
   border-top-left-radius: 50%;
   border-bottom-left-radius: 50%;
 }

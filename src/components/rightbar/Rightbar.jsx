@@ -104,8 +104,11 @@ const Rightbar = ({ user , isMobile, openRightBar}) => {
     right: "0",
     background: "white",
     height: "100vh",
+    width: "350px",
     overflowY: "scroll",
-  }
+    boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1), 0 0 10px rgba(0, 0, 0, 0.1)",
+  };
+  
 
 
   const isMobileFalse = {

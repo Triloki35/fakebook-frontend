@@ -125,7 +125,7 @@
 }
 
 @media screen and (max-width: 768px){
-  /* .suggestionContainer{
-    maxheight: auto;
-  } */
+  .suggestionListContainer{
+    height: auto;
+  }
 }

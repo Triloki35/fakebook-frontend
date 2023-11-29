@@ -33,6 +33,14 @@ function Home({ socket }) {
     left:190+'px',
   }
 
+  const rightBarOpenBtn = {
+    right : '0px',
+  }
+
+  const rightbarCloseBtn = {
+    right : '350px'
+  }
+
   return (
     <>
       <Topbar socket={socket} />
@@ -54,6 +62,7 @@ function Home({ socket }) {
             <button
               className="swipeBtn right"
               onClick={() => setOpenRightBar(!openRightBar)}
+              style={openRightBar ? rightbarCloseBtn : rightBarOpenBtn}
             >
              {openRightBar?<ArrowForward/>:<ArrowBack/>}
             </button>
