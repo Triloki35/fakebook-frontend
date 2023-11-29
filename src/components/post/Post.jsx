@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useContext, useRef } from "react";
 import "./post.css";
 import {
+  Bookmark,
+  BookmarkAdded,
   BookmarkBorder,
   Delete,
   MoreHoriz,
@@ -11,11 +13,12 @@ import axios from "axios";
 import * as timeago from "timeago.js";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
+import { UpdateUser } from "../../context/AuthActions"; 
 
 const Post = ({ post, socket }) => {
   // console.log(socket);
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-  const { user: currentUser } = useContext(AuthContext);
+  const { user: currentUser ,dispatch} = useContext(AuthContext);
   const [user, setuser] = useState({});
 
   // like
@@ -128,9 +131,16 @@ const Post = ({ post, socket }) => {
     }
   }
 
-  const handleSavePost = () => {
-    console.log("save post");
+  const handleSavePost = async() => {
+    try {
+      const res = await axios.post(`posts/save-post/${currentUser._id}`,{postId:post._id});
+      dispatch(UpdateUser(res.data));
+      localStorage.setItem("userInfo",res.data);
+    } catch (error) {
+      console.log(error);
+    }
   }
+  
 
   return (
     <div className="post">
@@ -166,7 +176,7 @@ const Post = ({ post, socket }) => {
             {optionBtn && (
               <div className="postOptionBtnContainer">
                 <div className="postSaveBtn" onClick={handleSavePost}>
-                  <BookmarkBorder />
+                  {currentUser.bookmarks.includes(post._id) ? <Bookmark/> :<BookmarkBorder />}
                   <span>Save</span>
                 </div>
                 <div
