@@ -14,6 +14,7 @@ import * as timeago from "timeago.js";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import { UpdateUser } from "../../context/AuthActions";
+import LikeModal from "../likeModal/LikeModal";
 
 const Post = ({ post, socket }) => {
   // console.log(socket);
@@ -24,7 +25,7 @@ const Post = ({ post, socket }) => {
   // like
   const [like, setLike] = useState(post.likes.length);
   const [isLiked, setisLiked] = useState(post.likes.includes(currentUser._id));
-
+  const [showLikeModal, setShowLikeModal] = useState(false);
   // comment box
   const [commentBox, setCommentBox] = useState(false);
   const [comment, setComment] = useState("");
@@ -227,7 +228,7 @@ const Post = ({ post, socket }) => {
               onClick={likeHandeler}
               alt=""
             />
-            <span className="postLikeCounter">{like} people like it</span>
+            <span className="postLikeCounter" onClick={()=>setShowLikeModal(!showLikeModal)}>{like} people like it</span>
           </div>
 
           <div className="postBottomRight">
@@ -251,7 +252,7 @@ const Post = ({ post, socket }) => {
                   <div>
                     <span>
                       <b>{c.senderName}</b>
-                      <small style={{ color: "gray", fontWeight: "lighter" }}>
+                      <small className="comment-time">
                         &nbsp; {timeago.format(c.createdAt)}
                       </small>
                       {(currentUser._id === c.senderId ||
@@ -280,6 +281,7 @@ const Post = ({ post, socket }) => {
           </div>
         )}
       </div>
+      {showLikeModal && <LikeModal setShowLikeModal={setShowLikeModal} postLikes={post.likes}/>}
     </div>
   );
 };

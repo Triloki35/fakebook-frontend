@@ -1,0 +1,33 @@
+.lm-bottom{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 5px 0px;
+}
+
+.lm-bottom-img{
+    height: 30px;
+    width: 30px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.lmb-nameContainer{
+    display: flex;
+    flex-direction: column;
+}
+
+.lmb-nameContainer span{
+    color: black;
+    font-size: medium;
+    font-weight: 500;
+}
+
+.lmb-nameContainer span:hover{
+    text-decoration: underline;
+}
+
+.lmb-nameContainer small{
+    color: rgb(68, 68, 68);
+}
+

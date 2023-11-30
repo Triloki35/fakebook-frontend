@@ -20,17 +20,20 @@ import NotificationModal from "../notificationModal/NotificationModal";
 import FriendRequest from "../friend-request/FriendRequest";
 import SearchBox from "../search/SearchBox";
 import { UpdateUser } from "../../context/AuthActions";
+import { CircularProgress } from "@mui/material";
 
 const Topbar = ({ socket }) => {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-  const { user , dispatch} = useContext(AuthContext);
+  const { user, dispatch } = useContext(AuthContext);
   const [dropdown, setDropdown] = useState(false);
   const [activeBtn, setActivebtn] = useState(true);
 
-  const [notification, setNotification] = useState([user?.notification]);
+  const [notifications, setNotifications] = useState(user?.notifications);
+  const [loadingNotification, setLoadingNotification] = useState(false);
   const [toggleNotification, setToggleNotification] = useState(false);
-  const [notificationBandage, setNotificationBandage] = useState();
+  const [notificationBandage, setNotificationBandage] = useState(0);
   const [unread, setunread] = useState(false);
+
   const [friendRequestBandage, setFriendRequestBandage] = useState();
   const [friendRequestPanelVisible, setFriendRequestPanelVisible] =
     useState(false);
@@ -39,53 +42,40 @@ const Topbar = ({ socket }) => {
   const [showModal, setShowModal] = useState(false);
   const [clickedNotification, setClickedNotification] = useState(null);
 
-
+  // fetching notification
+  const fetchNotifications = async () => {
+    try {
+      setLoadingNotification(true);
+      const res = await axios.get(`users/notifications/${user._id}`);
+      const sortedNotifications = res.data.sort((a, b) => {
+        return new Date(b.createdAt) - new Date(a.createdAt);
+      });
+      // console.log(sortedNotifications);
+      setNotifications(sortedNotifications);
+      // updating local storage
+      const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+      userInfo.notifications = res.data;
+      localStorage.setItem("userInfo", JSON.stringify(userInfo));
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoadingNotification(false);
+    }
+  };
+  //  setting bandage whenever notification change
   useEffect(() => {
-    if (notification && Array.isArray(notification)) {
+    if (notifications && Array.isArray(notifications)) {
       setNotificationBandage(
-        notification.filter((item) => item?.status === false).length
+        notifications.filter((n) => n?.status === false).length
       );
     }
-  }, [notification]);
+  }, [notifications]);
 
+  // socket event for notification
   useEffect(() => {
     socket?.on("Notification", (data) => {
-      console.log(data);
-
-      const newNotification = {
-        _id: uuidv4(),
-        postId: data.postId,
-        senderName: data.senderName,
-        senderProfilePicture: data.senderProfilePicture,
-        receiverId: data.receiverId,
-        type: data.type,
-        status: false,
-        createdAt: new Date(),
-      };
-
-      // updating notification in frontend
-      setNotification((prev) =>
-        [...prev, newNotification]
-      );
-
-      // api call to post new notification
-      const pushNotificationToDb = async () => {
-        try {
-          // updating notification to db
-          const res = await axios.put(
-            "/users/notifications/" + user._id,
-            newNotification
-          );
-
-          // updating notification in local storage
-          localStorage.setItem("userInfo",JSON.stringify(res.data));
-          dispatch(UpdateUser(res.data));
-        } catch (error) {
-          console.log("Error while sending notification to db" + error);
-        }
-      };
-
-      pushNotificationToDb();
+      // console.log(data);
+      setNotifications((prev) => [...prev, data]);
     });
   }, [socket]);
 
@@ -95,9 +85,6 @@ const Topbar = ({ socket }) => {
   };
 
   const closeNotificationModal = () => {
-    setNotificationBandage(
-      notification.filter((n) => n.status === false).length
-    );
     setShowModal(false);
   };
 
@@ -129,7 +116,7 @@ const Topbar = ({ socket }) => {
         </Link>
       </div>
       <div className="topbarCenter">
-        <SearchBox socket={socket}/>
+        <SearchBox socket={socket} />
       </div>
       <div className="topbarRight">
         <div className="topbarLinks">
@@ -161,7 +148,10 @@ const Topbar = ({ socket }) => {
           </div>
           <div
             className="topbarIconItem"
-            onClick={() => setToggleNotification(!toggleNotification)}
+            onClick={() => {
+              setToggleNotification(!toggleNotification);
+              fetchNotifications();
+            }}
           >
             <Notifications />
             {notificationBandage !== 0 && (
@@ -194,53 +184,61 @@ const Topbar = ({ socket }) => {
                   </button>
                 </div>
                 <ul className="notificationList">
-                  {notification.map((n) => {
-                    if (unread && !n.status) {
-                      return (
-                        <li
-                          className="notification unread"
-                          onClick={() => handleNotificationClick(n)}
-                        >
-                          <img
-                            className="notificationImg"
-                            src={PF + n.senderProfilePicture}
-                            alt="img"
-                          />
-                          <span className="notificationText">
-                            {n.senderName}{" "}
-                            {n.type === "commented" ? n.type + " on" : n.type}{" "}
-                            your post
-                          </span>
-                        </li>
-                      );
-                    } else if (!unread) {
-                      return (
-                        <li
-                          className={
-                            !n.status ? "notification unread" : "notification"
-                          }
-                          onClick={() => handleNotificationClick(n)}
-                        >
-                          <img
-                            className="notificationImg"
-                            src={PF + n.senderProfilePicture}
-                            alt="img"
-                          />
-                          <span className="notificationText">
-                            {n.senderName}{" "}
-                            {n.type === "commented" ? n.type + " on" : n.type}{" "}
-                            your post
-                          </span>
-                        </li>
-                      );
-                    }
-                  })}
+                  {loadingNotification ? (
+                    <CircularProgress color="primary" />
+                  ) : notifications.length === 0 ? (
+                    <li>No notifiactions found</li>
+                  ) : (
+                    notifications?.map((n) => {
+                      if (unread && !n.status) {
+                        return (
+                          <li
+                            className="notification unread"
+                            onClick={() => handleNotificationClick(n)}
+                          >
+                            <img
+                              className="notificationImg"
+                              src={PF + n.senderProfilePicture}
+                              alt="img"
+                            />
+                            <span className="notificationText">
+                              {n.senderName}{" "}
+                              {n.type === "commented" ? n.type + " on" : n.type}{" "}
+                              your post
+                            </span>
+                          </li>
+                        );
+                      } else if (!unread) {
+                        return (
+                          <li
+                            className={
+                              !n.status ? "notification unread" : "notification"
+                            }
+                            onClick={() => handleNotificationClick(n)}
+                          >
+                            <img
+                              className="notificationImg"
+                              src={PF + n.senderProfilePicture}
+                              alt="img"
+                            />
+                            <span className="notificationText">
+                              {n.senderName}{" "}
+                              {n.type === "commented" ? n.type + " on" : n.type}{" "}
+                              your post
+                            </span>
+                          </li>
+                        );
+                      }
+                    })
+                  )}
                 </ul>
               </div>
             </div>
           )}
 
-          {friendRequestPanelVisible && <FriendRequest setFriendRequestBandage={setFriendRequestBandage} />}
+          {friendRequestPanelVisible && (
+            <FriendRequest setFriendRequestBandage={setFriendRequestBandage} />
+          )}
         </div>
         <img
           src={

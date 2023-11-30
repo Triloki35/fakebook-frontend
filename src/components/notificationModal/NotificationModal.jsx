@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./notificationModal.css";
 import Post from "../post/Post";
 import axios from "axios";
 import { Cancel } from "@mui/icons-material";
+import { AuthContext } from "../../context/AuthContext";
 
 const NotificationModal = ({ notification, closeNotificationModal }) => {
   const [post, setPost] = useState(null);
+  const {user,dispatch} = useContext(AuthContext);
 
   useEffect(() => {
 
@@ -22,12 +24,13 @@ const NotificationModal = ({ notification, closeNotificationModal }) => {
 
     const updateNotificationStatus = async () => {
       try {
-        const userInfo = JSON.parse(localStorage.getItem("userInfo"));
         const res = await axios.patch(
-          `/users/update-notification/${notification._id}/${userInfo._id}`
+          `/users/update-notification/${notification._id}/${user._id}`
         );
-        userInfo.notification = res.data.notification;
-        localStorage.setItem("userInfo", JSON.stringify(userInfo));
+        console.log(res.data);
+        const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+        userInfo.notifications = res.data
+        localStorage.setItem("userInfo",JSON.stringify(userInfo));
       } catch (error) {
         console.log(error);
       }

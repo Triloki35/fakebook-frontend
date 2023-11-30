@@ -143,6 +143,11 @@
     font-size: 15px;
 }
 
+.postLikeCounter:hover{
+    cursor: pointer;
+    text-decoration: underline;
+}
+
 .postCommentText{
     cursor: pointer;
     border-bottom: 1px dashed grey;
@@ -189,6 +194,12 @@
     display: flex;
     align-items: center;
     margin-bottom: 5px;
+}
+
+.comment-time{
+    color: gray;
+    font-size: 10px;
+    font-weight: 300;
 }
 
 .comment-option{
