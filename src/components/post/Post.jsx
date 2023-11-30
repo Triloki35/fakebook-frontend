@@ -13,12 +13,12 @@ import axios from "axios";
 import * as timeago from "timeago.js";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
-import { UpdateUser } from "../../context/AuthActions"; 
+import { UpdateUser } from "../../context/AuthActions";
 
 const Post = ({ post, socket }) => {
   // console.log(socket);
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-  const { user: currentUser ,dispatch} = useContext(AuthContext);
+  const { user: currentUser, dispatch } = useContext(AuthContext);
   const [user, setuser] = useState({});
 
   // like
@@ -34,7 +34,6 @@ const Post = ({ post, socket }) => {
   const [optionBtn, setOptionBtn] = useState(false);
   const isDeleteButtonDisabled = currentUser._id !== user._id;
 
-
   // fetching user
   useEffect(() => {
     const fetchUser = async () => {
@@ -43,7 +42,7 @@ const Post = ({ post, socket }) => {
       setuser(res.data);
     };
     fetchUser();
-  }, [post.userId]);
+  }, [post]);
 
   // like
   const likeHandeler = async () => {
@@ -52,7 +51,8 @@ const Post = ({ post, socket }) => {
         userId: currentUser._id,
       });
 
-      if (res.data === "liked") {
+      // socket emmit event when liked
+      if (res.data.action === "liked") {
         currentUser._id !== post.userId &&
           socket?.emit("Notification", {
             postId: post._id,
@@ -82,7 +82,7 @@ const Post = ({ post, socket }) => {
       try {
         const res = await axios.get(`posts/comments/${post._id}`);
         setPrevComment(res.data);
-        console.log(prevComment);
+        // console.log(prevComment);
       } catch (error) {
         console.log(error);
       }
@@ -91,17 +91,18 @@ const Post = ({ post, socket }) => {
   }, [post]);
 
   const postComment = async () => {
-    console.log("comment=" + comment);
     try {
-      const res = await axios.post(`posts/comments/${post._id}`, {
+      const reqBody = {
         senderId: currentUser._id,
         senderName: currentUser.username,
         text: comment,
         profilePicture: currentUser.profilePicture,
-      });
+      }
+      const res = await axios.post(`posts/comments/${post._id}`, reqBody);
+      console.log(res.data);
+      setPrevComment((prev)=>[...prev,reqBody]);
       setComment("");
-      setPrevComment((prev) => [...prev, res.data]);
-
+     
       // socket event
       currentUser._id !== post.userId &&
         socket?.emit("Notification", {
@@ -117,9 +118,18 @@ const Post = ({ post, socket }) => {
     }
   };
 
+  const handleCommentDelete = async(commentId) => {
+    try {
+      const res = await axios.delete(`post/comments/${post._id}/${commentId}`,{userId:currentUser._id});
+      setPrevComment(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   //delete and save
 
-  const handleDeletePost = async() => {
+  const handleDeletePost = async () => {
     console.log(post.userId);
     console.log(currentUser._id);
     try {
@@ -129,18 +139,19 @@ const Post = ({ post, socket }) => {
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
-  const handleSavePost = async() => {
+  const handleSavePost = async () => {
     try {
-      const res = await axios.post(`posts/save-post/${currentUser._id}`,{postId:post._id});
+      const res = await axios.post(`posts/save-post/${currentUser._id}`, {
+        postId: post._id,
+      });
       dispatch(UpdateUser(res.data));
-      localStorage.setItem("userInfo",res.data);
+      localStorage.setItem("userInfo", JSON.stringify(res.data));
     } catch (error) {
       console.log(error);
     }
-  }
-  
+  };
 
   return (
     <div className="post">
@@ -170,17 +181,21 @@ const Post = ({ post, socket }) => {
             <span className="postDate">{timeago.format(post.createdAt)}</span>
           </div>
 
-          <div
-            className="postTopRight"
-          >
+          <div className="postTopRight">
             {optionBtn && (
               <div className="postOptionBtnContainer">
                 <div className="postSaveBtn" onClick={handleSavePost}>
-                  {currentUser.bookmarks.includes(post._id) ? <Bookmark/> :<BookmarkBorder />}
+                  {currentUser.bookmarks.includes(post._id) ? (
+                    <Bookmark />
+                  ) : (
+                    <BookmarkBorder />
+                  )}
                   <span>Save</span>
                 </div>
                 <div
-                  className={ isDeleteButtonDisabled ? "disabledStyle" : "postDeleteBtn"}
+                  className={
+                    isDeleteButtonDisabled ? "disabledStyle" : "postDeleteBtn"
+                  }
                   onClick={handleDeletePost}
                 >
                   <Delete />
@@ -188,9 +203,11 @@ const Post = ({ post, socket }) => {
                 </div>
               </div>
             )}
-            <MoreHoriz className="postTopRightIcon" onClick={() => setOptionBtn(!optionBtn)}/>
+            <MoreHoriz
+              className="postTopRightIcon"
+              onClick={() => setOptionBtn(!optionBtn)}
+            />
           </div>
-
         </div>
         <div className="postCenter">
           <span className="postText">{post?.desc}</span>
@@ -231,15 +248,19 @@ const Post = ({ post, socket }) => {
               {prevComment?.map((c) => (
                 <li className="prev-comment" key={c._id}>
                   <img src={PF + c.profilePicture} alt="" />
-                  <span>
-                    <b style={{ marginBottom: "3px" }}>
-                      {c.senderName}{" "}
+                  <div>
+                    <span>
+                      <b>{c.senderName}</b>
                       <small style={{ color: "gray", fontWeight: "lighter" }}>
                         &nbsp; {timeago.format(c.createdAt)}
-                      </small>{" "}
-                    </b>{" "}
+                      </small>
+                      {(currentUser._id === c.senderId ||
+                        post.userId === currentUser._id) && (
+                        <MoreVert className="comment-option" fontSize="10px" onClick={()=>handleCommentDelete(c._id)}/>
+                      )}
+                    </span>
                     {c.text}
-                  </span>
+                  </div>
                 </li>
               ))}
             </ul>

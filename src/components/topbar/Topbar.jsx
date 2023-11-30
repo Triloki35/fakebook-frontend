@@ -19,14 +19,15 @@ import { v4 as uuidv4 } from "uuid";
 import NotificationModal from "../notificationModal/NotificationModal";
 import FriendRequest from "../friend-request/FriendRequest";
 import SearchBox from "../search/SearchBox";
+import { UpdateUser } from "../../context/AuthActions";
 
 const Topbar = ({ socket }) => {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-  const { user } = useContext(AuthContext);
+  const { user , dispatch} = useContext(AuthContext);
   const [dropdown, setDropdown] = useState(false);
   const [activeBtn, setActivebtn] = useState(true);
 
-  const [notification, setNotification] = useState([]);
+  const [notification, setNotification] = useState([user?.notification]);
   const [toggleNotification, setToggleNotification] = useState(false);
   const [notificationBandage, setNotificationBandage] = useState();
   const [unread, setunread] = useState(false);
@@ -38,23 +39,11 @@ const Topbar = ({ socket }) => {
   const [showModal, setShowModal] = useState(false);
   const [clickedNotification, setClickedNotification] = useState(null);
 
-  useEffect(() => {
-    const getNotifications = async () => {
-      try {
-        // const res = await axios.get("/users/notifications/" + user._id);
-        // console.log(res.data);
-        setNotification(user.notification);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getNotifications();
-  }, [user]);
 
   useEffect(() => {
     if (notification && Array.isArray(notification)) {
       setNotificationBandage(
-        notification.filter((item) => item.status === false).length
+        notification.filter((item) => item?.status === false).length
       );
     }
   }, [notification]);
@@ -76,7 +65,7 @@ const Topbar = ({ socket }) => {
 
       // updating notification in frontend
       setNotification((prev) =>
-        [...prev, newNotification].sort((a, b) => a.createdAt - b.createdAt)
+        [...prev, newNotification]
       );
 
       // api call to post new notification
@@ -89,9 +78,8 @@ const Topbar = ({ socket }) => {
           );
 
           // updating notification in local storage
-          const userInfo = JSON.parse(localStorage.getItem("userInfo"));
-          userInfo.notification = res.data.notification;
-          localStorage.setItem("userInfo", JSON.stringify(userInfo));
+          localStorage.setItem("userInfo",JSON.stringify(res.data));
+          dispatch(UpdateUser(res.data));
         } catch (error) {
           console.log("Error while sending notification to db" + error);
         }

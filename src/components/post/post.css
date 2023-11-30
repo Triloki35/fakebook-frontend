@@ -174,7 +174,7 @@
     border-radius: 50%;
 }
 
-.prev-comment span{
+.prev-comment div{
     font-size: small;
     background-color: #f0f2f5;
     padding: 5px 5px;
@@ -183,6 +183,20 @@
     margin-left: 5px;
     border-radius: 10px;
     text-align: start;
+}
+
+.prev-comment div span{
+    display: flex;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.comment-option{
+    margin-left: 5px;
+}
+
+.comment-option:hover{
+    cursor: pointer;
 }
 
 .comment-input-container{
