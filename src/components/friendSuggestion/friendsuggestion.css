@@ -58,6 +58,20 @@
   justify-content: space-between;
 }
 
+.fs-userInfo{
+  display: flex;
+  flex-direction: column;
+}
+
+.fs-userInfo small{
+  color: rgb(68, 68, 68);
+  /* font-weight: 600; */
+}
+
+.fs-userInfo small:hover{
+  text-decoration: underline;
+}
+
 .fs-btn-container {
   display: flex;
 }

@@ -119,15 +119,15 @@ const Share = () => {
               />
             </label>
             <div className="shareOption">
-              <Label id="tag-label" htmlColor="blue" className="shareIcon" />
+              <Label id="tag-label" htmlColor="green" className="shareIcon" />
               <span id="tag-span" className="shareOptionText">
                 Tags
               </span>
             </div>
-            <div className="shareOption">
+            {/* <div className="shareOption">
               <Room htmlColor="green" className="shareIcon" />
               <span className="shareOptionText">Location</span>
-            </div>
+            </div> */}
             <div className="shareOption">
               <EmojiEmotions
                 htmlColor="goldenrod"

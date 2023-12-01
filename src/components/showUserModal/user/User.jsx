@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
-import "./likedUser.css";
+import "./user.css";
 import axios from "axios";
 import { Link } from "react-router-dom";
 
-const LikedUser = ({ userId }) => {
+const User = ({ userId }) => {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const [user, setUser] = useState();
 
@@ -36,10 +36,10 @@ const LikedUser = ({ userId }) => {
       />
       <div className="lmb-nameContainer">
         <span>{user?.username}</span>
-        <small>5 mutual friends</small>
+        {/* <small>5 mutual friends</small> */}
       </div>
     </Link>
   );
 };
 
-export default LikedUser;
+export default User;

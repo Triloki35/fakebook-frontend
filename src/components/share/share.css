@@ -112,6 +112,6 @@
         margin-right: 5px;
     }
     #tag-label,#tag-span{
-        display: none;
+        /* display: none; */
     }
 }
