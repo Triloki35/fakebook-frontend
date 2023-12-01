@@ -12,6 +12,8 @@ import { AuthContext } from "../../context/AuthContext";
 import SearchFriend from "../../components/search-friend/SearchFriend";
 
 const Messenger = ({ socket, onlineUsers }) => {
+  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
+  const [messengerCenterVisible, setMessengerCenterVisible] = useState(false);
   const { user } = useContext(AuthContext);
   const [communities, setCommunities] = useState(false); 
   const [conversation, setConversation] = useState([]);
@@ -20,6 +22,45 @@ const Messenger = ({ socket, onlineUsers }) => {
   const [arrivalMessage, setArrivalMessage] = useState(null);
   const [friend, setFriend] = useState(null);
   const scrollRef = useRef();
+
+  const messengerLeft = {
+    flex: "3.5",
+    borderRight: "1px solid #e8e1e1db",
+  }
+
+  const messengerLeftMobileVisible = {
+    flex:12,
+    border:"none"
+  }
+
+  const messengerLeftMobileInvisible = {
+    display:"none",
+  }
+
+  const messengerCenter = {
+    flex: "8.5",
+  }
+
+  const messengerCenterMobileInvisible = {
+    display:"none",
+  }
+
+  const messengerCenterMobilevisible = {
+    flex:12,
+  }
+
+  // tracking screen width
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  
 
   // socket receive event
   useEffect(() => {
@@ -95,7 +136,7 @@ const Messenger = ({ socket, onlineUsers }) => {
       <Topbar />
 
       <div className="messenger">
-        <div className="messengerLeft">
+        <div style={isMobile ? ( messengerCenterVisible ? messengerLeftMobileInvisible : messengerLeftMobileVisible) : messengerLeft}>
           <div className="messengerLeftWrapper">
             <div className="conversation">
 
@@ -129,7 +170,7 @@ const Messenger = ({ socket, onlineUsers }) => {
                 {!communities ? (
                   <>
                     {conversation.map((c) => (
-                      <div onClick={() => setCurrentConversation(c)}>
+                      <div onClick={() => {setCurrentConversation(c);setMessengerCenterVisible(true) }}>
                         <History conversation={c} curruser={user} key={c._id} />
                       </div>
                     ))}
@@ -140,9 +181,9 @@ const Messenger = ({ socket, onlineUsers }) => {
           </div>
         </div>
 
-        <div className="messengerCenter">
+        <div style={isMobile  ? (messengerCenterVisible ? messengerCenterMobilevisible : messengerCenterMobileInvisible) : messengerCenter}>
           <div className="messengerCenterWrapper">
-            {currentConversation && <Chatbar friend={friend} />}
+            {currentConversation && <Chatbar friend={friend} isMobile={isMobile} setMessengerCenterVisible={setMessengerCenterVisible}/>}
 
             <div className="chatBoxWrapper" ref={scrollRef}>
               {currentConversation ? (

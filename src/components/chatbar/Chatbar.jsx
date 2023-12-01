@@ -1,14 +1,15 @@
 import React from "react";
 import "./chatbar.css";
 import { Link } from "react-router-dom";
-import { Launch } from "@mui/icons-material";
+import { ChevronLeft, Launch } from "@mui/icons-material";
 
-function Chatbar({ friend }) {
+function Chatbar({ friend , isMobile , setMessengerCenterVisible}) {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
 
   return (
     <div className="chatbarContainer">
       <div className="chatbarWrapper">
+        {isMobile && <ChevronLeft onClick={()=>setMessengerCenterVisible((prev)=>!prev)}/>}
         <img
           className="chatbarImg"
           src={
