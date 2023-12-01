@@ -55,3 +55,8 @@
     cursor: pointer;
     color: #096cee;
 }
+
+.reply-emoji-container{
+    position: absolute;
+    bottom: 65px;
+}

@@ -2,19 +2,40 @@ import React, { useContext, useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import "./share.css";
 import axios from "axios";
-import { PermMedia, Label, Room, EmojiEmotions, Cancel } from "@mui/icons-material";
+import {
+  PermMedia,
+  Label,
+  Room,
+  EmojiEmotions,
+  Cancel,
+} from "@mui/icons-material";
 import { AuthContext } from "../../context/AuthContext";
+import Picker from "@emoji-mart/react";
 
 const Share = () => {
+  new Picker({
+    data: async () => {
+      const response = await fetch(
+        "https://cdn.jsdelivr.net/npm/@emoji-mart/data"
+      );
+
+      return response.json();
+    },
+  });
   const desc = useRef();
   const [image, setImage] = useState(null);
   const { user } = useContext(AuthContext);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   // console.log(user);
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
 
   const handleFileChange = (event) => {
     setImage(event.target.files[0]);
     // console.log(image);
+  };
+
+  const handleEmojiSelect = (emoji) => {
+    desc.current.value += emoji.native;
   };
 
   const handleSubmit = async (event) => {
@@ -52,10 +73,10 @@ const Share = () => {
             <img
               className="shareProfileImg"
               src={
-                  user.profilePicture
-                    ? PF + user.profilePicture
-                    : `${PF}person/profile-picture/default-profilepic.png`
-                }
+                user.profilePicture
+                  ? PF + user.profilePicture
+                  : `${PF}person/profile-picture/default-profilepic.png`
+              }
               alt=""
             />
           </Link>
@@ -66,16 +87,23 @@ const Share = () => {
           />
         </div>
 
-
         <hr className="shareHr" />
-
 
         {image && (
           <div className="previewImgcontainer">
-            <img className="previewImg" src={URL.createObjectURL(image)} alt="" />
-            <Cancel className="previewCancel" onClick={()=>{setImage(null)}}/>
+            <img
+              className="previewImg"
+              src={URL.createObjectURL(image)}
+              alt=""
+            />
+            <Cancel
+              className="previewCancel"
+              onClick={() => {
+                setImage(null);
+              }}
+            />
           </div>
-        ) }
+        )}
 
         <div className="shareBottom">
           <div className="shareOptions">
@@ -92,14 +120,20 @@ const Share = () => {
             </label>
             <div className="shareOption">
               <Label id="tag-label" htmlColor="blue" className="shareIcon" />
-              <span id="tag-span" className="shareOptionText">Tags</span>
+              <span id="tag-span" className="shareOptionText">
+                Tags
+              </span>
             </div>
             <div className="shareOption">
               <Room htmlColor="green" className="shareIcon" />
               <span className="shareOptionText">Location</span>
             </div>
             <div className="shareOption">
-              <EmojiEmotions htmlColor="goldenrod" className="shareIcon" />
+              <EmojiEmotions
+                htmlColor="goldenrod"
+                className="shareIcon"
+                onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+              />
               <span className="shareOptionText">Feelings</span>
             </div>
           </div>
@@ -108,6 +142,17 @@ const Share = () => {
           </button>
         </div>
       </form>
+      {showEmojiPicker && (
+        <div className="reply-emoji-container">
+          <Picker
+            onEmojiSelect={handleEmojiSelect}
+            onClickOutside={()=>setShowEmojiPicker(!showEmojiPicker)}
+            theme="light"
+            previewPosition="none"
+            maxFrequentRows="1"
+          />
+        </div>
+      )}
     </div>
   );
 };

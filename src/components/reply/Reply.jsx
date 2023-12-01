@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import axios from "axios";
 import "./reply.css";
 import {
@@ -7,10 +7,22 @@ import {
   EmojiEmotions,
   Send,
 } from "@mui/icons-material";
+import Picker from "@emoji-mart/react";
 
 const Reply = ({ currentConversation, user, message, setMessage, socket }) => {
+
   const replyText = useRef();
-  useEffect(() => {}, []);
+  const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+
+  new Picker({
+    data: async () => {
+      const response = await fetch(
+        "https://cdn.jsdelivr.net/npm/@emoji-mart/data"
+      );
+
+      return response.json();
+    },
+  });
 
   const handleReply = async (e) => {
     e.preventDefault();
@@ -41,11 +53,15 @@ const Reply = ({ currentConversation, user, message, setMessage, socket }) => {
     }
   };
 
+  const handleEmojiSelect = (emoji) => {
+    replyText.current.value += emoji.native;
+  };
+
   return (
     <div className="reply">
       <div className="replyLeft">
         <PermMedia htmlColor="tomato" className="replyIcon" />
-        <EmojiEmotions htmlColor="gold" className="replyIcon" />
+        <EmojiEmotions htmlColor="gold" className="replyIcon" onClick={()=>setShowEmojiPicker(!showEmojiPicker)}/>
         <KeyboardVoice htmlColor="teal" className="replyIcon" />
       </div>
       <div className="replyCenter">
@@ -63,6 +79,17 @@ const Reply = ({ currentConversation, user, message, setMessage, socket }) => {
           <Send />
         </button>
       </div>
+      {showEmojiPicker && (
+        <div className="reply-emoji-container">
+          <Picker
+            onEmojiSelect={handleEmojiSelect}
+            onClickOutside={()=>setShowEmojiPicker(!showEmojiPicker)}
+            theme="light"
+            previewPosition="none"
+            maxFrequentRows="1"
+          />
+        </div>
+      )}
     </div>
   );
 };
