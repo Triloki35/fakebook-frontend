@@ -10,44 +10,45 @@ import OnlineFriend from "../../components/onlineFriend/OnlineFriend";
 import Reply from "../../components/reply/Reply";
 import { AuthContext } from "../../context/AuthContext";
 import SearchFriend from "../../components/search-friend/SearchFriend";
+import { WavingHand } from "@mui/icons-material";
 
 const Messenger = ({ socket, onlineUsers }) => {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [messengerCenterVisible, setMessengerCenterVisible] = useState(false);
   const { user } = useContext(AuthContext);
-  const [communities, setCommunities] = useState(false); 
+  const [communities, setCommunities] = useState(false);
   const [conversation, setConversation] = useState([]);
   const [currentConversation, setCurrentConversation] = useState(null);
-  const [message, setMessage] = useState(null);
+  const [message, setMessage] = useState([]);
   const [arrivalMessage, setArrivalMessage] = useState(null);
   const [friend, setFriend] = useState(null);
   const scrollRef = useRef();
-
+  // css
   const messengerLeft = {
     flex: "3.5",
     borderRight: "1px solid #e8e1e1db",
-  }
+  };
 
   const messengerLeftMobileVisible = {
-    flex:12,
-    border:"none"
-  }
+    flex: 12,
+    border: "none",
+  };
 
   const messengerLeftMobileInvisible = {
-    display:"none",
-  }
+    display: "none",
+  };
 
   const messengerCenter = {
     flex: "8.5",
-  }
+  };
 
   const messengerCenterMobileInvisible = {
-    display:"none",
-  }
+    display: "none",
+  };
 
   const messengerCenterMobilevisible = {
-    flex:12,
-  }
+    flex: 12,
+  };
 
   // tracking screen width
   useEffect(() => {
@@ -59,8 +60,6 @@ const Messenger = ({ socket, onlineUsers }) => {
       window.removeEventListener("resize", handleResize);
     };
   }, []);
-
-  
 
   // socket receive event
   useEffect(() => {
@@ -74,8 +73,6 @@ const Messenger = ({ socket, onlineUsers }) => {
       setArrivalMessage(newArrivalMsg);
     });
   }, [socket]);
-  
-
 
   useEffect(() => {
     arrivalMessage &&
@@ -131,25 +128,39 @@ const Messenger = ({ socket, onlineUsers }) => {
     scrollRef.current?.scrollIntoView({ behaviour: "smooth" });
   }, [message]);
 
+  console.log(message);
+
   return (
     <>
       <Topbar />
 
       <div className="messenger">
-        <div style={isMobile ? ( messengerCenterVisible ? messengerLeftMobileInvisible : messengerLeftMobileVisible) : messengerLeft}>
+        <div
+          style={
+            isMobile
+              ? messengerCenterVisible
+                ? messengerLeftMobileInvisible
+                : messengerLeftMobileVisible
+              : messengerLeft
+          }
+        >
           <div className="messengerLeftWrapper">
             <div className="conversation">
-
               <div className="conversationTop">
                 <div className="ConversationTitle">
                   <h1>Chats</h1>
                 </div>
-                <SearchFriend />
+                <SearchFriend
+                  userId={user._id}
+                  setCurrentConversation={setCurrentConversation}
+                  setMessengerCenterVisible={setMessengerCenterVisible}
+                />
                 <div className="onlineFriendList">
                   <OnlineFriend
                     user={user}
                     onlineUsers={onlineUsers}
                     setCurrentConversation={setCurrentConversation}
+                    setMessengerCenterVisible={setMessengerCenterVisible}
                   />
                 </div>
               </div>
@@ -169,25 +180,48 @@ const Messenger = ({ socket, onlineUsers }) => {
                 </button>
                 {!communities ? (
                   <>
-                    {conversation.map((c) => (
-                      <div onClick={() => {setCurrentConversation(c);setMessengerCenterVisible(true) }}>
+                    {conversation.map((c,index) => (
+                      <div
+                        key={c._id}
+                        onClick={() => {
+                          setCurrentConversation(c);
+                          setMessengerCenterVisible(true);
+                        }}
+                        className={index === conversation.length - 1 ? 'last-child' : ''}
+                      >
                         <History conversation={c} curruser={user} key={c._id} />
                       </div>
                     ))}
                   </>
-                ) : (<h3 className="communities-title">Coming soon...</h3>)}
+                ) : (
+                  <h3 className="communities-title">Coming soon...</h3>
+                )}
               </div>
             </div>
           </div>
         </div>
 
-        <div style={isMobile  ? (messengerCenterVisible ? messengerCenterMobilevisible : messengerCenterMobileInvisible) : messengerCenter}>
+        <div
+          style={
+            isMobile
+              ? messengerCenterVisible
+                ? messengerCenterMobilevisible
+                : messengerCenterMobileInvisible
+              : messengerCenter
+          }
+        >
           <div className="messengerCenterWrapper">
-            {currentConversation && <Chatbar friend={friend} isMobile={isMobile} setMessengerCenterVisible={setMessengerCenterVisible}/>}
+            {currentConversation && (
+              <Chatbar
+                friend={friend}
+                isMobile={isMobile}
+                setMessengerCenterVisible={setMessengerCenterVisible}
+              />
+            )}
 
             <div className="chatBoxWrapper" ref={scrollRef}>
               {currentConversation ? (
-                message!==null ? (
+                message.length !== 0 ? (
                   message.map((m) => (
                     <div ref={scrollRef}>
                       <Chat
@@ -199,7 +233,10 @@ const Messenger = ({ socket, onlineUsers }) => {
                     </div>
                   ))
                 ) : (
-                  <span>Say hi to your new Fakebook friend...</span>
+                  <span className="greeting">
+                    Say hi to your new Fakebook friend.
+                    <WavingHand htmlColor="goldenrod" />
+                  </span>
                 )
               ) : (
                 <span className="noConversation">

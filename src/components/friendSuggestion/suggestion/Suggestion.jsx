@@ -20,18 +20,19 @@ const Suggestion = ({
   const [mutualFriends, setMutualFriends] = useState([]);
 
   useEffect(() => {
-    const fetchtMutualFriends = async() => {
-        try {
-            const res = await axios.get(`users/mutual-friends/${user._id}/${suggestion._id}`);
-            console.log(res.data);
-            setMutualFriends(res.data);
-        } catch (error) {
-            console.log(error);
-        }
-    }
+    const fetchtMutualFriends = async () => {
+      try {
+        const res = await axios.get(
+          `users/mutual-friends/${user._id}/${suggestion._id}`
+        );
+        console.log(res.data);
+        setMutualFriends(res.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
     fetchtMutualFriends();
-  }, [suggestion])
-  
+  }, [suggestion]);
 
   const SendRequest = async (userId) => {
     setLoadingStates((prevLoadingStates) => ({
@@ -92,9 +93,10 @@ const Suggestion = ({
         </Link>
 
         <div className="fs-userInfo">
-          <span>{suggestion.username.split(" ")[0]}</span>
+          <span>{suggestion.username.split(" ").slice(0, 2).join(" ")}</span>
           <small onClick={() => setShowUsersModal(!showUsersModal)}>
-            {mutualFriends.length !==0 && mutualFriends.length + " mutual friends"} 
+            {mutualFriends.length !== 0 &&
+              mutualFriends.length + " mutual friends"}
           </small>
         </div>
       </div>
@@ -106,7 +108,7 @@ const Suggestion = ({
           disabled={loadingStates[suggestion._id]}
         >
           {!loadingStates[suggestion._id] ? (
-            "Add Friend"
+            "Add"
           ) : (
             <CircularProgress color="inherit" size="15px" />
           )}
@@ -124,7 +126,10 @@ const Suggestion = ({
         </button>
       </div>
       {showUsersModal && (
-        <UsersModal setShowUsersModal={setShowUsersModal} users={mutualFriends} />
+        <UsersModal
+          setShowUsersModal={setShowUsersModal}
+          users={mutualFriends}
+        />
       )}
     </li>
   );

@@ -3,7 +3,7 @@ import "./onlineFriend.css";
 import axios from 'axios';
 import { fetchFriendList } from '../../apiCalls';
 
-const OnlineFriend = ({user , onlineUsers, setCurrentConversation}) => {
+const OnlineFriend = ({user , onlineUsers, setCurrentConversation, setMessengerCenterVisible}) => {
   
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const [friendList, setFriendList] = useState([]);
@@ -47,7 +47,7 @@ const OnlineFriend = ({user , onlineUsers, setCurrentConversation}) => {
   return (
     <>
       {activeFriend.map((f) => (
-        <div className="onlineFriend" key={f._id} onClick={()=>handleClick(f)}>
+        <div className="onlineFriend" key={f._id} onClick={()=>{handleClick(f);setMessengerCenterVisible((prev)=>!prev)}}>
           <div className="onlineFriendContainer">
             <img
               className="onlineFriendImg"

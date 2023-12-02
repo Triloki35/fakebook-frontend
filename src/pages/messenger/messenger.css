@@ -1,6 +1,7 @@
 .messenger{
     display: flex;
-    height: calc(100vh - 50px)
+    height: calc(100vh - 50px);
+    overflow: hidden;
 }
 /********** left *****/
 /* .messengerLeft{
@@ -32,9 +33,14 @@
 .conversationBottom{
     width: 100%;
     height: calc(100vh - 200px);
-    overflow: auto;
+    overflow-y: scroll;
     margin-top: 10px;
 }
+
+.last-child {
+   margin-bottom: 50px;
+  }
+  
 
 .toggleBtn{
     border: none;
@@ -109,4 +115,23 @@
     color: gray;
     font-size: 50px;
     margin: 10px 50px;
+}
+
+.greeting{
+    color: gray;
+    position: absolute;
+    top: 50%;
+    left: 30%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: larger;
+}
+
+@media screen and (max-width : 500px) {
+    .greeting{
+        left: 10%;
+    }
 }
