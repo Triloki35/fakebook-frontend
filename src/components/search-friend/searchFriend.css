@@ -50,7 +50,6 @@
 }
 
 .sf-result-item:hover {
-    background: gray;
     cursor: pointer;
     background-color: #e4e6eb;
     border-radius: 5px;

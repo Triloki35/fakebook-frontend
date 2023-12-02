@@ -99,7 +99,11 @@
   }
 
   .searchResults {
-    max-height: 250px;
+    max-height: 300px;
+    width: 250px;
+    font-size: small;
+    top: 50px;
+    left: -40px;
   }
 }
 

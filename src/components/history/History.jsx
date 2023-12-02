@@ -1,10 +1,14 @@
 import React, { useEffect, useState } from "react";
 import "./history.css";
 import axios from "axios";
+import { format } from "timeago.js";
+import Stack from "@mui/material/Stack";
+import LinearProgress from "@mui/material/LinearProgress";
 
 const History = ({ conversation, curruser }) => {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const [friend, setfriend] = useState(null);
+  const [lastMessage, setLastMessage] = useState(null);
 
   //
   useEffect(() => {
@@ -20,28 +24,51 @@ const History = ({ conversation, curruser }) => {
       }
     };
 
+    const fetchLastMessage = async () => {
+      try {
+        const res = await axios.get(`messages/${conversation._id}/last`);
+        setLastMessage(res.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
     getFriend();
+    fetchLastMessage();
   }, [conversation, curruser]);
 
   // console.log(friend);
 
   return (
     <div className="history">
-        <img
-          src={
-            friend?.profilePicture !== ""
-              ? PF + friend?.profilePicture
-              : PF + "person/profile-picture/default-profilePic.png"
-          }
-          alt="user"
-          className="historyImg"
-        />
+      <img
+        src={
+          friend?.profilePicture !== ""
+            ? PF + friend?.profilePicture
+            : PF + "person/profile-picture/default-profilePic.png"
+        }
+        alt="user"
+        className="historyImg"
+      />
       <div className="historyContainer">
         <span className="historyName">{friend?.username}</span>
         <div className="lastMsg">
-          <small className="historyMessage">love you</small>
-          <small className="dot"> . </small>
-          <small className="time">02.00pm</small>
+          {!lastMessage ? (
+            <Stack sx={{ width: "100%", color: "grey.500" }} spacing={1}>
+              <LinearProgress color="inherit" />
+              <LinearProgress color="inherit" />
+            </Stack>
+          ) : (
+            <>
+              <span className="historyMessage">
+                <small>{curruser._id === lastMessage.senderId && "You: " } {lastMessage?.text}</small>
+              </span>
+              <span className="time">
+                <small className="dot"> . </small>
+                <small>{format(lastMessage?.createdAt)}</small>
+              </span>
+            </>
+          )}
         </div>
       </div>
     </div>

@@ -1,11 +1,13 @@
 .history{
     display: flex;
-    padding-left: 15px;
-    margin: 20px 0px ;
+    margin: 10px 5px ;
+    padding: 10px 5px;
 }
 
 .history:hover{
     cursor: pointer;
+    background-color: #e4e6eb;
+    border-radius: 5px;
 }
 
 .historyContainer{
@@ -26,19 +28,19 @@
 .lastMsg{
     display: flex;
     justify-content: space-between;
-    position: relative;
+    /* position: relative; */
     margin-top: 3px;
     color: gray;
     font-weight: 400
 }
 
 .time{
-    /* position: absolute; */
+    position: relative;
 }
 
 .lastMsg .dot{
     position: absolute;
-    right: 60px;
+    left: -10px;
     bottom: 3px;
     font-weight: 900;
 }

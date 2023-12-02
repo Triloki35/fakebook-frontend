@@ -125,7 +125,7 @@
 
 .notification {
   margin-bottom: 10px;
-  padding: 5px 2px;
+  padding: 5px 5px;
   display: flex;
   align-items: center;
 }
@@ -142,7 +142,7 @@
 
 .notificationImg {
   height: 30px;
-  width: 30px;
+  width: 35px;
   object-fit: cover;
   border-radius: 50%;
 }
