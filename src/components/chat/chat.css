@@ -29,6 +29,10 @@
     max-width: 50%;
 }
 
+.chatMsgContainer:hover{
+    cursor: pointer;
+}
+
 .chatMsg{
     background: #e4e6eb;
     padding: 15px;
@@ -54,5 +58,11 @@
     bottom: 10px; */
     color: gray;
     font-size: x-small;
+    text-align: end;
+}
+
+.chat-seen{
+    color: gray;
+    font-size: 10px;
     text-align: end;
 }

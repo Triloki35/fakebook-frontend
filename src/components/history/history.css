@@ -2,12 +2,13 @@
     display: flex;
     margin: 10px 5px ;
     padding: 10px 5px;
+    border-radius: 5px;
 }
+
 
 .history:hover{
     cursor: pointer;
-    background-color: #e4e6eb;
-    border-radius: 5px;
+    background-color: #e4e6eb;  
 }
 
 .historyContainer{

@@ -5,14 +5,14 @@ import { format } from "timeago.js";
 import Stack from "@mui/material/Stack";
 import LinearProgress from "@mui/material/LinearProgress";
 
-const History = ({ conversation, curruser }) => {
+const History = ({ conversation, lastMessage, curruser }) => {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const [friend, setfriend] = useState(null);
-  const [lastMessage, setLastMessage] = useState(null);
+  const [seen , setSeen] = useState(false);
 
   //
   useEffect(() => {
-    const friendId = conversation.members.filter((id) => curruser._id !== id);
+    const friendId = conversation?.members.filter((id) => curruser._id !== id);
     // console.log(friendId);
     const getFriend = async () => {
       try {
@@ -24,23 +24,28 @@ const History = ({ conversation, curruser }) => {
       }
     };
 
-    const fetchLastMessage = async () => {
-      try {
-        const res = await axios.get(`messages/${conversation._id}/last`);
-        setLastMessage(res.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-
+    
     getFriend();
-    fetchLastMessage();
-  }, [conversation, curruser]);
+  }, [conversation,curruser]);
 
-  // console.log(friend);
-
+  useEffect(() => {
+    const getLastMsgStatus = async() => {
+      if(lastMessage){
+        try {
+         const res = await axios.get(`messages/${lastMessage?._id}/seen`);
+        //  console.log(res.data);
+         setSeen(res.data.seen);
+        } catch (error) {
+         console.log(error);
+        } 
+       }
+      }
+     getLastMsgStatus();
+  }, [lastMessage])
+  
+    
   return (
-    <div className="history">
+    <div className="history" style={(lastMessage?.senderId !== curruser._id && seen===false) ? {background:"#e4e6eb"} : {}}>
       <img
         src={
           friend?.profilePicture !== ""
@@ -58,7 +63,7 @@ const History = ({ conversation, curruser }) => {
               <LinearProgress color="inherit" />
               <LinearProgress color="inherit" />
             </Stack>
-          ) : (
+          ) : ( 
             <>
               <span className="historyMessage">
                 <small>{curruser._id === lastMessage.senderId && "You: " } {lastMessage?.text}</small>

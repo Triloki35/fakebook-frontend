@@ -9,7 +9,7 @@ function Chatbar({ friend , isMobile , setMessengerCenterVisible}) {
   return (
     <div className="chatbarContainer">
       <div className="chatbarWrapper">
-        {isMobile && <ChevronLeft onClick={()=>setMessengerCenterVisible((prev)=>!prev)}/>}
+        <ChevronLeft onClick={()=>{isMobile && setMessengerCenterVisible((prev)=>!prev);window.location.reload()}}/>
         <img
           className="chatbarImg"
           src={

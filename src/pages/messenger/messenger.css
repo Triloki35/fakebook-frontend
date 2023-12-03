@@ -1,13 +1,15 @@
 .messenger{
-    display: flex;
     height: calc(100vh - 50px);
-    overflow: hidden;
+    display: flex;
+    overflow-y: hidden;
 }
 /********** left *****/
 /* .messengerLeft{
     flex: 3.5;
     border-right: 1px solid #e8e1e1db;
 } */
+
+
 
 .conversation{
     display: flex;
@@ -128,6 +130,10 @@
     justify-content: center;
     gap: 8px;
     font-size: larger;
+}
+
+.messenger-loader{
+    margin: 30% 40%;
 }
 
 @media screen and (max-width : 500px) {
