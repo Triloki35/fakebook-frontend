@@ -12,6 +12,7 @@ const Suggestion = ({
   setSuggestions,
   setLoadingStates,
   loadingStates,
+  socket
 }) => {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const { user, dispatch } = useContext(AuthContext);
@@ -50,6 +51,7 @@ const Suggestion = ({
       setSuggestions((prevSuggestions) =>
         prevSuggestions.filter((suggestion) => suggestion._id !== userId)
       );
+      socket.emit("send-friendRequest",{  userId:userId });
       localStorage.setItem("userInfo", JSON.stringify(res.data));
       dispatch(UpdateUser(res.data));
     } catch (error) {

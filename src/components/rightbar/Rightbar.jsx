@@ -11,7 +11,7 @@ import { Link } from "react-router-dom";
 
 const PF = process.env.REACT_APP_PUBLIC_FOLDER;
 
-const HomeRightBar = () => {
+const HomeRightBar = ({socket}) => {
   return (
     <div>
       <div className="birthdayContainer">
@@ -26,7 +26,7 @@ const HomeRightBar = () => {
       </div>
 
       <div className="friendSuggestionList">
-        <FriendSuggestions />
+        <FriendSuggestions socket={socket}/>
       </div>
     </div>
   );
@@ -91,7 +91,7 @@ const ProfileRightBar = ({ user }) => {
 };
 
 
-const Rightbar = ({ user , isMobile, openRightBar}) => {
+const Rightbar = ({ user , isMobile, openRightBar, socket}) => {
 
   const isMoblieTrue = {
     display : "none",
@@ -122,7 +122,7 @@ const Rightbar = ({ user , isMobile, openRightBar}) => {
   return (
     <div className="rightbar" style={isMobile?(openRightBar ? rightBarMobileView :  isMoblieTrue ):isMobileFalse}>
       <div className="rightbarWrapper">
-        {user ? <ProfileRightBar user={user} /> : <HomeRightBar />}
+        {user ? <ProfileRightBar user={user} /> : <HomeRightBar socket={socket}/>}
       </div>
     </div>
   );

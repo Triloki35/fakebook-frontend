@@ -102,6 +102,13 @@ const Topbar = ({ socket, unseen}) => {
     setFriendRequestBandage(user?.friendRequests?.length);
   }, [user]);
 
+  // increment bandage
+  useEffect(()=>{
+    socket?.on("get-friendRequest",()=>{
+      setFriendRequestBandage((prev)=>prev+1);
+    })
+  },[socket])
+
   const handleFriendRequestsClick = () => {
     setFriendRequestPanelVisible(!friendRequestPanelVisible);
   };

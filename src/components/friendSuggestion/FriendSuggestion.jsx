@@ -6,7 +6,7 @@ import { MoreHoriz } from "@mui/icons-material";
 import { AuthContext } from "../../context/AuthContext";
 import Suggestion from "./suggestion/Suggestion";
 
-function FriendSuggestions() {
+function FriendSuggestions({socket}) {
   const { user } = useContext(AuthContext);
 
   const [suggestions, setSuggestions] = useState([]);
@@ -59,7 +59,7 @@ function FriendSuggestions() {
       <div className="suggestionListContainer">
         <ul className="suggestionList">
           {suggestions.map((s) => (
-            <Suggestion suggestion={s} setSuggestions={setSuggestions} setLoadingStates={setLoadingStates} loadingStates={loadingStates}/>
+            <Suggestion suggestion={s} setSuggestions={setSuggestions} setLoadingStates={setLoadingStates} loadingStates={loadingStates} socket={socket}/>
           ))}
         </ul>
       </div>

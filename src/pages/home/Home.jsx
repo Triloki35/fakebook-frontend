@@ -76,7 +76,7 @@ function Home({ socket, unseenProp }) {
 
         <Sidebar isMobile={isMobile} openSideBar={openSideBar}/>
         <Feed socket={socket} isMobile={isMobile} />
-        <Rightbar isMobile={isMobile} openRightBar={openRightBar}/>
+        <Rightbar isMobile={isMobile} openRightBar={openRightBar} socket={socket}/>
 
         {isMobile && (
           <>
