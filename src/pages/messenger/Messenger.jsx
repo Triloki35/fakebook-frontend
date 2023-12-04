@@ -14,7 +14,7 @@ import { WavingHand } from "@mui/icons-material";
 import ClipLoader from "react-spinners/ClipLoader";
 import ScaleLoader from "react-spinners/ScaleLoader";
 
-const Messenger = ({ socket, onlineUsers }) => {
+const Messenger = ({ socket, onlineUsers, unseenProp }) => {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [messengerCenterVisible, setMessengerCenterVisible] = useState(false);
   const { user } = useContext(AuthContext);
@@ -25,6 +25,7 @@ const Messenger = ({ socket, onlineUsers }) => {
   const [arrivalMessage, setArrivalMessage] = useState(null);
   const [friend, setFriend] = useState(null);
   const scrollRef = useRef();
+  const { unseen, setUnseen } = unseenProp;
 
   // css
   const messengerLeft = {
@@ -54,55 +55,21 @@ const Messenger = ({ socket, onlineUsers }) => {
     flex: 12,
   };
 
-  // tracking screen width
+  // unseen msg fetching from db
   useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth <= 768);
+    const fetchUnseenMsg = async () => {
+      try {
+        const res = await axios.get(`/conversations/unseen/${user._id}`);
+        console.log(res.data);
+        setUnseen(res.data.totalUnseenCount);
+      } catch (error) {
+        console.log(error);
+      }
     };
-    window.addEventListener("resize", handleResize);
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, []);
+    fetchUnseenMsg();
+  }, [user, currentConversation]);
 
-  // socket receive event
-  useEffect(() => {
-    socket?.on("getMsg", (data) => {
-      console.log("Message received:", data);
-      const newArrivalMsg = {
-        conversationId: currentConversation?._id,
-        senderId: data.senderId,
-        text: data.text,
-      };
-      setArrivalMessage(newArrivalMsg);
-    });
-  }, [socket]);
-
-  useEffect(() => {
-    // arrivalMessage &&
-    //   currentConversation?.members.includes(arrivalMessage.senderId) &&
-    //   setMessage((prev) => [...prev, arrivalMessage]);
-
-    if (
-      arrivalMessage &&
-      currentConversation?.members.includes(arrivalMessage.senderId)
-    ) {
-      setMessage((prev) => [...prev, arrivalMessage]);
-      const markSeen = async () => {
-        try {
-          const res = await axios.put(
-            `messages/seenByText/${arrivalMessage.text}`,
-            { userId: user._id, senderId: arrivalMessage.senderId }
-          );
-        } catch (error) {
-          console.log(error);
-        }
-      };
-      markSeen();
-    }
-  }, [arrivalMessage]);
-
-  // fetching conversationID
+  // fetching  all conversation
   useEffect(() => {
     const getConversation = async () => {
       try {
@@ -112,35 +79,6 @@ const Messenger = ({ socket, onlineUsers }) => {
     };
     getConversation();
   }, [user]);
-
-  // get messages
-  useEffect(() => {
-    const getMsg = async () => {
-      try {
-        const res = await axios.get("/messages/" + currentConversation?._id, {
-          userId: user._id,
-        });
-        setMessage(res.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    getMsg();
-  }, [currentConversation, user]);
-
-  // mark last msg seen
-
-  const markLastMsg = async (lastMessage) => {
-    try {
-      const res = await axios.put(`messages/${lastMessage._id}/seen`, {
-        userId: user._id,
-        senderId: lastMessage.senderId,
-      });
-      console.log(res.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   // fetching friendId
   useEffect(() => {
@@ -160,6 +98,85 @@ const Messenger = ({ socket, onlineUsers }) => {
     getFriend(friendId);
   }, [currentConversation, user]);
 
+  // get messages
+  useEffect(() => {
+    const getMsg = async () => {
+      try {
+        const res = await axios.get("/messages/" + currentConversation?._id, {
+          userId: user._id,
+        });
+        setMessage(res.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getMsg();
+  }, [currentConversation, user]);
+
+  // mark last msg seen
+  const markAllSeen = async (conversationId) => {
+    try {
+      const res = await axios.put(`/messages/${conversationId}/seen`, {
+        userId: user._id,
+      });
+      console.log(res.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  // socket receive event
+  useEffect(() => {
+    socket?.on("getMsg", (data) => {
+      console.log("Message received:", data);
+      const newArrivalMsg = {
+        conversationId: currentConversation?._id,
+        senderId: data.senderId,
+        text: data.text,
+      };
+      setArrivalMessage(newArrivalMsg);
+      console.log(
+        !currentConversation?.members.includes(newArrivalMsg.senderId)
+      );
+      if (currentConversation?.members.includes(newArrivalMsg.senderId)) {
+        setUnseen((prev) => prev - 1);
+      }
+    });
+  }, [socket]);
+
+  // pushing arrival msg into msg
+  useEffect(() => {
+    if (
+      arrivalMessage &&
+      currentConversation?.members.includes(arrivalMessage.senderId)
+    ) {
+      setMessage((prev) => [...prev, arrivalMessage]);
+      const markSeen = async () => {
+        try {
+          const res = await axios.put(
+            `/messages/seenByText/${arrivalMessage.text}`,
+            { userId: user._id, senderId: arrivalMessage.senderId }
+          );
+        } catch (error) {
+          console.log(error);
+        }
+      };
+      markSeen();
+    }
+  }, [arrivalMessage]);
+
+  // tracking screen width
+  useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    window.addEventListener("resize", handleResize);
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
+  // scrool to bottom
   useEffect(() => {
     const scrollToBottom = () => {
       if (scrollRef.current) {
@@ -169,11 +186,11 @@ const Messenger = ({ socket, onlineUsers }) => {
     scrollToBottom();
   }, [message]);
 
-  // console.log(conversation);
+  console.log(currentConversation);
 
   return (
     <>
-      <Topbar />
+      <Topbar unseen={unseen} />
 
       <div className="messenger">
         <div
@@ -228,7 +245,7 @@ const Messenger = ({ socket, onlineUsers }) => {
                           onClick={() => {
                             setCurrentConversation(c.conversation);
                             isMobile && setMessengerCenterVisible(true);
-                            markLastMsg(c.lastMessage);
+                            markAllSeen(c.conversation._id);
                           }}
                           className={
                             index === conversation.length - 1

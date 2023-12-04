@@ -22,7 +22,7 @@ import SearchBox from "../search/SearchBox";
 import { UpdateUser } from "../../context/AuthActions";
 import { CircularProgress } from "@mui/material";
 
-const Topbar = ({ socket }) => {
+const Topbar = ({ socket, unseen}) => {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const { user, dispatch } = useContext(AuthContext);
   const [dropdown, setDropdown] = useState(false);
@@ -40,13 +40,13 @@ const Topbar = ({ socket }) => {
 
   // setting up modal
   const [showModal, setShowModal] = useState(false);
-  const [clickedNotification, setClickedNotification] = useState(null);
+  const [clickedNotification, setClickedNotification] = useState(null);  
 
   // fetching notification
   const fetchNotifications = async () => {
     try {
       setLoadingNotification(true);
-      const res = await axios.get(`users/notifications/${user._id}`);
+      const res = await axios.get(`/users/notifications/${user._id}`);
       const sortedNotifications = res.data.sort((a, b) => {
         return new Date(b.createdAt) - new Date(a.createdAt);
       });
@@ -76,6 +76,15 @@ const Topbar = ({ socket }) => {
     socket?.on("Notification", (data) => {
       // console.log(data);
       setNotifications((prev) => [...prev, data]);
+    });
+
+    socket?.on("getMsg", (data) => {
+      // console.log("Message received:", data);
+      const newArrivalMsg = {
+        conversationId: user?._id,
+        senderId: data.senderId,
+        text: data.text,
+      };
     });
   }, [socket]);
 
@@ -139,11 +148,12 @@ const Topbar = ({ socket }) => {
           </div>
           <div className="topbarIconItem">
             <Link
+              reloadDocument
               to={"/messenger"}
               style={{ textDecoration: "none", color: "white" }}
             >
               <Chat />
-              <span className="topbarIconBadge">1</span>
+              {unseen!==0 && <span className="topbarIconBadge">{unseen}</span>}
             </Link>
           </div>
           <div

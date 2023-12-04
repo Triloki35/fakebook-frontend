@@ -23,7 +23,7 @@ const Suggestion = ({
     const fetchtMutualFriends = async () => {
       try {
         const res = await axios.get(
-          `users/mutual-friends/${user._id}/${suggestion._id}`
+          `/users/mutual-friends/${user._id}/${suggestion._id}`
         );
         console.log(res.data);
         setMutualFriends(res.data);

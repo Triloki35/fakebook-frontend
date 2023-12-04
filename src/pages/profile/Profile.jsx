@@ -12,7 +12,7 @@ import { AuthContext } from "../../context/AuthContext";
 import { UpdateUser } from "../../context/AuthActions";
 import FriendButton from "./friendButton";
 
-export default function Profile() {
+export default function Profile({socket, unseenProp}) {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const { user: currUser, dispatch } = useContext(AuthContext);
   const { username } = useParams();
@@ -23,6 +23,30 @@ export default function Profile() {
   const [isAsked, setIsAsked] = useState(false);
 
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const {unseen,setUnseen} = unseenProp;
+  
+  // fetching unseen msg from db
+  useEffect(() => {
+    const fetchUnseenMsg = async() => {
+      try {
+        console.log(currUser);
+        const res = await axios.get(`/conversations/unseen/${currUser._id}`);
+        console.log(res.data);
+        setUnseen(res.data.totalUnseenCount);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchUnseenMsg();
+  }, [currUser])
+
+    // real time addon
+    useEffect(() => {
+      socket?.on("getMsg", (data) => {
+        setUnseen((prev)=>prev+1);
+      });
+    }, [socket])
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -118,7 +142,7 @@ export default function Profile() {
 
   return (
     <>
-      <Topbar />
+      <Topbar unseen={unseen} />
       <div className="profileContainer">
         <Sidebar />
         <div className="profileRight">

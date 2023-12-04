@@ -32,7 +32,7 @@ const OnlineFriend = ({user , onlineUsers, setCurrentConversation, setMessengerC
 
   const handleClick = async(friend) => {
     try {
-      const res = await axios.get(`conversations/find/${user._id}/${friend._id}`);
+      const res = await axios.get(`/conversations/find/${user._id}/${friend._id}`);
       setCurrentConversation(res.data);
       // console.log(res.data);
     } catch (error) {

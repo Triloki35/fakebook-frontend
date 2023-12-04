@@ -12,6 +12,9 @@ export default function App() {
   let { user } = useContext(AuthContext);
   const [socket, setSocket] = useState(null);
   const [onlineUsers, setOnlineUsers] = useState([]);
+  const [unseen, setUnseen] = useState(0);
+
+  const unseenProp = {unseen , setUnseen};
 
   useEffect(() => {
     if(user){
@@ -31,11 +34,11 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route exact path="/" element={user ? <Home socket={socket} /> : <Login />} />
-        <Route exact path="/login" element={user ? <Home socket={socket}/> : <Login />} />
-        <Route exact path="/register" element={user ? <Home socket={socket}/> : <Register />} />
-        <Route exact path="/messenger" element={user ? <Messenger socket={socket} onlineUsers={onlineUsers}/> : <Login />} />
-        <Route exact path="/profile/:username" element={<Profile socket={socket}/>} />
+        <Route exact path="/" element={user ? <Home socket={socket} unseenProp={unseenProp}/> : <Login />} />
+        <Route exact path="/login" element={user ? <Home socket={socket} unseenProp={unseenProp}/> : <Login />} />
+        <Route exact path="/register" element={user ? <Home socket={socket} unseenProp={unseenProp}/> : <Register />} />
+        <Route exact path="/messenger" element={user ? <Messenger socket={socket} onlineUsers={onlineUsers} unseenProp={unseenProp}/> : <Login />} />
+        <Route exact path="/profile/:username" element={<Profile socket={socket} unseenProp={unseenProp}/>} />
       </Routes>
     </BrowserRouter>
   );

@@ -81,7 +81,7 @@ const Post = ({ post, socket }) => {
   useEffect(() => {
     const fetchComment = async () => {
       try {
-        const res = await axios.get(`posts/comments/${post._id}`);
+        const res = await axios.get(`/posts/comments/${post._id}`);
         setPrevComment(res.data);
         // console.log(prevComment);
       } catch (error) {
@@ -99,7 +99,7 @@ const Post = ({ post, socket }) => {
         text: comment,
         profilePicture: currentUser.profilePicture,
       }
-      const res = await axios.post(`posts/comments/${post._id}`, reqBody);
+      const res = await axios.post(`/posts/comments/${post._id}`, reqBody);
       console.log(res.data);
       setPrevComment((prev)=>[...prev,reqBody]);
       setComment("");
@@ -121,7 +121,7 @@ const Post = ({ post, socket }) => {
 
   const handleCommentDelete = async(commentId) => {
     try {
-      const res = await axios.delete(`post/comments/${post._id}/${commentId}`,{userId:currentUser._id});
+      const res = await axios.delete(`/post/comments/${post._id}/${commentId}`,{userId:currentUser._id});
       setPrevComment(res.data);
     } catch (error) {
       console.log(error);
@@ -134,7 +134,7 @@ const Post = ({ post, socket }) => {
     console.log(post.userId);
     console.log(currentUser._id);
     try {
-      const res = await axios.delete(`posts/${post._id}/${currentUser._id}`);
+      const res = await axios.delete(`/posts/${post._id}/${currentUser._id}`);
       console.log(res.data);
       window.location.reload();
     } catch (error) {
@@ -144,7 +144,7 @@ const Post = ({ post, socket }) => {
 
   const handleSavePost = async () => {
     try {
-      const res = await axios.post(`posts/save-post/${currentUser._id}`, {
+      const res = await axios.post(`/posts/save-post/${currentUser._id}`, {
         postId: post._id,
       });
       dispatch(UpdateUser(res.data));

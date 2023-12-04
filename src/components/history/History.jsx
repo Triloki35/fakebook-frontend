@@ -32,7 +32,7 @@ const History = ({ conversation, lastMessage, curruser }) => {
     const getLastMsgStatus = async() => {
       if(lastMessage){
         try {
-         const res = await axios.get(`messages/${lastMessage?._id}/seen`);
+         const res = await axios.get(`/messages/${lastMessage?._id}/seen`);
         //  console.log(res.data);
          setSeen(res.data.seen);
         } catch (error) {

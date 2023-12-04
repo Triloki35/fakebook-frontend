@@ -18,7 +18,7 @@ export const loginCall = async (userCredentials, dispatch) => {
 // user fetchFriendList
 export const fetchFriendList= async (user) => {
   try {
-    const friendList = await axios.get(`users/friends/${user?._id}`);
+    const friendList = await axios.get(`/users/friends/${user?._id}`);
     return friendList;
   } catch (error) {
     console.log(error);
