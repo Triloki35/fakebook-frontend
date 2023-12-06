@@ -10,15 +10,21 @@
 .replyLeft{
     display: flex;
     justify-content: space-evenly;
+    margin-left: 5px;
 }
 
 .replyIcon{
     margin: 0px 3px;
 }
 
+.replyIcon:hover{
+    cursor: pointer;
+}
+
 .replyCenter{
     flex: 8;
     margin-right: 10px;
+    position: relative;
 }
 
 .replyMsg{
@@ -42,13 +48,9 @@
 
 .replyBtn{
     border: none;
-    /* border-radius: 50%; */
-    /* color: white;
-    background-color: #1877f2; */
+    border-radius: 50%;
     color: #1877f2;
     background: white;
-    /* padding: 5px 10px; */
-    /* box-shadow: 3px 4px 6px -1px rgba(0,0,0,0.35); */
 }
 
 .replyBtn:hover{
@@ -59,4 +61,15 @@
 .reply-emoji-container{
     position: absolute;
     bottom: 65px;
+}
+
+.imagePreview{
+    position: absolute;
+    top: -109px;
+    display: flex;
+}
+
+.r-preview-img{
+    height: 100px;
+    width: 100px;
 }

@@ -24,30 +24,34 @@ const Chat = ({ message, own, friend }) => {
   }, [toggle, message._id]);
 
   return (
-    <div className="chats">
-      <div className={own ? "chatContainer own" : "chatContainer"}>
-        {!own && (
-          <img
-            src={
-              friend?.profilePicture !== ""
-                ? PF + friend?.profilePicture
-                : PF + "person/profile-pic/default-profilePic.png"
-            }
-            alt="user"
-            className="chatImg"
-          />
-        )}
-        <div
-          className="chatMsgContainer"
-          onClick={() => {
-            setToggle(!toggle);
-          }}
-        >
-          <p className={own ? "chatMsg ownMsg" : "chatMsg "}>
-            {message.text}
-          </p>
-          <time className="chatTime">{format(message.createdAt)}</time>
-          <small className="chat-seen">{toggle && seen && own && "Seen"}</small>
+    <div className={own ? "chat-common chatOwn" : "chat-common chat"}>
+      {!own && (
+        <img
+          src={
+            friend?.profilePicture !== ""
+              ? PF + friend?.profilePicture
+              : PF + "person/profile-pic/default-profilePic.png"
+          }
+          alt="user"
+          className="chatImg"
+        />
+      )}
+
+      <div
+        className={own ? "chatMsgContainerOwn" :"chatMsgContainer"}
+        onClick={() => {
+          setToggle(!toggle);
+        }}
+      >
+        {message.content.images.map((img) => (
+          <img src={PF + img} alt="" className="chatImgMsg" />
+        ))}
+        <p className={message.content.text !=='' && ( own ? "chatTextMsgOwn" : "chatTextMsg ")}>
+          {message.content.text !=='' && message.content.text}
+        </p>
+        <div className="msgInfo">
+        <span className={own ? "chatTimeOwn" : "chatTime"}>{format(message.createdAt)}</span>
+        <small className="chat-seen">{toggle && seen && own && "Seen"}</small>
         </div>
       </div>
     </div>

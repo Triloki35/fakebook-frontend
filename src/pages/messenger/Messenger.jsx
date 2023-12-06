@@ -2,17 +2,12 @@ import React, { useContext, useEffect, useState, useRef } from "react";
 import axios from "axios";
 import "./messenger.css";
 import Topbar from "../../components/topbar/Topbar";
-import SearchIcon from "@mui/icons-material/Search";
-import History from "../../components/history/History";
 import Chatbar from "../../components/chatbar/Chatbar";
 import Chat from "../../components/chat/Chat";
-import OnlineFriend from "../../components/onlineFriend/OnlineFriend";
 import Reply from "../../components/reply/Reply";
 import { AuthContext } from "../../context/AuthContext";
-import SearchFriend from "../../components/search-friend/SearchFriend";
 import { WavingHand } from "@mui/icons-material";
-import ClipLoader from "react-spinners/ClipLoader";
-import ScaleLoader from "react-spinners/ScaleLoader";
+import ConversationList from "../../components/conversationList/ConversationList";
 
 const Messenger = ({ socket, onlineUsers, unseenProp }) => {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
@@ -129,16 +124,16 @@ const Messenger = ({ socket, onlineUsers, unseenProp }) => {
   useEffect(() => {
     socket?.on("getMsg", (data) => {
       console.log("Message received:", data);
-      const newArrivalMsg = {
-        conversationId: currentConversation?._id,
-        senderId: data.senderId,
-        text: data.text,
-      };
-      setArrivalMessage(newArrivalMsg);
-      console.log(
-        !currentConversation?.members.includes(newArrivalMsg.senderId)
-      );
-      if (currentConversation?.members.includes(newArrivalMsg.senderId)) {
+      // const newArrivalMsg = {
+      //   conversationId: currentConversation?._id,
+      //   senderId: data.senderId,
+      //   text: data.text,
+      // };
+      setArrivalMessage(data);
+      // console.log(
+      //   !currentConversation?.members.includes(newArrivalMsg.senderId)
+      // );
+      if (currentConversation?.members.includes(data.senderId)) {
         setUnseen((prev) => prev - 1);
       }
     });
@@ -186,7 +181,7 @@ const Messenger = ({ socket, onlineUsers, unseenProp }) => {
     scrollToBottom();
   }, [message]);
 
-  console.log(currentConversation);
+  console.log(conversation);
 
   return (
     <>
@@ -203,82 +198,16 @@ const Messenger = ({ socket, onlineUsers, unseenProp }) => {
           }
         >
           <div className="messengerLeftWrapper">
-            <div className="conversation">
-              <div className="conversationTop">
-                <div className="ConversationTitle">
-                  <h1>Chats</h1>
-                </div>
-                <SearchFriend
-                  userId={user._id}
-                  setCurrentConversation={setCurrentConversation}
-                  setMessengerCenterVisible={setMessengerCenterVisible}
-                />
-                <div className="onlineFriendList">
-                  <OnlineFriend
-                    user={user}
-                    onlineUsers={onlineUsers}
-                    setCurrentConversation={setCurrentConversation}
-                    setMessengerCenterVisible={setMessengerCenterVisible}
-                  />
-                </div>
-              </div>
-
-              <div className="conversationBottom">
-                <button
-                  className={communities ? "toggleBtn" : "activeBtn"}
-                  onClick={() => setCommunities(!communities)}
-                >
-                  Inbox
-                </button>
-                <button
-                  className={communities ? "activeBtn" : "toggleBtn"}
-                  onClick={() => setCommunities(!communities)}
-                >
-                  Communities
-                </button>
-                {!communities ? (
-                  <>
-                    {conversation ? (
-                      conversation?.map((c, index) => (
-                        <div
-                          key={c._id}
-                          onClick={() => {
-                            setCurrentConversation(c.conversation);
-                            isMobile && setMessengerCenterVisible(true);
-                            markAllSeen(c.conversation._id);
-                          }}
-                          className={
-                            index === conversation.length - 1
-                              ? "last-child"
-                              : ""
-                          }
-                        >
-                          <History
-                            conversation={c.conversation}
-                            lastMessage={c.lastMessage}
-                            curruser={user}
-                            key={c._id}
-                          />
-                        </div>
-                      ))
-                    ) : (
-                      <div className="messenger-loader">
-                        <ClipLoader
-                          color={"#1877F2"}
-                          loading={true}
-                          speedMultiplier={2}
-                        />
-                      </div>
-                    )}
-                  </>
-                ) : (
-                  <h3 className="communities-title">
-                    Coming soon
-                    <ScaleLoader color="gray" height={20} width={5} />
-                  </h3>
-                )}
-              </div>
-            </div>
+            <ConversationList
+              user={user}
+              communitiesProp={{ communities, setCommunities }}
+              setCurrentConversation={setCurrentConversation}
+              setMessengerCenterVisible={setMessengerCenterVisible}
+              conversation={conversation}
+              isMobile={isMobile}
+              markAllSeen={markAllSeen}
+              onlineUsers={onlineUsers}
+            />
           </div>
         </div>
 

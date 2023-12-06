@@ -1,68 +1,93 @@
-
-.chats{
-    padding-left:0px 20px;
-    /* height: 400px; */
-    /* flex: 8; */
-    /* overflow-y: scroll; */
+.chat-common{
+    margin-bottom: 20px;
 }
 
-.chatContainer{
-    /* width: 100%; */
-    display: flex;
-    margin: 10px 0px;
+.chat {
+  width: 100%;
+  display: flex;
+  /* position: relative; */
 }
 
-.own{
-    flex-direction: row-reverse;
+.chatOwn {
+  width: 100%;
+  display: flex;
+  /* position: relative; */
+  flex-direction: row-reverse;
 }
 
-.chatImg{
-    height: 35px;
-    width: 35px;
-    object-fit: cover;
-    border-radius: 50%;
+.chatImg {
+  height: 35px;
+  width: 35px;
+  object-fit: cover;
+  border-radius: 50%;
+  position: relative;
+  top: 0;
+  left: 0;
 }
 
-.chatMsgContainer{
-    display: flex;
-    flex-direction: column;
-    max-width: 50%;
+.chatMsgContainer {
+  display: flex;
+  flex-direction: column;
+  max-width: 50%;
+  position: relative;
+  margin-left: 5px;
 }
 
-.chatMsgContainer:hover{
-    cursor: pointer;
+.chatMsgContainerOwn {
+  display: flex;
+  flex-direction: column;
+  max-width: 50%;
+  /* position: relative; */
+ 
 }
 
-.chatMsg{
-    background: #e4e6eb;
-    padding: 15px;
-    border-radius: 30px;
-    margin-left: 10px;
-    /* color: #000000; */
-    font-size: .8rem;
-    /* font-family: sans-serif;
-    font-weight: 450; */
-    /* display: flex; */
-    /* flex-direction: column; */
+.chatImgMsg {
+  height: 200px;
+  width: 150px;
+  z-index: 1;
+  object-fit: cover;
+  border-radius: 10px;
+  margin: 5px 0px;
 }
 
-.ownMsg{
-    background-color: rgb(0, 132, 255);
-    color: white;
-    /* font-weight: 400; */
+.chatTextMsgOwn {
+  padding: 15px;
+  border-radius: 30px;
+  margin-left: 10px;
+  background-color: rgb(0, 132, 255);
+  color: white;
+  font-size: small;
+}
+
+.chatTextMsg {
+  padding: 15px;
+  border-radius: 30px;
+  margin-left: 10px;
+  background: #e4e6eb;
+  font-size: small;
+}
+
+.msgInfo{
+  display: flex;
+  justify-content: space-between;
+  flex-direction: column;
+}
+
+.chatTimeOwn {
+  color: gray;
+  font-size: x-small;
+  /* position: absolute;
+  right: 0; */
 }
 
 .chatTime {
-    /* position: absolute;
-    right: 25px;
-    bottom: 10px; */
-    color: gray;
-    font-size: x-small;
-    text-align: end;
+  color: gray;
+  font-size: x-small;
 }
 
-.chat-seen{
-    color: gray;
-    font-size: 10px;
-    text-align: end;
+
+.chat-seen {
+  color: gray;
+  font-size: x-small;
+  text-align: end;
 }

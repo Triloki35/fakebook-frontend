@@ -1,0 +1,12 @@
+.no-convo{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: darkgray;
+    margin-top: 20%;
+}
+
+.no-convo p{
+    text-align: center;
+}

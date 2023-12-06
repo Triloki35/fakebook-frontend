@@ -6,13 +6,17 @@ import {
   PermMedia,
   EmojiEmotions,
   Send,
+  Cancel,
 } from "@mui/icons-material";
 import Picker from "@emoji-mart/react";
 
 const Reply = ({ currentConversation, user, message, setMessage, socket }) => {
-
+  const fileInput = useRef();
   const replyText = useRef();
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [imagePreview, setImagePreview] = useState(null);
+
+  const friendId = currentConversation?.members.find((userId)=>userId !== user._id);
 
   new Picker({
     data: async () => {
@@ -24,30 +28,58 @@ const Reply = ({ currentConversation, user, message, setMessage, socket }) => {
     },
   });
 
+  const handleImageChange = () => {
+    const files = fileInput.current.files;
+
+    if (files.length > 0) {
+      const reader = new FileReader();
+
+      reader.onload = (e) => {
+        setImagePreview(e.target.result);
+      };
+
+      reader.readAsDataURL(files[0]);
+    } else {
+      setImagePreview(null);
+    }
+  };
+
+  const handleCancelImage = () => {
+    fileInput.current.value = null;
+    setImagePreview(null);
+  };
+
   const handleReply = async (e) => {
     e.preventDefault();
-    // console.log(replyText.current.value);
+
     try {
-      const newMessage = {
-        conversationId: currentConversation._id,
-        senderId: user._id,
-        text: replyText.current.value,
-      };
-      // console.log(newMessage);
-      // socket event emit
-      const receiverId = currentConversation?.members.filter(
-        (id) => user._id !== id
-      );
-      socket.emit("sendMsg", {
-        senderId: user._id,
-        receiverId: receiverId,
-        text: replyText.current.value,
+      const formData = new FormData();
+      formData.append("conversationId", currentConversation._id);
+      formData.append("senderId", user._id);
+      formData.append("text", replyText.current.value);
+
+      // Append selected images to formData
+      for (let i = 0; i < fileInput.current.files.length; i++) {
+        formData.append("images", fileInput.current.files[i]);
+      }
+
+      const res = await axios.post("/messages/", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       });
 
-      const res = await axios.post("/messages/", newMessage);
       setMessage([...message, res.data]);
+
+      socket.emit("sendMsg",{
+        senderId:user._id,
+        receiverId:friendId,
+        data:res.data
+      })
+
       replyText.current.value = "";
-      // console.log(res.data);
+      fileInput.current.value = null;
+      setImagePreview(null);
     } catch (error) {
       console.log(error);
     }
@@ -60,9 +92,14 @@ const Reply = ({ currentConversation, user, message, setMessage, socket }) => {
   return (
     <div className="reply">
       <div className="replyLeft">
-        <PermMedia htmlColor="tomato" className="replyIcon" />
-        <EmojiEmotions htmlColor="gold" className="replyIcon" onClick={()=>setShowEmojiPicker(!showEmojiPicker)}/>
-        <KeyboardVoice htmlColor="teal" className="replyIcon" />
+        <label htmlFor="img">
+          <PermMedia htmlColor="tomato" className="replyIcon" />
+        </label>
+        <EmojiEmotions
+          htmlColor="gold"
+          className="replyIcon"
+          onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+        />
       </div>
       <div className="replyCenter">
         <textarea
@@ -72,6 +109,20 @@ const Reply = ({ currentConversation, user, message, setMessage, socket }) => {
           rows="1"
           ref={replyText}
         />
+        <input
+          type="file"
+          ref={fileInput}
+          accept="image/*"
+          onChange={handleImageChange}
+          style={{ display: "none" }}
+          id="img"
+        />
+        {imagePreview && (
+          <div className="imagePreview">
+            <img className="r-preview-img" src={imagePreview} alt="Preview" />
+            <Cancel className="cancelImageBtn" onClick={handleCancelImage}/>
+          </div>
+        )}
       </div>
       <div className="replyRight">
         <button className="replyBtn" onClick={handleReply}>
@@ -83,7 +134,7 @@ const Reply = ({ currentConversation, user, message, setMessage, socket }) => {
         <div className="reply-emoji-container">
           <Picker
             onEmojiSelect={handleEmojiSelect}
-            onClickOutside={()=>setShowEmojiPicker(!showEmojiPicker)}
+            onClickOutside={() => setShowEmojiPicker(!showEmojiPicker)}
             theme="light"
             previewPosition="none"
             maxFrequentRows="1"

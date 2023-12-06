@@ -66,7 +66,9 @@ const History = ({ conversation, lastMessage, curruser }) => {
           ) : ( 
             <>
               <span className="historyMessage">
-                <small>{curruser._id === lastMessage.senderId && "You: " } {lastMessage?.text}</small>
+                <small>{curruser._id === lastMessage.senderId && "You: " }
+                 {lastMessage && lastMessage.content.text !== '' ? lastMessage.content.text : (curruser._id !== lastMessage.senderId ? `${friend?.username} sent photo` : "photo") }
+                </small>
               </span>
               <span className="time">
                 <small className="dot"> . </small>
