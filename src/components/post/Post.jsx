@@ -26,6 +26,8 @@ const Post = ({ post, socket }) => {
   const [like, setLike] = useState(post.likes.length);
   const [isLiked, setisLiked] = useState(post.likes.includes(currentUser._id));
   const [showUsersModal, setShowUsersModal] = useState(false);
+  // tag
+  const [istag, setIstag] = useState(false);
   // comment box
   const [commentBox, setCommentBox] = useState(false);
   const [comment, setComment] = useState("");
@@ -98,12 +100,12 @@ const Post = ({ post, socket }) => {
         senderName: currentUser.username,
         text: comment,
         profilePicture: currentUser.profilePicture,
-      }
+      };
       const res = await axios.post(`/posts/comments/${post._id}`, reqBody);
       console.log(res.data);
-      setPrevComment((prev)=>[...prev,reqBody]);
+      setPrevComment((prev) => [...prev, reqBody]);
       setComment("");
-     
+
       // socket event
       currentUser._id !== post.userId &&
         socket?.emit("Notification", {
@@ -119,9 +121,12 @@ const Post = ({ post, socket }) => {
     }
   };
 
-  const handleCommentDelete = async(commentId) => {
+  const handleCommentDelete = async (commentId) => {
     try {
-      const res = await axios.delete(`/post/comments/${post._id}/${commentId}`,{userId:currentUser._id});
+      const res = await axios.delete(
+        `/post/comments/${post._id}/${commentId}`,
+        { userId: currentUser._id }
+      );
       setPrevComment(res.data);
     } catch (error) {
       console.log(error);
@@ -173,13 +178,25 @@ const Post = ({ post, socket }) => {
                 alt=""
               />
             </Link>
-            <Link
-              to={`/profile/${user.username}`}
-              style={{ textDecoration: "none", color: "black" }}
-            >
-              <span className="postUsername">{user.username}</span>
-            </Link>
-            <span className="postDate">{timeago.format(post.createdAt)}</span>
+            <div className="ps-l-wrapper">
+              <div style={{ display: "flex" }}>
+                <Link
+                  to={`/profile/${user.username}`}
+                  style={{ textDecoration: "none", color: "black" }}
+                >
+                  <span className="postUsername">{user.username}</span>
+                </Link>
+                <div>
+                  {post.tags?.length===1 && <small>
+                    &nbsp; is with <Link to={`/profile/${post.tags[0].username}`} style={{ textDecoration: "none", color: "black" }}> <b> {post.tags[0].username}</b></Link> 
+                  </small>}
+                  {post.tags?.length>1 && <small>
+                    &nbsp; is with <Link to={`/profile/${post.tags[0].username}`} style={{ textDecoration: "none", color: "black" }}> <b> {post.tags[0].username}</b></Link> and <b className="other-tag"onClick={() => {setShowUsersModal(!showUsersModal);setIstag(true)}}>{post.tags.length} others</b>
+                  </small>}
+                </div>
+              </div>
+              <span className="postDate">{timeago.format(post.createdAt)}</span>
+            </div>
           </div>
 
           <div className="postTopRight">
@@ -228,7 +245,12 @@ const Post = ({ post, socket }) => {
               onClick={likeHandeler}
               alt=""
             />
-            <span className="postLikeCounter" onClick={()=>setShowUsersModal(!showUsersModal)}>{like} people like it</span>
+            <span
+              className="postLikeCounter"
+              onClick={() => setShowUsersModal(!showUsersModal)}
+            >
+              {like} people like it
+            </span>
           </div>
 
           <div className="postBottomRight">
@@ -257,7 +279,11 @@ const Post = ({ post, socket }) => {
                       </small>
                       {(currentUser._id === c.senderId ||
                         post.userId === currentUser._id) && (
-                        <MoreVert className="comment-option" fontSize="10px" onClick={()=>handleCommentDelete(c._id)}/>
+                        <MoreVert
+                          className="comment-option"
+                          fontSize="10px"
+                          onClick={() => handleCommentDelete(c._id)}
+                        />
                       )}
                     </span>
                     {c.text}
@@ -281,7 +307,9 @@ const Post = ({ post, socket }) => {
           </div>
         )}
       </div>
-      {showUsersModal && <UsersModal setShowUsersModal={setShowUsersModal} users={post.likes}/>}
+      {showUsersModal && (
+        <UsersModal setShowUsersModal={setShowUsersModal} istag={istag} setIstag={setIstag} users={istag ? post.tags : post.likes} />
+      )}
     </div>
   );
 };

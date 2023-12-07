@@ -1,4 +1,4 @@
-import React, { useContext, useState, useRef } from "react";
+import React, { useContext, useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "./share.css";
 import axios from "axios";
@@ -25,13 +25,45 @@ const Share = () => {
   const desc = useRef();
   const [image, setImage] = useState(null);
   const { user } = useContext(AuthContext);
+  const [friendList, setFriendList] = useState([]);
+  const [selectedTags, setSelectedTags] = useState([]);
+  const [showOptions, setShowOptions] = useState(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   // console.log(user);
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
 
+  useEffect(() => {
+    const getFriends = async () => {
+      try {
+        const res = await axios.get("/users/friends/" + user._id);
+        setFriendList(res.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getFriends();
+  }, [user]);
+
   const handleFileChange = (event) => {
     setImage(event.target.files[0]);
     // console.log(image);
+  };
+
+  const handleTagClick = () => {
+    setShowOptions(!showOptions);
+  };
+
+  const handleTagSelect = (friend) => {
+    // Check if the friend is already selected
+    if (!selectedTags.some((tag) => tag._id === friend._id)) {
+      setSelectedTags((prevTags) => [...prevTags, friend]);
+    }
+  };
+
+  const handleTagRemove = (friendId) => {
+    setSelectedTags((prevTags) =>
+      prevTags.filter((tag) => tag._id !== friendId)
+    );
   };
 
   const handleEmojiSelect = (emoji) => {
@@ -46,7 +78,10 @@ const Share = () => {
     formData.append("desc", desc.current.value);
     formData.append("image", image);
 
-    console.log(formData);
+    // Append selected tags to the formData
+    selectedTags.forEach((tag) => {
+      formData.append("tags[]", JSON.stringify(tag));
+    });
 
     try {
       const response = await axios.post("/posts/", formData, {
@@ -118,16 +153,54 @@ const Share = () => {
                 onChange={handleFileChange}
               />
             </label>
-            <div className="shareOption">
+
+            {/* Select input for tags */}
+            <label
+              htmlFor="select"
+              className="shareOption"
+              onClick={handleTagClick}
+            >
               <Label id="tag-label" htmlColor="green" className="shareIcon" />
               <span id="tag-span" className="shareOptionText">
                 Tags
               </span>
-            </div>
-            {/* <div className="shareOption">
-              <Room htmlColor="green" className="shareIcon" />
-              <span className="shareOptionText">Location</span>
-            </div> */}
+            </label>
+            {showOptions && (
+              <div className="tagOptions">
+                {friendList.length === 0 ? (
+                  <div className="noTag">
+                    <h3>No friend found</h3>
+                    <p>Add friend to tag</p>
+                  </div>
+                ) : (
+                  friendList.map((f) => (
+                    <div
+                      key={f._id}
+                      className={`tagOption ${
+                        selectedTags.some((tag) => tag._id === f._id) &&
+                        "tagOptionSelected"
+                      }`}
+                      onClick={() =>
+                        selectedTags.some((tag) => tag._id === f._id)
+                          ? handleTagRemove(f._id)
+                          : handleTagSelect(f)
+                      }
+                    >
+                      <img
+                        src={
+                          f.profilePicture
+                            ? `${process.env.REACT_APP_PUBLIC_FOLDER}${f.profilePicture}`
+                            : `${process.env.REACT_APP_PUBLIC_FOLDER}person/profile-picture/default-profilepic.png`
+                        }
+                        alt=""
+                      />
+                      <span>{f.username}</span>
+                    </div>
+                  ))
+                )}
+              </div>
+            )}
+
             <div className="shareOption">
               <EmojiEmotions
                 htmlColor="goldenrod"
@@ -146,7 +219,7 @@ const Share = () => {
         <div className="reply-emoji-container">
           <Picker
             onEmojiSelect={handleEmojiSelect}
-            onClickOutside={()=>setShowEmojiPicker(!showEmojiPicker)}
+            onClickOutside={() => setShowEmojiPicker(!showEmojiPicker)}
             theme="light"
             previewPosition="none"
             maxFrequentRows="1"

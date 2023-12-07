@@ -90,15 +90,15 @@
 }
 
 .postProfileImg{
-    width: 32px;
-    height: 32px;
+    width: 40px;
+    height: 40px;
     border-radius: 50%;
     object-fit: cover;
     cursor: pointer;
 }
 
 .postUsername{
-    margin: 0px 10px;
+    margin-left:10px;
     font-size: 15px;
     font-weight: 500;
     cursor: pointer;
@@ -106,6 +106,12 @@
 
 .postDate{
     font-size: 12px;
+    margin-left: 10px;
+    color: gray;
+}
+
+.other-tag:hover{
+    cursor: pointer;
 }
 
 .postCenter{
@@ -118,6 +124,7 @@
     max-height: 500px;
     object-fit: contain;
     cursor: pointer;
+    /* background: #90949C; */
 }
 
 .postBottom{
