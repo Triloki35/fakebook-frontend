@@ -84,6 +84,10 @@
   gap: 10px;
 }
 
+.tagOptionSelected{
+  background-color: #e4e6eb;
+}
+
 .tagOption img {
     height: 30px;
     width: 30px;

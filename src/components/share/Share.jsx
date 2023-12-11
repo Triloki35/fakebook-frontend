@@ -12,7 +12,7 @@ import {
 import { AuthContext } from "../../context/AuthContext";
 import Picker from "@emoji-mart/react";
 
-const Share = () => {
+const Share = ({socket}) => {
   new Picker({
     data: async () => {
       const response = await fetch(
@@ -75,6 +75,8 @@ const Share = () => {
 
     const formData = new FormData();
     formData.append("userId", user._id);
+    formData.append("username", user.username);
+    formData.append("profilePicture", user.profilePicture);
     formData.append("desc", desc.current.value);
     formData.append("image", image);
 
@@ -84,13 +86,12 @@ const Share = () => {
     });
 
     try {
-      const response = await axios.post("/posts/", formData, {
+      const res = await axios.post("/posts/", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
 
-      console.log("Post uploaded successfully:", response.data);
       window.location.reload();
     } catch (error) {
       console.error("Error uploading post:", error);

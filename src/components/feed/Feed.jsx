@@ -33,7 +33,7 @@ const Feed = ({ username , socket }) => {
   return (
     <div className="feed">
       <div className="feedWrapper">
-        <Share />
+        <Share socket={socket}/>
         {posts.map((p) => (
           <Post key={p._id} post={p} socket={socket} />
         ))}

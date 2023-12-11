@@ -74,18 +74,10 @@ const Topbar = ({ socket, unseen}) => {
   // socket event for notification
   useEffect(() => {
     socket?.on("Notification", (data) => {
-      // console.log(data);
+      console.log(data);
       setNotifications((prev) => [...prev, data]);
     });
 
-    socket?.on("getMsg", (data) => {
-      // console.log("Message received:", data);
-      const newArrivalMsg = {
-        conversationId: user?._id,
-        senderId: data.senderId,
-        text: data.text,
-      };
-    });
   }, [socket]);
 
   const handleNotificationClick = (notification) => {
@@ -220,8 +212,9 @@ const Topbar = ({ socket, unseen}) => {
                             />
                             <span className="notificationText">
                               {n.senderName}{" "}
-                              {n.type === "commented" ? n.type + " on" : n.type}{" "}
-                              your post
+                              {n.type === "tagged" && `${n.type} you in post`}
+                              {n.type === "commented" && `${n.type} on your post`}
+                              {n.type === "liked" && `${n.type} your post`}
                             </span>
                           </li>
                         );
@@ -240,8 +233,9 @@ const Topbar = ({ socket, unseen}) => {
                             />
                             <span className="notificationText">
                               {n.senderName}{" "}
-                              {n.type === "commented" ? n.type + " on" : n.type}{" "}
-                              your post
+                              {n.type === "tagged" && `${n.type} you in post`}
+                              {n.type === "commented" && `${n.type} on your post`}
+                              {n.type === "liked" && `${n.type} your post`}
                             </span>
                           </li>
                         );
