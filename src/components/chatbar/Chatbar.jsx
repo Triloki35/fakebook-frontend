@@ -27,11 +27,11 @@ function Chatbar({ friend, isMobile, setMessengerCenterVisible }) {
         <span className="chatbarName">{friend && friend.username}</span>
       </div>
       <div className="chatbarRight">
-        <Link to={`/call?caller=true`} state={{friend:friend}}>
+        <Link to={`/call?caller=true`} state={{friend:friend,audio:true,video:false}}>
           <Call style={{ color: "rgb(0, 132, 255)", marginRight: "10px" }} />
         </Link>
 
-        <Link to={`/call?caller=true`} state={{friend:friend}}>
+        <Link to={`/call?caller=true`} state={{friend:friend,audio:true,video:true}}>
           <Videocam style={{ color: "rgb(0, 132, 255)", marginRight: "10px" }} />
         </Link>
 

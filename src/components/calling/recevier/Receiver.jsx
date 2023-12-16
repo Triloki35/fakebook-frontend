@@ -6,12 +6,15 @@ import { useNavigate } from "react-router-dom";
 import Peer from "simple-peer";
 
 import * as process from "process";
+import Timer from "../../timer/Timer";
 
 const Receiver = ({ socket, callProp }) => {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const { call, setCall } = callProp;
   const [stream, setStream] = useState(null);
   const [callAccepted, setCallAccepted] = useState(false);
+  const [mainVideo,setMainVideo] = useState(false);
+
 
   const ownVideoRef = useRef();
   const friendVideoRef = useRef();
@@ -26,12 +29,12 @@ const Receiver = ({ socket, callProp }) => {
 
   useEffect(() => {
     navigator.mediaDevices
-      .getUserMedia({ video: true, audio: true })
+      .getUserMedia({ video: call.video, audio: call.audio })
       .then((currentStream) => {
         setStream(currentStream);
         ownVideoRef.current.srcObject = currentStream;
       });
-  }, []);
+  }, [call]);
 
   useEffect(()=>{
     socket.on("endCall",()=>{
@@ -59,6 +62,7 @@ const Receiver = ({ socket, callProp }) => {
 
   const answerCall = () => {
     setCallAccepted(true);
+    setMainVideo(true);
 
     const peer = new Peer({ initiator: false, trickle: false, stream:stream });
 
@@ -87,17 +91,20 @@ const Receiver = ({ socket, callProp }) => {
 
   // console.log(friendVideoRef);
 
+  // console.log("Audio = "+ call.audio);
+  // console.log("Video = "+ call.video);
+
   return (
     <div className="receiverContainer">
       <div className="receiverWrapper">
-        {!callAccepted && (
+        {(!callAccepted || !call.video) && (
           <div className="receiverTop">
             <img src={PF + call?.from.profilePicture} alt="" />
-            <h4>{call?.from.username}</h4>
-            <small>
-              Incoming call
-              <ScaleLoader color="white" height={3} width={3} />
-            </small>
+            <h4 style={!call.video ? {color:"black"} : {}}>{call?.from.username}</h4>
+            {!callAccepted ? <small style={!call.video ? {color:"black"} : {}}>
+              {!call.video ? "Incoming call" : "Incoming video call"}
+              <ScaleLoader color={!call.video ?"black":"white"} height={3} width={3} />
+            </small> : <Timer/> }
           </div>
         )}
         <div className={callAccepted ? "receiverBottom" : "receiverBottom2"}>
@@ -113,19 +120,21 @@ const Receiver = ({ socket, callProp }) => {
       </div>
 
       <video
-        className={callAccepted ? "secondaryVideo" : "mainVideo"}
+        className={mainVideo ? "secondaryVideo" : "mainVideo"}
         ref={ownVideoRef}
         autoPlay
         playsInline
         muted
+        onClick={()=>setMainVideo((prev)=>!prev)}
       />
 
       {callAccepted && (
         <video
-          className={callAccepted ? "mainVideo" : "secondaryVideo"}
+          className={mainVideo ? "mainVideo" : "secondaryVideo"}
           ref={friendVideoRef}
           autoPlay
           playsInline
+          onClick={()=>setMainVideo((prev)=>!prev)}
         />
       )}
 

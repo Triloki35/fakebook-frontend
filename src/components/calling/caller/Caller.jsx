@@ -1,14 +1,15 @@
 import React, { useRef, useEffect, useState, useContext } from "react";
 import "./caller.css";
 import ScaleLoader from "react-spinners/ScaleLoader";
-import { Call, CallEnd, Videocam, VideocamOff } from "@mui/icons-material";
+import { Call, CallEnd, PhoneDisabled, Videocam, VideocamOff } from "@mui/icons-material";
 import Peer from "simple-peer";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../../context/AuthContext";
 
 import * as process from "process";
+import Timer from "../../timer/Timer";
 
-const Caller = ({ friend, socket }) => {
+const Caller = ({ friend, socket, audio, video }) => {
   const { user } = useContext(AuthContext);
 
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
@@ -16,17 +17,18 @@ const Caller = ({ friend, socket }) => {
   const [callAccepted, setCallAccepted] = useState(false);
   const [callEnded, setCallEnded] = useState(false);
   const [callProgress, setCallProgress] = useState(false);
+  const [mainVideo,setMainVideo] = useState(false);
 
   const ownVideoRef = useRef();
   const friendVideoRef = useRef();
   const connectionRef = useRef();
-  const navigate = useNavigate();
+ 
 
   window.process = process;
 
   useEffect(() => {
     navigator.mediaDevices
-      .getUserMedia({ video: true, audio: true })
+      .getUserMedia({ video: video, audio: audio })
       .then((currentStream) => {
         setStream(currentStream);
         ownVideoRef.current.srcObject = currentStream;
@@ -51,6 +53,8 @@ const Caller = ({ friend, socket }) => {
         friendId: friend._id,
         signal: data,
         from: user,
+        audio:audio,
+        video:video
       });
     });
 
@@ -63,6 +67,7 @@ const Caller = ({ friend, socket }) => {
       // console.log(`callAccepted ${JSON.stringify(signal)}`);
       setCallAccepted(true);
       setCallProgress(false);
+      setMainVideo(true);
       peer?.signal(signal);
     });
   };
@@ -73,20 +78,23 @@ const Caller = ({ friend, socket }) => {
   };
 
   // console.log(friendVideoRef);
+  console.log("audio = "+audio);
+  console.log("video = "+video);
 
   return (
     <div className="callerContainer">
       <div className="callerWrapper">
-        {!callAccepted && (
+        {(!callAccepted || !video)&& (
           <div className="callerTop">
             <img src={PF + friend.profilePicture} alt="" />
-            <h4>{friend.username}</h4>
+            <h4 style={!video ? {color:"black"} : {}}>{friend.username}</h4>
             {callProgress && (
-              <small>
+              <small style={!video ? {color:"black"} : {}}>
                 Ringing
-                <ScaleLoader height={3} width={3} color="white"/>
+                <ScaleLoader height={3} width={3} color={!video ?"black":"white"}/>
               </small>
-            )}
+            ) }
+            {(!callProgress && !video && callAccepted) && <Timer />}
           </div>
         )}
 
@@ -100,10 +108,10 @@ const Caller = ({ friend, socket }) => {
                   setCallProgress(true);
                 }}
               >
-                <Videocam htmlColor="white" /> <span>&nbsp;Call</span>
+                {!video ?<Call htmlColor="white"/> :<Videocam htmlColor="white" />} <span>&nbsp; Call</span>
               </button>
               <button className="abortBtn" onClick={() => handleCallEnd()}>
-                <VideocamOff htmlColor="white" /> <span>&nbsp; Abort</span>
+                {!video ? <PhoneDisabled htmlColor="white"/> :<VideocamOff htmlColor="white" />} <span>&nbsp; Abort</span>
               </button>
             </>
           ) : (
@@ -115,19 +123,21 @@ const Caller = ({ friend, socket }) => {
       </div>
 
       <video
-        className={callAccepted ? "secondaryVideo" : "mainVideo"}
+        className={mainVideo ? "secondaryVideo" : "mainVideo"}
         ref={ownVideoRef}
         autoPlay
         playsInline
         muted
+        onClick={()=>setMainVideo((prev)=>!prev)}
       />
 
       {callAccepted && (
         <video
-          className={callAccepted ? "mainVideo" : "secondaryVideo"}
+          className={mainVideo ? "mainVideo" : "secondaryVideo"}
           ref={friendVideoRef}
           autoPlay
           playsInline
+          onClick={()=>setMainVideo((prev)=>!prev)}
         />
       )}
     </div>

@@ -83,6 +83,10 @@
   border: none;
 }
 
+.endBtn:hover{
+    cursor: pointer;
+}
+
 .mainVideo {
   position: absolute;
   top: 0;

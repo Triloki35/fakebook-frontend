@@ -133,9 +133,11 @@ const Messenger = ({ socket, onlineUsers, unseenProp, callProp }) => {
       }
     });
 
-    socket?.on('callUser', ({ from, signal }) => {
-      console.log("recived call");
-      setCall({ from, signal });
+    socket?.on('callUser', ({ from, signal, audio , video }) => {
+      // console.log("recived call");
+      // console.log("Audio = "+audio);
+      // console.log("Video = "+video);
+      setCall({ from, signal, audio:audio, video:video });
       navigate("/call");
     });
   }, [socket]);
