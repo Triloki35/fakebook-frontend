@@ -8,8 +8,9 @@ import Reply from "../../components/reply/Reply";
 import { AuthContext } from "../../context/AuthContext";
 import { WavingHand } from "@mui/icons-material";
 import ConversationList from "../../components/conversationList/ConversationList";
+import { useNavigate } from "react-router-dom";
 
-const Messenger = ({ socket, onlineUsers, unseenProp }) => {
+const Messenger = ({ socket, onlineUsers, unseenProp, callProp }) => {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [messengerCenterVisible, setMessengerCenterVisible] = useState(false);
   const { user } = useContext(AuthContext);
@@ -21,6 +22,8 @@ const Messenger = ({ socket, onlineUsers, unseenProp }) => {
   const [friend, setFriend] = useState(null);
   const scrollRef = useRef();
   const { unseen, setUnseen } = unseenProp;
+  const {call,setCall} = callProp;
+  const navigate = useNavigate();
 
   // css
   const messengerLeft = {
@@ -123,19 +126,17 @@ const Messenger = ({ socket, onlineUsers, unseenProp }) => {
   // socket receive event
   useEffect(() => {
     socket?.on("getMsg", (data) => {
-      console.log("Message received:", data);
-      // const newArrivalMsg = {
-      //   conversationId: currentConversation?._id,
-      //   senderId: data.senderId,
-      //   text: data.text,
-      // };
+      // console.log("Message received:", data);
       setArrivalMessage(data);
-      // console.log(
-      //   !currentConversation?.members.includes(newArrivalMsg.senderId)
-      // );
       if (currentConversation?.members.includes(data.senderId)) {
         setUnseen((prev) => prev - 1);
       }
+    });
+
+    socket?.on('callUser', ({ from, signal }) => {
+      console.log("recived call");
+      setCall({ from, signal });
+      navigate("/call");
     });
   }, [socket]);
 

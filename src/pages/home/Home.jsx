@@ -8,13 +8,16 @@ import SlidingPanel from "react-sliding-side-panel";
 import { ArrowBack, ArrowForward } from "@mui/icons-material";
 import { AuthContext } from "../../context/AuthContext";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
-function Home({ socket, unseenProp }) {
+function Home({ socket, unseenProp , callProp }) {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [openSideBar, setOpenSideBar] = useState(false);
   const [openRightBar, setOpenRightBar] = useState(false);
   const {user} = useContext(AuthContext);
   const {unseen,setUnseen} = unseenProp;
+  const {call,setCall} = callProp;
+  const navigate = useNavigate();
 
   
   // getting unseen msg from db
@@ -35,6 +38,12 @@ function Home({ socket, unseenProp }) {
   useEffect(() => {
     socket?.on("getMsg", (data) => {
       setUnseen((prev)=>prev+1);
+    });
+
+    socket?.on('callUser', ({ from, signal }) => {
+      console.log("recived call");
+      setCall({ from, signal });
+      navigate("/call");
     });
   }, [socket])
 

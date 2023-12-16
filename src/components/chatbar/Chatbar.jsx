@@ -1,15 +1,20 @@
 import React from "react";
 import "./chatbar.css";
 import { Link } from "react-router-dom";
-import { ChevronLeft, Launch } from "@mui/icons-material";
+import { Call, ChevronLeft, Info, Videocam } from "@mui/icons-material";
 
-function Chatbar({ friend , isMobile , setMessengerCenterVisible}) {
+function Chatbar({ friend, isMobile, setMessengerCenterVisible }) {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
 
   return (
     <div className="chatbarContainer">
-      <div className="chatbarWrapper">
-        <ChevronLeft onClick={()=>{isMobile && setMessengerCenterVisible((prev)=>!prev);window.location.reload()}}/>
+      <div className="chatbarLeft">
+        <ChevronLeft
+          onClick={() => {
+            isMobile && setMessengerCenterVisible((prev) => !prev);
+            window.location.reload();
+          }}
+        />
         <img
           className="chatbarImg"
           src={
@@ -21,9 +26,19 @@ function Chatbar({ friend , isMobile , setMessengerCenterVisible}) {
         />
         <span className="chatbarName">{friend && friend.username}</span>
       </div>
-      <Link to={`/profile/${friend?.username}`}>
-        <Launch style={{ color: "rgb(0, 132, 255)", marginRight: "10px" }} />
-      </Link>
+      <div className="chatbarRight">
+        <Link to={`/call?caller=true`} state={{friend:friend}}>
+          <Call style={{ color: "rgb(0, 132, 255)", marginRight: "10px" }} />
+        </Link>
+
+        <Link to={`/call?caller=true`} state={{friend:friend}}>
+          <Videocam style={{ color: "rgb(0, 132, 255)", marginRight: "10px" }} />
+        </Link>
+
+        <Link to={`/profile/${friend?.username}`}>
+          <Info style={{ color: "rgb(0, 132, 255)", marginRight: "10px" }} />
+        </Link>
+      </div>
     </div>
   );
 }

@@ -5,14 +5,14 @@ import Feed from "../../components/feed/Feed";
 import Rightbar from "../../components/rightbar/Rightbar";
 import Sidebar from "../../components/sidebar/Sidebar";
 import Topbar from "../../components/topbar/Topbar";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Edit } from "@mui/icons-material";
 import ProfileEdit from "../../components/profileEdit/ProfileEdit";
 import { AuthContext } from "../../context/AuthContext";
 import { UpdateUser } from "../../context/AuthActions";
 import FriendButton from "./friendButton";
 
-export default function Profile({socket, unseenProp}) {
+export default function Profile({socket, unseenProp, callProp}) {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const { user: currUser, dispatch } = useContext(AuthContext);
   const { username } = useParams();
@@ -25,6 +25,9 @@ export default function Profile({socket, unseenProp}) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const {unseen,setUnseen} = unseenProp;
+
+  const {call,setCall} = callProp;
+  const navigate = useNavigate();
   
   // fetching unseen msg from db
   useEffect(() => {
@@ -45,6 +48,12 @@ export default function Profile({socket, unseenProp}) {
     useEffect(() => {
       socket?.on("getMsg", (data) => {
         setUnseen((prev)=>prev+1);
+      });
+
+      socket?.on('callUser', ({ from, signal }) => {
+        console.log("recived call");
+        setCall({ from, signal });
+        navigate("/call");
       });
     }, [socket])
 
