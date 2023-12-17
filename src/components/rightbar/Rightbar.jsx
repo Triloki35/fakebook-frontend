@@ -17,7 +17,8 @@ const HomeRightBar = ({ socket }) => {
       </div>
 
       <div className="advertisement">
-        <img className="adImg" src={PF + "ad.png"} alt="" />
+        <h5 className="ad-title">ads</h5>
+        <video className="adVideo" src={PF+"Triloki Nath.mp4"} autoPlay loop controls/>
       </div>
 
       <div className="friendSuggestionList">

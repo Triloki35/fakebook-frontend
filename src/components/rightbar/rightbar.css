@@ -31,20 +31,31 @@
   font-size: 15px;
 }
 
-.advertisement{
-    margin: 20px 0px;
+.advertisement {
+  margin: 20px 0px;
 }
 
-.adImg{
-    width: 100%;
-    border-radius: 5px;
+.ad-title{
+  color: gray;
+  margin-bottom: 5px;
+  font-weight: 400;
+  text-align: end;
 }
 
+.adImg {
+  width: 100%;
+  border-radius: 5px;
+}
+
+.adVideo {
+  width: 100%;
+  border-radius: 5px;
+}
 
 /* for profile page */
 
-@media screen and (max-width: 768px){
-  .rightbarWrapper{
+@media screen and (max-width: 768px) {
+  .rightbarWrapper {
     padding-left: 10px;
   }
 }
