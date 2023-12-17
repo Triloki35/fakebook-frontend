@@ -1,0 +1,33 @@
+.rightBarTitle{
+    margin-bottom: .55rem;
+  }
+  
+  .rightBarInfo{
+    margin-bottom: .8rem;
+    list-style: none;
+    padding: 0;
+  }
+  
+  .rightBarInfoItems{
+    margin-bottom: .2rem;
+    display: flex;
+    align-items: center;
+  }
+  
+  .rightBarInfoKey{
+    font-weight: 450;
+    font-size:medium;
+    color: #555;
+  }
+  
+  .rightBarInfoValue{
+    font-weight: 300;
+    font-size: medium;
+  }
+
+  @media screen and (max-width: 768px) {
+    .rightBarTitle{
+      display: none;
+    }
+  }
+  

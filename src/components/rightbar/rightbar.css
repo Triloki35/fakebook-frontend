@@ -42,62 +42,6 @@
 
 
 /* for profile page */
-.rightBarTitle{
-  margin-bottom: .55rem;
-}
-
-.rightBarInfo{
-  margin-bottom: .8rem;
-  list-style: none;
-  padding: 0;
-}
-
-.rightBarInfoItems{
-  margin-bottom: .2rem;
-  display: flex;
-  align-items: center;
-}
-
-.rightBarInfoKey{
-  font-weight: 450;
-  font-size:medium;
-  color: #555;
-}
-
-.rightBarInfoValue{
-  font-weight: 300;
-  font-size: medium;
-}
-
-.friendProfilePic{
-  height: 100px;
-  width: 100px;
-  border-radius: 5px;
-  object-fit: cover;
-  /* cursor: pointer; */
-}
-
-.rightBarFriends{
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;  
-}
-
-.rightBarFriend{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 10px;
-  cursor: pointer;
-  text-decoration: none;
-  color: black;
-}
-
-.friendName{
-  margin: 5px 0px;
-  font-weight: 500;
-  font-size: small;
-}
 
 @media screen and (max-width: 768px){
   .rightbarWrapper{

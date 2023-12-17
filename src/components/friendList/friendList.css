@@ -1,0 +1,53 @@
+.fl-top{
+  margin-bottom: 10px;
+}
+
+.fl-top-up{
+  display: flex;
+  justify-content: space-between;
+}
+
+.friendProfilePic {
+  height: 100px;
+  width: 100px;
+  border-radius: 5px;
+  object-fit: cover;
+  /* cursor: pointer; */
+}
+
+.rightBarFriends {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.rightBarFriend {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 10px;
+  cursor: pointer;
+  text-decoration: none;
+  color: black;
+}
+
+.friendName {
+  margin: 5px 0px;
+  font-weight: 500;
+  font-size: small;
+}
+
+.rightBarFriendTitle {
+  /* margin-bottom: 10px; */
+}
+
+@media screen and (max-width: 768px) {
+  .rightBarFriends {
+    justify-content: start;
+    gap: 10px;
+  }
+
+  .rightBarFriend{
+    margin-bottom: 0px;
+  }
+}

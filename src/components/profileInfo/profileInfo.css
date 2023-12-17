@@ -1,0 +1,42 @@
+.profileInfo{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.profileDesc{
+    font-weight: 400;
+}
+
+.ownBtnContainer{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.story-message{
+    position: fixed;
+    top: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: white; 
+    color: black; 
+    padding: 10px;
+    border-radius: 5px;
+  }
+
+@media screen and (max-width: 768px) {
+    .profileInfo{
+        align-items: start;
+    }
+
+    .btn{
+        border-radius: 5px;
+    }
+
+    .profileName{
+        font-size: x-large;
+    }
+
+}

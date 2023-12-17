@@ -11,42 +11,6 @@
     flex-direction: column;
 }
 
-.coverContainer{
-    width: auto;
-    height: 23rem;
-    position: relative;
-}
-
-.coverPic{
-    width: 100%;
-    height: 20rem;
-    object-fit: cover;
-}
-
-.profilePic{
-    height: 7rem;
-    width: 7rem;
-    object-fit: cover;
-    border-radius: 50%;
-    border: 3px solid white;
-    position: absolute;
-    left: 0px;
-    right: 0px;
-    margin: auto;
-    top: 15rem;
-}
-
-.profileInfo{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-}
-
-.profileDesc{
-    font-weight: 300;
-}
-
 .profileRightBottom{
     display: flex;
 }
@@ -100,3 +64,37 @@
 .btn:hover{
     outline: none;
 }
+
+
+/* mobile */
+
+.profileInfoWrapper{
+    padding: 10px;
+}
+.profileDetailsWrapper{
+    padding: 10px;
+}
+
+.friendListWrapper{
+    padding: 0px 10px;
+}
+
+.friendBtnContainer{
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    gap: 10px;
+}
+
+
+.copy-message {
+    position: fixed;
+    top: 60px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: white; 
+    color: black; 
+    padding: 10px;
+    border-radius: 5px;
+  }
+  

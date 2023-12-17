@@ -11,4 +11,8 @@
     .feed{
         width: 100vw;
     }
+
+    .feedWrapper{
+        padding: 10px 10px;
+    }
 }
