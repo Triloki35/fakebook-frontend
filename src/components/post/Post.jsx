@@ -20,7 +20,7 @@ const Post = ({ post, socket }) => {
   // console.log(socket);
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const { user: currentUser, dispatch } = useContext(AuthContext);
-  const [user, setuser] = useState({});
+  // const [user, setuser] = useState({});
 
   // like
   const [like, setLike] = useState(post.likes.length);
@@ -35,17 +35,7 @@ const Post = ({ post, socket }) => {
 
   // for delete and save post
   const [optionBtn, setOptionBtn] = useState(false);
-  const isDeleteButtonDisabled = currentUser._id !== user._id;
-
-  // fetching user
-  useEffect(() => {
-    const fetchUser = async () => {
-      const res = await axios.get(`/users?userId=${post.userId}`);
-      // console.log(res.data);
-      setuser(res.data);
-    };
-    fetchUser();
-  }, [post]);
+  const isDeleteButtonDisabled = currentUser._id !== post.userId;
 
   // like
   const likeHandeler = async () => {
@@ -165,14 +155,14 @@ const Post = ({ post, socket }) => {
         <div className="postTop">
           <div className="postTopLeft">
             <Link
-              to={`/profile/${user.username}`}
+              to={`/profile/${post.username}`}
               style={{ textDecoration: "none" }}
             >
               <img
                 className="postProfileImg"
                 src={
-                  user.profilePicture
-                    ? PF + user.profilePicture
+                  post.profilePicture
+                    ? PF + post.profilePicture
                     : `${PF}person/profile-picture/default-profilepic.png`
                 }
                 alt=""
@@ -181,10 +171,10 @@ const Post = ({ post, socket }) => {
             <div className="ps-l-wrapper">
               <div style={{ display: "flex" }}>
                 <Link
-                  to={`/profile/${user.username}`}
+                  to={`/profile/${post.username}`}
                   style={{ textDecoration: "none", color: "black" }}
                 >
-                  <span className="postUsername">{user.username}</span>
+                  <span className="postUsername">{post.username}</span>
                 </Link>
                 <div>
                   {post.tags?.length===1 && <small>

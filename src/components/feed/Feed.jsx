@@ -6,68 +6,68 @@ import Post from "../post/Post";
 import { AuthContext } from "../../context/AuthContext";
 import NoPost from "../post/NoPost";
 import ClipLoader from "react-spinners/ClipLoader";
+import { v4 as uuidv4 } from 'uuid';
 
 const Feed = ({ username, socket }) => {
   const { user } = useContext(AuthContext);
   const [posts, setPosts] = useState([]);
-  const [fetchMore, setFetchMore] = useState(1);
+  const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
+  const [fetchMore,setFetchMore] = useState(true);
 
-  useEffect(() => {
-    document.documentElement.scrollTop = 0;
-  }, []);
+  const fetchPosts = async () => {
+    try {
+      setLoading(true);
+      const res = username
+        ? await axios.get(`/posts/profile/${username}?page=${page}`)
+        : await axios.get(`/posts/timeline/${user._id}?page=${page}`);
 
-  useEffect(() => {
-    const fetchPosts = async () => {
-      try {
-        setLoading(true);
-        const res = username
-          ? await axios.get(`/posts/profile/${username}`)
-          : await axios.get(`/posts/timeline/${user._id}`);
+      const sortedPostsAscending = await res.data.sort((a, b) => {
+        const dateA = new Date(a.createdAt);
+        const dateB = new Date(b.createdAt);
+        return dateB - dateA;
+      });
 
-        const sortedPostsAscending = res.data.sort((a, b) => {
-          const dateA = new Date(a.createdAt);
-          const dateB = new Date(b.createdAt);
-          return dateB - dateA;
-        });
-
+      if(sortedPostsAscending.length!==0){
         setPosts((prevPosts) => [...prevPosts, ...sortedPostsAscending]);
-        setLoading(false);
-      } catch (error) {
-        console.error(error);
-        setLoading(false);
+      }else{
+        setFetchMore(false);
       }
-    };
+      
+      setLoading(false);
+    } catch (error) {
+      console.error(error);
+      setLoading(false);
+    }
+  };
 
+  useEffect(() => {
+    if(fetchMore)
     fetchPosts();
-  }, [fetchMore, username, user._id]);
+  }, [page, username, user._id,fetchMore]);
 
   useEffect(() => {
     const handleScroll = () => {
-      if (
-        window.innerHeight + document.documentElement.scrollTop ===
-        document.documentElement.offsetHeight &&
-        !loading // Add this condition to check if not already loading
-      ) {
-        setFetchMore((prev) => prev + 1);
-        setLoading(true);
+      if (fetchMore && !loading && (window.innerHeight + document.documentElement.scrollTop + 1 >= document.documentElement.scrollHeight)) {
+        setPage((prevPage) => prevPage + 1);
       }
     };
-  
+
     window.addEventListener("scroll", handleScroll);
-  
+
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, [loading, fetchMore]); // Add loading and fetchMore to the dependency array
-  
+  }, []);
+
+  console.log(posts[0]);
 
   return (
     <div className="feed">
       <div className="feedWrapper">
         <Share socket={socket} />
         {posts.length !== 0 ? (
-          posts.map((p) => <Post key={p._id} post={p} socket={socket} />)
+          posts.map((p) => <Post key={uuidv4()} post={p} socket={socket} />)
         ) : (
           <NoPost />
         )}
