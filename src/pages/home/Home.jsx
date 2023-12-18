@@ -19,6 +19,9 @@ function Home({ socket, unseenProp , callProp }) {
   const {call,setCall} = callProp;
   const navigate = useNavigate();
 
+  useEffect(() => {
+    document.documentElement.scrollTop = 0;
+  }, []);
   
   // getting unseen msg from db
   useEffect(() => {
