@@ -7,6 +7,7 @@ import ProfileEdit from "../profileEdit/ProfileEdit";
 import { UpdateUser } from "../../context/AuthActions";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { Alert } from "@mui/material";
 
 const ProfileInfo = ({ user }) => {
   const { user: currUser, dispatch } = useContext(AuthContext);
@@ -144,7 +145,8 @@ const ProfileInfo = ({ user }) => {
         <div className="copy-message">Copied profile URL</div>
       )}
       {showStoryMessage && (
-        <div className="story-message">Coming soon...</div>
+      
+        <Alert className="story-message" severity="info">Coming soon...!!</Alert>
       )}
     </div>
   );

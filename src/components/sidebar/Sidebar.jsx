@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import "./sidebar.css";
 import {
   RssFeed,
@@ -12,13 +12,13 @@ import {
   SchoolSharp,
   Logout,
 } from "@mui/icons-material";
-
-import CloseFriend from "../closeFriend/CloseFriend";
 import { AuthContext } from "../../context/AuthContext";
 
-const Sidebar = ({ isMobile, openSideBar }) => {
+const Sidebar = ({ isMobile, openSideBar,setJobs,setShowVideos }) => {
   const { user } = useContext(AuthContext);
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
+  
+
   const handleLogout = () => {
     localStorage.clear();
     window.location.href = "/";
@@ -89,7 +89,7 @@ const Sidebar = ({ isMobile, openSideBar }) => {
             <HelpOutline /> <span className="sidebarListItemText">Help</span>
           </li>
           <li className="sidebarListItem">
-            <Work /> <span className="sidebarListItemText">Jobs</span>
+            <Work /> <span className="sidebarListItemText" onClick={()=>setJobs(true)}>Jobs</span>
           </li>
           <li className="sidebarListItem">
             <Event /> <span className="sidebarListItemText">Events</span>

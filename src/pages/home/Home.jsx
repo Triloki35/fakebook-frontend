@@ -17,6 +17,9 @@ function Home({ socket, unseenProp , callProp }) {
   const {user} = useContext(AuthContext);
   const {unseen,setUnseen} = unseenProp;
   const {call,setCall} = callProp;
+  const [jobs, setJobs] = useState(false);
+  const [showVideos , setShowVideos] = useState(false);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -44,9 +47,6 @@ function Home({ socket, unseenProp , callProp }) {
     });
 
     socket?.on('callUser', ({ from, signal, audio , video }) => {
-      // console.log("recived call");
-      // console.log("Audio = "+audio);
-      // console.log("Video = "+video);
       setCall({ from, signal, audio:audio, video:video });
       navigate("/call");
     });
@@ -90,8 +90,8 @@ function Home({ socket, unseenProp , callProp }) {
       <Topbar socket={socket} unseen={unseen}/>
       <div className="homeContainer">
 
-        <Sidebar isMobile={isMobile} openSideBar={openSideBar}/>
-        <Feed socket={socket} isMobile={isMobile} />
+        <Sidebar isMobile={isMobile} openSideBar={openSideBar} setJobs={setJobs}/>
+        <Feed socket={socket} isMobile={isMobile} jobsProp={{jobs,setJobs}} videosProp={{showVideos , setShowVideos}}/>
         <Rightbar isMobile={isMobile} openRightBar={openRightBar} socket={socket}/>
 
         {isMobile && (

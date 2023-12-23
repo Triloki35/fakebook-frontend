@@ -74,6 +74,16 @@
     outline: none;
 }
 
+.dob-gender-wrapper{
+    display: flex;
+    justify-content: space-between;
+}
+
+.gender-select{
+    padding: 5px 25px;
+    /* color: gray; */
+    width: 200px;
+}
 .registerButton{
     height: 50px;
     background-color: #1877f2;
@@ -111,3 +121,15 @@
 .createButton:hover{
     background-color: #36a120;
 }
+
+/* date picker  */
+
+.react-datepicker__header__dropdown {
+    margin: 15px 0px;
+}
+
+.react-datepicker__year-select,.react-datepicker__month-select{
+    padding: 5px;
+    border-radius: 5px;
+}
+
