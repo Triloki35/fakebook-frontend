@@ -8,6 +8,7 @@ import NoPost from "../post/NoPost";
 import ClipLoader from "react-spinners/ClipLoader";
 import { v4 as uuidv4 } from "uuid";
 import Jobs from "../jobs/Jobs.jsx";
+import Videos from "../videos/Videos.jsx";
 
 
 const Feed = ({ username, socket, jobsProp, videosProp}) => {
@@ -71,7 +72,10 @@ const Feed = ({ username, socket, jobsProp, videosProp}) => {
   const renderContent = () => {
     if (jobs) {
       return <Jobs setJobs={setJobs} />;
-    } else {
+    }else if (showVideos){
+      return <Videos setShowVideos={setShowVideos}/>
+    }
+     else {
       return (
         <>
           <Share socket={socket} />

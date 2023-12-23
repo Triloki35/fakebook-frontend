@@ -90,7 +90,7 @@ function Home({ socket, unseenProp , callProp }) {
       <Topbar socket={socket} unseen={unseen}/>
       <div className="homeContainer">
 
-        <Sidebar isMobile={isMobile} openSideBar={openSideBar} setJobs={setJobs}/>
+        <Sidebar isMobile={isMobile} openSideBar={openSideBar} setJobs={setJobs} setShowVideos={setShowVideos}/>
         <Feed socket={socket} isMobile={isMobile} jobsProp={{jobs,setJobs}} videosProp={{showVideos , setShowVideos}}/>
         <Rightbar isMobile={isMobile} openRightBar={openRightBar} socket={socket}/>
 

@@ -14,8 +14,9 @@ import {
 import TextField from "@mui/material/TextField";
 import { AccessTime, ArrowBack, Home, Launch, Work } from "@mui/icons-material";
 import { format } from "timeago.js";
+import ClipLoader from "react-spinners/ClipLoader";
 
-function Jobs({setJobs}) {
+function Jobs({ setJobs }) {
   const [query, setQuery] = useState("");
   const [searchResult, setSearchResult] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -52,7 +53,7 @@ function Jobs({setJobs}) {
     for (let i = 0; i < count; i++) {
       skeletons.push(
         <ListItem key={i} style={{ marginBottom: "10px" }}>
-          <Skeleton variant="circular" width={50} height={50} />
+          <Skeleton variant="circular" width={60} height={50} />
           <Skeleton
             variant="rounded"
             width={370}
@@ -72,7 +73,7 @@ function Jobs({setJobs}) {
   return (
     <Grid className="jobs-container" container direction="column" rowGap={2}>
       <div className="job-search-container">
-      <ArrowBack className="job-back-btn" onClick={()=>setJobs(false)}/>
+        <ArrowBack className="job-back-btn" onClick={() => setJobs(false)} />
         <TextField
           style={{ width: "400px" }}
           id="standard-basic"
@@ -89,12 +90,15 @@ function Jobs({setJobs}) {
             searchJob();
           }}
         >
-          {loading ? "Loading..." : "Search"}
+          {loading ? (
+            <ClipLoader size={15} color={"white"} loading={true} speedMultiplier={2} />
+          ) : (
+            "Search"
+          )}
         </Button>
       </div>
 
       <List sx={{ width: "100%", bgcolor: "background.paper" }}>
-
         {searchResult &&
           searchResult.map((s, index) => (
             <ListItem key={index} divider={true}>

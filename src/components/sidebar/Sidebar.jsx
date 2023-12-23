@@ -77,7 +77,7 @@ const Sidebar = ({ isMobile, openSideBar,setJobs,setShowVideos }) => {
             <Chat /> <span className="sidebarListItemText">Chat</span>
           </li>
           <li className="sidebarListItem">
-            <PlayCircle /> <span className="sidebarListItemText">Videos</span>
+            <PlayCircle /> <span className="sidebarListItemText" onClick={() => setShowVideos && setShowVideos(true)}>Videos</span>
           </li>
           <li className="sidebarListItem">
             <Group /> <span className="sidebarListItemText">Groups</span>
@@ -89,7 +89,7 @@ const Sidebar = ({ isMobile, openSideBar,setJobs,setShowVideos }) => {
             <HelpOutline /> <span className="sidebarListItemText">Help</span>
           </li>
           <li className="sidebarListItem">
-            <Work /> <span className="sidebarListItemText" onClick={()=>setJobs(true)}>Jobs</span>
+            <Work /> <span className="sidebarListItemText" onClick={()=>setJobs && setJobs(true)}>Jobs</span>
           </li>
           <li className="sidebarListItem">
             <Event /> <span className="sidebarListItemText">Events</span>
