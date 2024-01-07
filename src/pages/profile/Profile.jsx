@@ -12,12 +12,37 @@ import { AuthContext } from "../../context/AuthContext";
 import ProfileDetails from "../../components/profileDetails/ProfileDetails";
 import FriendList from "../../components/friendList/FriendList";
 
-const ProfilePc = ({ user, username, unseen }) => {
+const ProfilePc = ({
+  user,
+  username,
+  unseen,
+  jobsProp,
+  videosProp,
+  newsProp,
+  eventsProp,
+  bookmarksProp,
+  helpProp
+}) => {
+
+  const { setShowVideos } = videosProp;
+  const { setJobs } = jobsProp;
+  const { setNews } = newsProp;
+  const { setEvents } = eventsProp;
+  const {setShowBookmark} = bookmarksProp;
+  const {setHelp} = helpProp;
+
   return (
     <>
       <Topbar unseen={unseen} />
       <div className="profileContainer">
-        <Sidebar />
+        <Sidebar
+          setShowVideos={setShowVideos}
+          setJobs={setJobs}
+          setNews={setNews}
+          setEvents={setEvents}
+          setShowBookmark={setShowBookmark}
+          setHelp={setHelp}
+        />
         <div className="profileRight">
           <div className="profileRightTop">
             <CoverAndProfilePics user={user} />
@@ -25,7 +50,15 @@ const ProfilePc = ({ user, username, unseen }) => {
           </div>
           <div className="profileRightBottom">
             <div className="profileRightBottomLeft">
-              <Feed username={username} />
+              <Feed
+                username={username}
+                jobsProp={jobsProp}
+                videosProp={videosProp}
+                newsProp={newsProp}
+                eventsProp={eventsProp}
+                bookmarksProp={bookmarksProp}
+                helpProp={helpProp}
+              />
             </div>
             <div className="profileRightBottomRight">
               <Rightbar user={user} />
@@ -37,8 +70,17 @@ const ProfilePc = ({ user, username, unseen }) => {
   );
 };
 
-const ProfileMobile = ({ user, username, unseen }) => {
-  
+const ProfileMobile = ({
+  user,
+  username,
+  unseen,
+  jobsProp,
+  videosProp,
+  newsProp,
+  eventsProp,
+  bookmarksProp,
+  helpProp
+}) => {
   return (
     <>
       <Topbar unseen={unseen} />
@@ -52,7 +94,15 @@ const ProfileMobile = ({ user, username, unseen }) => {
       <div className="friendListWrapper">
         <FriendList user={user} />
       </div>
-      <Feed username={username} />
+      <Feed
+        username={username}
+        jobsProp={jobsProp}
+        videosProp={videosProp}
+        newsProp={newsProp}
+        eventsProp={eventsProp}
+        bookmarksProp={bookmarksProp}
+        helpProp={helpProp}
+      />
     </>
   );
 };
@@ -64,6 +114,12 @@ export default function Profile({ socket, unseenProp, callProp }) {
   const [user, setUser] = useState(null);
   const { unseen, setUnseen } = unseenProp;
   const { call, setCall } = callProp;
+  const [jobs, setJobs] = useState(false);
+  const [showVideos, setShowVideos] = useState(false);
+  const [news, setNews] = useState(false);
+  const [events, setEvents] = useState(false);
+  const [showBookmark, setShowBookmark] = useState(false);
+  const [help, setHelp] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -116,14 +172,34 @@ export default function Profile({ socket, unseenProp, callProp }) {
     fetchUserData();
   }, [username]);
 
-  console.log("isMobile = "+isMobile);
+  console.log("isMobile = " + isMobile);
 
   return (
     <>
       {isMobile ? (
-        <ProfileMobile user={user} username={username} unseen={unseen} />
+        <ProfileMobile
+          user={user}
+          username={username}
+          unseen={unseen}
+          jobsProp={{ jobs, setJobs }}
+          videosProp={{ showVideos, setShowVideos }}
+          newsProp={{ news, setNews }}
+          eventsProp={{ events, setEvents }}
+          bookmarksProp={{showBookmark,setShowBookmark}}
+          helpProp = {{help,setHelp}}
+        />
       ) : (
-        <ProfilePc user={user} username={username} unseen={unseen} />
+        <ProfilePc
+          user={user}
+          username={username}
+          unseen={unseen}
+          jobsProp={{ jobs, setJobs }}
+          videosProp={{ showVideos, setShowVideos }}
+          newsProp={{ news, setNews }}
+          eventsProp={{ events, setEvents }}
+          bookmarksProp={{showBookmark,setShowBookmark}}
+          helpProp={{help,setHelp}}
+        />
       )}
     </>
   );

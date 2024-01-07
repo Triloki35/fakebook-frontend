@@ -9,9 +9,14 @@ import ClipLoader from "react-spinners/ClipLoader";
 import { v4 as uuidv4 } from "uuid";
 import Jobs from "../jobs/Jobs.jsx";
 import Videos from "../videos/Videos.jsx";
+import News from "../news/News.jsx";
+import Events from "../events/Events.jsx";
+import { ArrowBack } from "@mui/icons-material";
+import Bookmarks from "../bookmarks/Bookmarks.jsx";
+import Help from "../help/Help.jsx";
 
 
-const Feed = ({ username, socket, jobsProp, videosProp}) => {
+const Feed = ({ username, socket, jobsProp, videosProp, newsProp, eventsProp, bookmarksProp, helpProp}) => {
   const { user } = useContext(AuthContext);
   const [posts, setPosts] = useState([]);
   const [page, setPage] = useState(1);
@@ -19,7 +24,12 @@ const Feed = ({ username, socket, jobsProp, videosProp}) => {
   const [fetchMore, setFetchMore] = useState(true);
   const {jobs,setJobs} = jobsProp ;
   const {showVideos , setShowVideos} = videosProp;
+  const {news , setNews} = newsProp;
+  const {events, setEvents} = eventsProp;
+  const {showBookmark,setShowBookmark} = bookmarksProp;
+  const {help, setHelp} = helpProp;
 
+  
   const fetchPosts = async () => {
     try {
       setLoading(true);
@@ -69,11 +79,20 @@ const Feed = ({ username, socket, jobsProp, videosProp}) => {
     };
   }, []);
 
+
   const renderContent = () => {
     if (jobs) {
       return <Jobs setJobs={setJobs} />;
     }else if (showVideos){
       return <Videos setShowVideos={setShowVideos}/>
+    }else if(news){
+      return <News setNews={setNews}/>
+    }else if(events){
+      return <Events setEvents={setEvents}/>
+    }else if(showBookmark){
+      return <Bookmarks setShowBookmark={setShowBookmark} socket={socket}/>
+    }else if(help){
+      return <Help setHelp={setHelp}/>
     }
      else {
       return (
@@ -93,6 +112,10 @@ const Feed = ({ username, socket, jobsProp, videosProp}) => {
       );
     }
   };
+
+
+  console.log("showBookmar : "+showBookmark);
+ 
 
   return (
     <div className="feed">

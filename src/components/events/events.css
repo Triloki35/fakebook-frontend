@@ -1,0 +1,31 @@
+.events-list-item{
+    display: flex;
+    /* gap: 40px; */
+    justify-content: space-between;
+}
+
+.ev-center{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.ev-center small{
+    color: gray;
+}
+
+.ev-bottom{
+    padding-left: 32px;
+}
+
+#ev-list{
+    display: flex;
+    /* justify-content: space-between; */
+    gap: 10px;
+}
+
+/* .events-list-item:hover{
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+} */

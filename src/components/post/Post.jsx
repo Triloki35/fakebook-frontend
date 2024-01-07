@@ -15,11 +15,13 @@ import { Link } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import { UpdateUser } from "../../context/AuthActions";
 import UsersModal from "../showUserModal/UsersModal";
+import { Avatar, Skeleton } from "@mui/material";
 
 const Post = ({ post, socket }) => {
   // console.log(socket);
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const { user: currentUser, dispatch } = useContext(AuthContext);
+  const [user, setUser] = useState(null);
   // const [user, setuser] = useState({});
 
   // like
@@ -36,6 +38,19 @@ const Post = ({ post, socket }) => {
   // for delete and save post
   const [optionBtn, setOptionBtn] = useState(false);
   const isDeleteButtonDisabled = currentUser._id !== post.userId;
+
+  // fetch user info
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await axios.get(`/users?userId=${post.userId}`);
+        setUser(res.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchUser();
+  }, [post]);
 
   // like
   const likeHandeler = async () => {
@@ -155,34 +170,80 @@ const Post = ({ post, socket }) => {
         <div className="postTop">
           <div className="postTopLeft">
             <Link
-              to={`/profile/${post.username}`}
+              to={`/profile/${user?.username}`}
               style={{ textDecoration: "none" }}
             >
-              <img
+              {/* <img
                 className="postProfileImg"
                 src={
-                  post.profilePicture
-                    ? PF + post.profilePicture
+                  user?.profilePicture
+                    ? PF + user?.profilePicture
                     : `${PF}person/profile-picture/default-profilepic.png`
                 }
                 alt=""
-              />
+              /> */}
+              {user?.profilePicture ? (
+                <img
+                  className="postProfileImg"
+                  src={
+                    user?.profilePicture
+                      ? PF + user?.profilePicture
+                      : `${PF}person/profile-picture/default-profilepic.png`
+                  }
+                  alt=""
+                />
+              ) : (
+                <Skeleton variant="circular" width={40} height={40} />
+              )}
+              {/* <Avatar src={PF + user?.profilePicture} /> */}
             </Link>
             <div className="ps-l-wrapper">
               <div style={{ display: "flex" }}>
                 <Link
-                  to={`/profile/${post.username}`}
+                  to={`/profile/${user?.username}`}
                   style={{ textDecoration: "none", color: "black" }}
                 >
-                  <span className="postUsername">{post.username}</span>
+                  {!user?.username ? (
+                    <Skeleton variant="text" sx={{ width: 100 , height:30 , marginLeft:1}} />
+                  ) : (
+                    <span className="postUsername">{user?.username}</span>
+                  )}
                 </Link>
                 <div>
-                  {post.tags?.length===1 && <small>
-                    &nbsp; is with <Link to={`/profile/${post.tags[0].username}`} style={{ textDecoration: "none", color: "black" }}> <b> {post.tags[0].username}</b></Link> 
-                  </small>}
-                  {post.tags?.length>1 && <small>
-                    &nbsp; is with <Link to={`/profile/${post.tags[0].username}`} style={{ textDecoration: "none", color: "black" }}> <b> {post.tags[0].username}</b></Link> and <b className="other-tag"onClick={() => {setShowUsersModal(!showUsersModal);setIstag(true)}}>{post.tags.length} others</b>
-                  </small>}
+                  {post.tags?.length === 1 && (
+                    <small>
+                      &nbsp; is with{" "}
+                      <Link
+                        to={`/profile/${post.tags[0].username}`}
+                        style={{ textDecoration: "none", color: "black" }}
+                      >
+                        {" "}
+                        <b> {post.tags[0].username}</b>
+                      </Link>
+                    </small>
+                  )}
+                  {post.tags?.length > 1 && (
+                    <small>
+                      &nbsp; is with{" "}
+                      <Link
+                        to={`/profile/${post.tags[0].username}`}
+                        style={{ textDecoration: "none", color: "black" }}
+                      >
+                        {" "}
+                        <b> {post.tags[0].username}</b>
+                      </Link>{" "}
+                      and{" "}
+                      <b
+                        className="other-tag"
+                        onClick={() => {
+                          setShowUsersModal(!showUsersModal);
+                          setIstag(true);
+                        }}
+                      >
+                        {post.tags.length} others
+                      </b>
+                    </small>
+                  )}
                 </div>
               </div>
               <span className="postDate">{timeago.format(post.createdAt)}</span>
@@ -298,7 +359,12 @@ const Post = ({ post, socket }) => {
         )}
       </div>
       {showUsersModal && (
-        <UsersModal setShowUsersModal={setShowUsersModal} istag={istag} setIstag={setIstag} users={istag ? post.tags : post.likes} />
+        <UsersModal
+          setShowUsersModal={setShowUsersModal}
+          istag={istag}
+          setIstag={setIstag}
+          users={istag ? post.tags : post.likes}
+        />
       )}
     </div>
   );
