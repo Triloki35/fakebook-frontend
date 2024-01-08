@@ -50,7 +50,7 @@
 .loginBox{
     height: 300px;
     width: 400px;
-    padding: 5%;
+    padding: 20px;
     display: flex;
     flex-direction: column;
     justify-content:space-between;
@@ -100,6 +100,7 @@
     color: #1877f2;
     font-size: 15px;
     cursor: pointer;
+    text-decoration: none;
 }
 
 .forgotpassword:hover{

@@ -8,6 +8,7 @@ import Messenger from "./pages/messenger/Messenger";
 import { AuthContext } from "./context/AuthContext";
 import { io } from "socket.io-client";
 import Call from "./pages/call/Call";
+import Recover from "./pages/recover/Recover";
 
 export default function App() {
   let { user } = useContext(AuthContext);
@@ -42,6 +43,7 @@ export default function App() {
         <Route exact path="/messenger" element={user ? <Messenger socket={socket} onlineUsers={onlineUsers} unseenProp={unseenProp} callProp={callProp}/> : <Login />} />
         <Route exact path="/profile/:username" element={<Profile socket={socket} unseenProp={unseenProp} callProp={callProp}/>} />
         <Route exact path="/call" element={<Call socket={socket} callProp={callProp}/>} />
+        <Route exact path="/recover" element={<Recover/>} />
       </Routes>
     </BrowserRouter>
   );

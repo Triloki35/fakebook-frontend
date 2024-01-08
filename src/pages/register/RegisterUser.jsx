@@ -4,10 +4,11 @@ import { Link, useNavigate } from "react-router-dom";
 import DatePicker from "react-datepicker";
 import Alert from "@mui/material/Alert";
 import VerifyEmail from "./VerifyEmail";
+import { CircularProgress } from "@mui/material";
 
 const RegisterUser = () => {
   const username = useRef();
-  const email = useRef();
+  const [email,setEmail] = useState("");
   const password = useRef();
   const matchPassword = useRef();
   const [dob, setDob] = useState(null);
@@ -15,8 +16,10 @@ const RegisterUser = () => {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
   const [otpSent, setOtpSent] = useState(false);
+  const [loading,setLoading] = useState(false);
 
   const handleRegister = async (e) => {
+    setLoading(true);
     e.preventDefault();
 
     if (matchPassword.current.value !== password.current.value) {
@@ -24,7 +27,7 @@ const RegisterUser = () => {
     } else {
       const user = {
         username: username.current.value,
-        email: email.current.value,
+        email: email,
         password: password.current.value,
         dob: dob,
         gender: gender,
@@ -40,12 +43,13 @@ const RegisterUser = () => {
         console.log(error);
       }
     }
+    setLoading(false);
   };
 
   return (
     <>
       {otpSent ? (
-        <VerifyEmail email={email.current.value} />
+        <VerifyEmail email={email} />
       ) : (
         <form className="registerBox" onSubmit={handleRegister}>
           {error && (
@@ -69,7 +73,7 @@ const RegisterUser = () => {
             type="email"
             className="registerInput"
             placeholder="Email"
-            ref={email}
+            onChange={(e)=>setEmail(e.target.value)}
           />
           <div className="dob-gender-wrapper">
             <DatePicker
@@ -112,7 +116,7 @@ const RegisterUser = () => {
             ref={matchPassword}
           />
           <button className="registerButton" type="submit">
-            Sign Up
+            {loading ? <CircularProgress color="inherit" size={"35px"} /> :"Sign Up"}
           </button>
           <hr />
           <Link

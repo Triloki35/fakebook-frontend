@@ -50,7 +50,7 @@
 .registerBox{
     height: 400px;
     width: 400px;
-    padding: 5%;
+    padding: 20px;
     display: flex;
     flex-direction: column;
     justify-content:space-between;
@@ -153,4 +153,14 @@ select option :disabled{
 .rg-alert{
     position: absolute;
     top: 0;
+}
+
+.send-again{
+    margin-left: 5px;
+    color: #1877f2;
+}
+
+.send-again:hover{
+    cursor: pointer;
+    text-decoration: underline;
 }

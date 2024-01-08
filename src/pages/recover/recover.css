@@ -1,0 +1,38 @@
+.recoverContainer {
+  display: flex;
+  justify-content: center;
+  background-color: #f0f2f5;
+  height: 100vh;
+}
+
+.recoverForm {
+  margin-top: 70px;
+  height: 200px ;
+  width: 320px !important;
+  padding: 20px 25px !important;
+}
+
+.recover-title {
+  display: flex;
+  flex-direction: column;
+}
+
+.recover-title h3 {
+  text-align: center;
+}
+
+.recover-title hr {
+  margin: 5px 0px;
+}
+
+.rc-otp-btn {
+  font-size: small;
+}
+
+.recover-alert {
+  position: absolute;
+}
+
+.verifyWrapper {
+  margin-top: 70px;
+}

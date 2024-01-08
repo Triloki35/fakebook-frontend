@@ -1,19 +1,24 @@
-import React, { useContext, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import "./login.css";
 import { loginCall } from "../../apiCalls";
 import { AuthContext } from "../../context/AuthContext";
 import CircularProgress from "@mui/material/CircularProgress";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Alert } from "@mui/material";
 import axios from "axios";
+import VerifyEmail from "../register/VerifyEmail";
 
 export default function Login() {
   const { user, isFetching, error, dispatch } = useContext(AuthContext);
   const navigate = useNavigate();
   const[email,setEmail] = useState('');
   const password = useRef();
-  const [otp, setOtp] = useState("");
+  const [errorMsg,setErrorMsg] = useState(null);
 
+  useEffect(() => {
+    setErrorMsg(error?.response?.data?.error);
+  }, [error])
+  
   const handleClick = async (e) => {
     e.preventDefault();
     await loginCall(
@@ -26,23 +31,6 @@ export default function Login() {
     navigate("/register");
   };
 
-  const handleVerify = async (e) => {
-    e.preventDefault();
-    try {
-      const res = await axios.post("/auth/verify-otp", {
-        email: email,
-        otp: otp,
-      });
-      console.log(res.data);
-      // alert(res.data);
-      window.location.reload();
-    } catch (error) {
-      // alert(error);
-      console.log(error);
-    }
-  };
-
-  console.log(otp);
   console.log(email);
 
   console.log("Login = " + JSON.stringify(user));
@@ -57,36 +45,14 @@ export default function Login() {
           </span>
         </div>
         <div className="loginRight">
-          {error && (
-            <Alert className="rg-alert" severity="error">
-              {error.response.data.error}
+          {errorMsg && (
+            <Alert className="rg-alert" severity="error" onClose={()=>setErrorMsg(null)}>
+              {errorMsg}
             </Alert>
           )}
 
           {error?.response?.data?.otpSent ? (
-            <form
-              className="loginBox"
-              onSubmit={handleVerify}
-              style={{ height: "250px" }}
-            >
-              <h4>Enter the code from your email</h4>
-              <hr />
-              <p style={{ color: "gray" }}>
-                Let us know that this email address belongs to you. Enter the
-                code from the email sent to {email}.
-              </p>
-              <input
-                type="text"
-                className="loginInput"
-                placeholder="Enter your OTP here"
-                onChange={(e) => setOtp(e.target.value)}
-                required
-                minLength={6}
-              />
-              <button className="loginButton" type="submit">
-                Verify
-              </button>
-            </form>
+            <VerifyEmail email={email}/>
           ) : (
             <form className="loginBox" onSubmit={handleClick}>
               <input
@@ -111,7 +77,7 @@ export default function Login() {
                   "Log in"
                 )}
               </button>
-              <span className="forgotpassword">Forgotten password ?</span>
+              <Link to={"/recover"} className="forgotpassword" >Forgotten password ?</Link>
               <hr />
               <button
                 className="createButton"
