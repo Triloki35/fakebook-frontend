@@ -79,7 +79,7 @@ const RegisterUser = () => {
             <DatePicker
               selected={dob}
               onChange={(date) => setDob(date)}
-              placeholderText="Date of Birth"
+              placeholderText="DOB"
               dateFormat="dd/MM/yyyy"
               className="registerInput"
               showYearDropdown
@@ -92,7 +92,7 @@ const RegisterUser = () => {
               onChange={(e) => setGender(e.target.value)}
               required
             >
-              <option cl value="" disabled style={{ color: "gry" }}>
+              <option value="" disabled>
                 Select Gender
               </option>
               <option value="male">male</option>

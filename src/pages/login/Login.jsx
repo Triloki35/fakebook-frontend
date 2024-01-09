@@ -11,14 +11,14 @@ import VerifyEmail from "../register/VerifyEmail";
 export default function Login() {
   const { user, isFetching, error, dispatch } = useContext(AuthContext);
   const navigate = useNavigate();
-  const[email,setEmail] = useState('');
+  const [email, setEmail] = useState("");
   const password = useRef();
-  const [errorMsg,setErrorMsg] = useState(null);
+  const [errorMsg, setErrorMsg] = useState(null);
 
   useEffect(() => {
     setErrorMsg(error?.response?.data?.error);
-  }, [error])
-  
+  }, [error]);
+
   const handleClick = async (e) => {
     e.preventDefault();
     await loginCall(
@@ -46,20 +46,24 @@ export default function Login() {
         </div>
         <div className="loginRight">
           {errorMsg && (
-            <Alert className="rg-alert" severity="error" onClose={()=>setErrorMsg(null)}>
+            <Alert
+              className="rg-alert"
+              severity="error"
+              onClose={() => setErrorMsg(null)}
+            >
               {errorMsg}
             </Alert>
           )}
 
           {error?.response?.data?.otpSent ? (
-            <VerifyEmail email={email}/>
+            <VerifyEmail email={email} />
           ) : (
             <form className="loginBox" onSubmit={handleClick}>
               <input
                 type="email"
                 className="loginInput"
                 placeholder="Email"
-                onChange={(e)=>setEmail(e.target.value)}
+                onChange={(e) => setEmail(e.target.value)}
                 required
               />
               <input
@@ -77,7 +81,9 @@ export default function Login() {
                   "Log in"
                 )}
               </button>
-              <Link to={"/recover"} className="forgotpassword" >Forgotten password ?</Link>
+              <Link to={"/recover"} className="forgotpassword">
+                Forgotten password ?
+              </Link>
               <hr />
               <button
                 className="createButton"
@@ -94,6 +100,11 @@ export default function Login() {
           )}
         </div>
       </div>
+      <footer className="footer">
+        <p>
+          &copy; 2024 Your Website. All rights reserved. Designed by triloki35
+        </p>
+      </footer>
     </div>
   );
 }

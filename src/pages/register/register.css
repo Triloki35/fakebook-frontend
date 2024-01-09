@@ -1,166 +1,219 @@
-.registerContainer{
+.registerContainer {
+  height: 100vh;
+  width: 100vw;
+  background-color: #f0f2f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.registerWrapper {
+  height: 70%;
+  width: 70%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.registerLeft,
+.registerRight {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.registerLeft {
+  margin-bottom: 111px;
+}
+
+.registerLogo {
+  /* text-align: center; */
+  color: #1877f2;
+  font-size: 80px;
+  margin-bottom: 10px;
+  /* font-weight: 650; */
+}
+
+.registerDesc {
+  font-size: 19px;
+  margin-right: 50px;
+  font-weight: 350;
+}
+
+.registerRight {
+  /* width: 400px; */
+  margin-left: 50px;
+}
+
+.registerBox {
+  height: 400px;
+  width: 400px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: -1px -1px 10px 0px rgba(0, 0, 0, 0.31);
+}
+
+.registerInput {
+  height: 50px;
+  font-size: 15px;
+  padding-left: 15px;
+  border: 1px solid #dddfe2;
+  border-radius: 10px;
+  /* box-shadow: inset 0px 3px 5px black; */
+  /* padding: 5px 5px; */
+}
+
+.registerInput:focus {
+  outline: none;
+}
+
+.dob-gender-wrapper {
+  display: flex;
+  justify-content: space-between;
+  gap: 5px;
+}
+
+.gender-select {
+  width: 200px;
+  color: gray;
+}
+
+.gender-select option {
+  color: black;
+  max-width: 200px;
+}
+
+.registerButton {
+  height: 50px;
+  background-color: #1877f2;
+  color: white;
+  border-radius: 10px;
+  border: none;
+  font-size: 20px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.already {
+  text-align: center;
+  color: #1877f2;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.already:hover {
+  text-decoration: underline;
+}
+
+.createButton {
+  height: 50px;
+  margin: 0 20%;
+  background-color: #42b72a;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.createButton:hover {
+  background-color: #36a120;
+}
+
+.react-datepicker__header__dropdown {
+  margin: 15px 0px;
+}
+
+.react-datepicker__year-select,
+.react-datepicker__month-select {
+  padding: 5px;
+  border-radius: 5px;
+}
+
+.r-g-o::placeholder {
+  color: gray;
+}
+
+::-webkit-input-placeholder {
+  color: gray;
+}
+
+select option :disabled {
+  color: gray;
+}
+
+.rg-alert {
+  position: absolute;
+  top: 0;
+}
+
+.send-again {
+  margin-left: 5px;
+  color: #1877f2;
+}
+
+.send-again:hover {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+  .registerContainer {
     height: 100vh;
     width: 100vw;
     background-color: #f0f2f5;
     display: flex;
-    align-items: center;
+    align-items: start;
     justify-content: center;
-}
-
-.registerWrapper{
-    height: 70%;
-    width: 70%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    
-}
-
-.registerLeft,.registerRight{
-    flex: 1;
+  }
+  .registerWrapper {
     display: flex;
     flex-direction: column;
-}
+    align-items: center;
+    justify-content: center;
+  }
+  .registerLeft,
+  .registerRight {
+    flex: none;
+  }
+  .registerLeft {
+    margin-bottom: 20px;
+    margin-top: 80px;
+  }
 
-.registerLeft{
-    margin-bottom: 111px;
-}
+  .registerLogo {
+    font-size: 40px;
+    margin-bottom: 0px;
+  }
 
+  .registerDesc {
+    display: none;
+  }
 
-.registerLogo{
-    /* text-align: center; */
-    color: #1877f2;
-    font-size:80px;
-    margin-bottom: 10px;
-    /* font-weight: 650; */
-}
+  .registerRight {
+    margin-left: 0;
+  }
 
-.registerDesc{
-    font-size: 19px;
-    margin-right: 50px;
-    font-weight: 350;
-}
+  .registerBox {
+    height: 450px;
+    width: 300px;
+    padding: 10px;
+  }
 
-.registerRight{
-    /* width: 400px; */
-    margin-left: 50px;
+  .registerButton {
+    font-size: 15px !important;
+  }
 
-}
+  .gender-select {
+    width: 150px;
+  }
 
-.registerBox{
-    height: 400px;
-    width: 400px;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    justify-content:space-between;
-    background-color: white;
-    border-radius: 10px;
-    box-shadow: -1px -1px 10px 0px rgba(0,0,0,0.31);
-
-}
-
-.registerInput{
-    height: 50px;
-    font-size: 15px;
-    padding-left: 15px;
-    border: 1px solid #dddfe2;
-    border-radius: 10px;
-    /* box-shadow: inset 0px 3px 5px black; */
-    /* padding: 5px 5px; */
-}
-
-.registerInput:focus{
-    outline: none;
-}
-
-.dob-gender-wrapper{
-    display: flex;
-    justify-content: space-between;
-}
-
-.gender-select{
-    padding: 5px 25px;
-    /* color: gray; */
-    width: 200px;
-    color: gray;
-}
-
-.gender-select option{
-    color: black;
-}
-.registerButton{
-    height: 50px;
-    background-color: #1877f2;
-    color: white;
-    border-radius: 10px;
-    border: none;
-    font-size: 20px;
-    font-weight: 500;
-    cursor: pointer;
-}
-
-.already{
-    text-align: center;
-    color: #1877f2;
-    font-size: 20px;
-    cursor: pointer;
-}
-
-.already:hover{
-    text-decoration:underline;
-}
-
-.createButton{
-    height: 50px;
-    margin: 0 20%;
-    background-color: #42b72a;
-    color: white;
-    border: none;
-    border-radius: 10px;
-    cursor: pointer;
-    font-size: 20px;
-    font-weight: 500;
-}
-
-.createButton:hover{
-    background-color: #36a120;
-}
-
-/* date picker  */
-
-.react-datepicker__header__dropdown {
-    margin: 15px 0px;
-}
-
-.react-datepicker__year-select,.react-datepicker__month-select{
-    padding: 5px;
-    border-radius: 5px;
-}
-
-.r-g-o::placeholder{
-    color: gray;
-}
-
-::-webkit-input-placeholder { 
-    color: gray;
-}
-
-select option :disabled{
-    color: gray;
-}
-
-.rg-alert{
-    position: absolute;
-    top: 0;
-}
-
-.send-again{
-    margin-left: 5px;
-    color: #1877f2;
-}
-
-.send-again:hover{
-    cursor: pointer;
-    text-decoration: underline;
+  .react-datepicker__input-container input {
+    width: 130px;
+  }
 }

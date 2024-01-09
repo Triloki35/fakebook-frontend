@@ -1,10 +1,8 @@
-import React, { useRef, useState } from "react";
+import React from "react";
 import "react-datepicker/dist/react-datepicker.css";
 import "./register.css";
-import { Link, useNavigate } from "react-router-dom";
-import axios from "axios";
 import RegisterUser from "./RegisterUser";
-import VerifyEmail from "./VerifyEmail";
+
 
 export default function Register() {
   return (
@@ -17,10 +15,14 @@ export default function Register() {
           </span>
         </div>
         <div className="registerRight">
-         {/* {otpSent ? <VerifyEmail email={email}/>  :<RegisterUser email={email} setOtpSent={setOtpSent}/>} */}
          <RegisterUser/>
         </div>
       </div>
+      <footer className="footer">
+        <p>
+          &copy; 2024 Your Website. All rights reserved. Designed by triloki35
+        </p>
+      </footer>
     </div>
   );
 }
