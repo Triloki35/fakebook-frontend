@@ -10,7 +10,7 @@ import {
   Send,
 } from "@mui/icons-material";
 import axios from "axios";
-import * as timeago from "timeago.js";
+import { format } from "timeago.js";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import { UpdateUser } from "../../context/AuthActions";
@@ -246,7 +246,7 @@ const Post = ({ post, socket }) => {
                   )}
                 </div>
               </div>
-              <span className="postDate">{timeago.format(post.createdAt)}</span>
+              <span className="postDate">{format(post.createdAt)}</span>
             </div>
           </div>
 
@@ -326,7 +326,7 @@ const Post = ({ post, socket }) => {
                     <span>
                       <b>{c.senderName}</b>
                       <small className="comment-time">
-                        &nbsp; {timeago.format(c.createdAt)}
+                        &nbsp; {format(c.createdAt)}
                       </small>
                       {(currentUser._id === c.senderId ||
                         post.userId === currentUser._id) && (
