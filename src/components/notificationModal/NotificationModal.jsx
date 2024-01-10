@@ -7,7 +7,7 @@ import { AuthContext } from "../../context/AuthContext";
 
 const NotificationModal = ({ notification, closeNotificationModal }) => {
   const [post, setPost] = useState(null);
-  const {user,dispatch} = useContext(AuthContext);
+  const {user} = useContext(AuthContext);
 
   useEffect(() => {
 

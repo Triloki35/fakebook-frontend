@@ -3,7 +3,7 @@ import "./help.css";
 import TextField from "@mui/material/TextField";
 import { Alert, Button, ToggleButton, ToggleButtonGroup } from "@mui/material";
 import SendIcon from "@mui/icons-material/Send";
-import { Cancel, FileUpload } from "@mui/icons-material";
+import { Cancel } from "@mui/icons-material";
 import axios from "axios";
 
 const Help = ({ setHelp }) => {

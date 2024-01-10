@@ -2,11 +2,10 @@ import React, { useContext, useEffect, useState } from "react";
 import "./profileInfo.css";
 import { AuthContext } from "../../context/AuthContext";
 import FriendButton from "../../pages/profile/friendButton";
-import { Add, Edit, MoreHoriz, Share } from "@mui/icons-material";
+import { Add, Edit, MoreHoriz } from "@mui/icons-material";
 import ProfileEdit from "../profileEdit/ProfileEdit";
 import { UpdateUser } from "../../context/AuthActions";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
 import { Alert } from "@mui/material";
 
 const ProfileInfo = ({ user }) => {
@@ -17,8 +16,6 @@ const ProfileInfo = ({ user }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [showCopyMessage, setShowCopyMessage] = useState(false);
   const [showStoryMessage, setShowStoryMessage] = useState(false);
-
-  const navigate = useNavigate();
 
   const handleClick = async () => {
     // make change in local storage

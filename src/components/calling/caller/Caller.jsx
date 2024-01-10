@@ -3,7 +3,6 @@ import "./caller.css";
 import ScaleLoader from "react-spinners/ScaleLoader";
 import { Call, CallEnd, PhoneDisabled, Videocam, VideocamOff } from "@mui/icons-material";
 import Peer from "simple-peer";
-import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../../context/AuthContext";
 
 import * as process from "process";
@@ -11,18 +10,14 @@ import Timer from "../../timer/Timer";
 
 const Caller = ({ friend, socket, audio, video }) => {
   const { user } = useContext(AuthContext);
-
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const [stream, setStream] = useState(null);
   const [callAccepted, setCallAccepted] = useState(false);
-  const [callEnded, setCallEnded] = useState(false);
   const [callProgress, setCallProgress] = useState(false);
   const [mainVideo,setMainVideo] = useState(false);
 
   const ownVideoRef = useRef();
   const friendVideoRef = useRef();
-  const connectionRef = useRef();
- 
 
   window.process = process;
 

@@ -5,7 +5,6 @@ import { AuthContext } from "../../context/AuthContext";
 import CircularProgress from "@mui/material/CircularProgress";
 import { Link, useNavigate } from "react-router-dom";
 import { Alert } from "@mui/material";
-import axios from "axios";
 import VerifyEmail from "../register/VerifyEmail";
 
 export default function Login() {

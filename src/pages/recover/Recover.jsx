@@ -1,8 +1,7 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./recover.css";
 import axios from "axios";
 import { Alert, CircularProgress } from "@mui/material";
-import VerifyEmail from "../register/VerifyEmail";
 import { useNavigate } from "react-router-dom";
 
 const Recover = () => {

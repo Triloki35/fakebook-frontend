@@ -4,7 +4,6 @@ import Feed from "../../components/feed/Feed";
 import Rightbar from "../../components/rightbar/Rightbar";
 import Sidebar from "../../components/sidebar/Sidebar";
 import Topbar from "../../components/topbar/Topbar";
-import SlidingPanel from "react-sliding-side-panel";
 import { ArrowBack, ArrowForward } from "@mui/icons-material";
 import { AuthContext } from "../../context/AuthContext";
 import axios from "axios";
@@ -16,7 +15,7 @@ function Home({ socket, unseenProp, callProp }) {
   const [openRightBar, setOpenRightBar] = useState(false);
   const { user } = useContext(AuthContext);
   const { unseen, setUnseen } = unseenProp;
-  const { call, setCall } = callProp;
+  const { setCall } = callProp;
   const [jobs, setJobs] = useState(false);
   const [showVideos, setShowVideos] = useState(false);
   const [news, setNews] = useState(false);

@@ -4,7 +4,6 @@ import {
   Chat,
   Notifications,
   Person,
-  Search,
   Settings,
   Help,
   Logout,
@@ -19,12 +18,11 @@ import { v4 as uuidv4 } from "uuid";
 import NotificationModal from "../notificationModal/NotificationModal";
 import FriendRequest from "../friend-request/FriendRequest";
 import SearchBox from "../search/SearchBox";
-import { UpdateUser } from "../../context/AuthActions";
 import { CircularProgress } from "@mui/material";
 
 const Topbar = ({ socket, unseen}) => {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-  const { user, dispatch } = useContext(AuthContext);
+  const { user } = useContext(AuthContext);
   const [dropdown, setDropdown] = useState(false);
   const [activeBtn, setActivebtn] = useState(true);
 

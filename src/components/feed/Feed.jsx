@@ -11,25 +11,32 @@ import Jobs from "../jobs/Jobs.jsx";
 import Videos from "../videos/Videos.jsx";
 import News from "../news/News.jsx";
 import Events from "../events/Events.jsx";
-import { ArrowBack } from "@mui/icons-material";
 import Bookmarks from "../bookmarks/Bookmarks.jsx";
 import Help from "../help/Help.jsx";
 
-
-const Feed = ({ username, socket, jobsProp, videosProp, newsProp, eventsProp, bookmarksProp, helpProp}) => {
+const Feed = ({
+  username,
+  socket,
+  jobsProp,
+  videosProp,
+  newsProp,
+  eventsProp,
+  bookmarksProp,
+  helpProp,
+}) => {
   const { user } = useContext(AuthContext);
   const [posts, setPosts] = useState([]);
   const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [fetchMore, setFetchMore] = useState(true);
-  const {jobs,setJobs} = jobsProp ;
-  const {showVideos , setShowVideos} = videosProp;
-  const {news , setNews} = newsProp;
-  const {events, setEvents} = eventsProp;
-  const {showBookmark,setShowBookmark} = bookmarksProp;
-  const {help, setHelp} = helpProp;
 
-  
+  const { jobs, setJobs } = jobsProp;
+  const { showVideos, setShowVideos } = videosProp;
+  const { news, setNews } = newsProp;
+  const { events, setEvents } = eventsProp;
+  const { showBookmark, setShowBookmark } = bookmarksProp;
+  const { help, setHelp } = helpProp;
+
   const fetchPosts = async () => {
     try {
       setLoading(true);
@@ -37,11 +44,9 @@ const Feed = ({ username, socket, jobsProp, videosProp, newsProp, eventsProp, bo
         ? await axios.get(`/posts/profile/${username}?page=${page}`)
         : await axios.get(`/posts/timeline/${user._id}?page=${page}`);
 
-      const sortedPostsAscending = await res.data.sort((a, b) => {
-        const dateA = new Date(a.createdAt);
-        const dateB = new Date(b.createdAt);
-        return dateB - dateA;
-      });
+      const sortedPostsAscending = res.data.sort(
+        (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
+      );
 
       if (sortedPostsAscending.length !== 0) {
         setPosts((prevPosts) => [...prevPosts, ...sortedPostsAscending]);
@@ -77,24 +82,22 @@ const Feed = ({ username, socket, jobsProp, videosProp, newsProp, eventsProp, bo
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
-  }, []);
-
+  }, [fetchMore, loading]);
 
   const renderContent = () => {
     if (jobs) {
       return <Jobs setJobs={setJobs} />;
-    }else if (showVideos){
-      return <Videos setShowVideos={setShowVideos}/>
-    }else if(news){
-      return <News setNews={setNews}/>
-    }else if(events){
-      return <Events setEvents={setEvents}/>
-    }else if(showBookmark){
-      return <Bookmarks setShowBookmark={setShowBookmark} socket={socket}/>
-    }else if(help){
-      return <Help setHelp={setHelp}/>
-    }
-     else {
+    } else if (showVideos) {
+      return <Videos setShowVideos={setShowVideos} />;
+    } else if (news) {
+      return <News setNews={setNews} />;
+    } else if (events) {
+      return <Events setEvents={setEvents} />;
+    } else if (showBookmark) {
+      return <Bookmarks setShowBookmark={setShowBookmark} socket={socket} />;
+    } else if (help) {
+      return <Help setHelp={setHelp} />;
+    } else {
       return (
         <>
           <Share socket={socket} />
@@ -105,7 +108,11 @@ const Feed = ({ username, socket, jobsProp, videosProp, newsProp, eventsProp, bo
           )}
           {loading && (
             <p style={{ textAlign: "center" }}>
-              <ClipLoader color={"#1877F2"} loading={true} speedMultiplier={2} />
+              <ClipLoader
+                color={"#1877F2"}
+                loading={true}
+                speedMultiplier={2}
+              />
             </p>
           )}
         </>
@@ -113,15 +120,9 @@ const Feed = ({ username, socket, jobsProp, videosProp, newsProp, eventsProp, bo
     }
   };
 
-
-  console.log("showBookmar : "+showBookmark);
- 
-
   return (
     <div className="feed">
-      <div className="feedWrapper">
-      {renderContent()}
-      </div>
+      <div className="feedWrapper">{renderContent()}</div>
     </div>
   );
 };

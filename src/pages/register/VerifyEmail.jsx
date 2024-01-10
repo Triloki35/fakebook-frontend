@@ -1,6 +1,6 @@
 import { Alert, CircularProgress } from "@mui/material";
 import axios from "axios";
-import React, { useRef, useState } from "react";
+import React, {useState} from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 const VerifyEmail = ({ email }) => {

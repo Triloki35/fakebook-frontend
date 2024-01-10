@@ -14,7 +14,6 @@ const RegisterUser = () => {
   const [dob, setDob] = useState(null);
   const [gender, setGender] = useState("");
   const [error, setError] = useState(null);
-  const navigate = useNavigate();
   const [otpSent, setOtpSent] = useState(false);
   const [loading,setLoading] = useState(false);
 

@@ -4,17 +4,14 @@ import {
   Grid,
   List,
   ListItem,
-  ListItemAvatar,
-  ListItemText,
   Skeleton,
   TextField,
-  Typography,
 } from "@mui/material";
 import React, { useState } from "react";
 import CountrySelect from "./CountrySelect";
 import Categories from "./Categories";
 import "./news.css";
-import { ArrowBack, Launch } from "@mui/icons-material";
+import { ArrowBack } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 import axios from "axios";
 

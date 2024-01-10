@@ -1,4 +1,4 @@
-import React ,{useEffect , useState , useRef}from 'react';
+import React ,{useEffect , useState }from 'react';
 import "./onlineFriend.css";
 import axios from 'axios';
 import { fetchFriendList } from '../../apiCalls';

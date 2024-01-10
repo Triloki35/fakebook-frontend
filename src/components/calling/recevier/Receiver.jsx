@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from "react";
 import "./receiver.css";
 import ScaleLoader from "react-spinners/ScaleLoader";
 import { Call, CallEnd } from "@mui/icons-material";
-import { useNavigate } from "react-router-dom";
 import Peer from "simple-peer";
 
 import * as process from "process";
@@ -10,7 +9,7 @@ import Timer from "../../timer/Timer";
 
 const Receiver = ({ socket, callProp }) => {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-  const { call, setCall } = callProp;
+  const { call } = callProp;
   const [stream, setStream] = useState(null);
   const [callAccepted, setCallAccepted] = useState(false);
   const [mainVideo,setMainVideo] = useState(false);
@@ -19,13 +18,8 @@ const Receiver = ({ socket, callProp }) => {
   const ownVideoRef = useRef();
   const friendVideoRef = useRef();
   const audioRef = useRef();
-  const connectionRef = useRef();
-  const navigate = useNavigate();
 
-  // window.global = window;
   window.process = process;
-  // window.Buffer = [];
-
 
   useEffect(() => {
     navigator.mediaDevices

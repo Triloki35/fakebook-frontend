@@ -57,5 +57,8 @@
       "last 1 safari version"
     ]
   },
-  "proxy": "https://fakebook-backend-d0vq.onrender.com/api/"
+  "proxy": "https://fakebook-backend-d0vq.onrender.com/api/",
+  "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11"
+  }
 }

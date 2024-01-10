@@ -1,18 +1,18 @@
-import axios from "axios";
 import React, { useContext, useEffect, useState } from "react";
-import { AuthContext } from "../../context/AuthContext";
-import NoPost from "../post/NoPost";
-import ClipLoader from "react-spinners/ClipLoader";
+import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
-import Post from "../post/Post";
-import "./bookmarks.css";
 import { ArrowBack } from "@mui/icons-material";
+import { AuthContext } from "../../context/AuthContext";
+import ClipLoader from "react-spinners/ClipLoader";
+import Post from "../post/Post";
+import NoPost from "../post/NoPost";
+import "./bookmarks.css";
 
 const Bookmarks = ({ setShowBookmark, socket }) => {
   const { user } = useContext(AuthContext);
   const [bookmarks, setBookmarks] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [noBookmarks, setNoBookmarks] = useState(user?.bookmarks.length === 0);
+  const noBookmarks = user?.bookmarks.length === 0;
 
   const fetchBookmarks = async () => {
     setLoading(true);
@@ -27,26 +27,24 @@ const Bookmarks = ({ setShowBookmark, socket }) => {
 
   useEffect(() => {
     fetchBookmarks();
-  }, [user]);
+  }, []); // Add an empty dependency array to run once on mount
 
   return (
-    <div>
+    <>
       <ArrowBack onClick={() => setShowBookmark(false)} />
-      {bookmarks.length !== 0 ? (
-        bookmarks.map((b) => <Post key={uuidv4()} post={b} socket={socket} />)
-      ) : noBookmarks ? (
-        <h4 className="noBookmarks" style={{ textAlign: "center" }}>
-          No saved post !!
-        </h4>
-      ) : (
-        <NoPost />
-      )}
       {loading && (
         <p style={{ textAlign: "center" }}>
           <ClipLoader color={"#1877F2"} loading={true} speedMultiplier={2} />
         </p>
       )}
-    </div>
+      {bookmarks.length !== 0 ? (
+        bookmarks.map((b) => <Post key={uuidv4()} post={b} socket={socket} />)
+      ) : (
+        <h4 className="noBookmarks" style={{ textAlign: "center" }}>
+          {noBookmarks ? "No saved post !!" : <NoPost />}
+        </h4>
+      )}
+    </>
   );
 };
 

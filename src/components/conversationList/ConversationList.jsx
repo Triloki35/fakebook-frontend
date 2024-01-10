@@ -1,5 +1,4 @@
 import React from "react";
-import axios from "axios";
 import "./conversationList.css"
 import SearchFriend from "../search-friend/SearchFriend";
 import OnlineFriend from "../onlineFriend/OnlineFriend";

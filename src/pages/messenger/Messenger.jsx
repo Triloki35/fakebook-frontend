@@ -22,7 +22,7 @@ const Messenger = ({ socket, onlineUsers, unseenProp, callProp }) => {
   const [friend, setFriend] = useState(null);
   const scrollRef = useRef();
   const { unseen, setUnseen } = unseenProp;
-  const {call,setCall} = callProp;
+  const {setCall} = callProp;
   const navigate = useNavigate();
 
   // css

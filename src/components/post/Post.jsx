@@ -1,8 +1,7 @@
-import React, { useState, useEffect, useContext, useRef } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import "./post.css";
 import {
   Bookmark,
-  BookmarkAdded,
   BookmarkBorder,
   Delete,
   MoreHoriz,
@@ -15,7 +14,7 @@ import { Link } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import { UpdateUser } from "../../context/AuthActions";
 import UsersModal from "../showUserModal/UsersModal";
-import { Avatar, Skeleton } from "@mui/material";
+import { Skeleton } from "@mui/material";
 
 const Post = ({ post, socket }) => {
   // console.log(socket);

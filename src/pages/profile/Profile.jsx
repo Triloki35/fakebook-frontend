@@ -113,7 +113,7 @@ export default function Profile({ socket, unseenProp, callProp }) {
   const { username } = useParams();
   const [user, setUser] = useState(null);
   const { unseen, setUnseen } = unseenProp;
-  const { call, setCall } = callProp;
+  const { setCall } = callProp;
   const [jobs, setJobs] = useState(false);
   const [showVideos, setShowVideos] = useState(false);
   const [news, setNews] = useState(false);
