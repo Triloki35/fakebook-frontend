@@ -28,7 +28,6 @@ export default function App() {
       newSocket.emit("addUser", user._id);
 
        newSocket.on("getUser", (users) => {
-        //  console.log(users);
          setOnlineUsers(users);
        });
     }

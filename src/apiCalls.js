@@ -1,11 +1,8 @@
 import axios from "axios";
 export const loginCall = async (userCredentials, dispatch) => {
-  // console.log("usercredential = "+userCredentials);
-  // console.log("dispatch = "+dispatch);
   dispatch({ type: "LOGIN_START" });
   try {
     const res = await axios.post("/auth/login", userCredentials);
-    console.log("res.data = " + JSON.stringify(res.data));
     // saving user info in localStorage
     localStorage.setItem("userInfo", JSON.stringify(res.data));
     dispatch({ type: "LOGIN_SUCCESS", payload: res.data });

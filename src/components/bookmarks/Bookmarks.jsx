@@ -18,7 +18,6 @@ const Bookmarks = ({ setShowBookmark, socket }) => {
     setLoading(true);
     try {
       const res = await axios.get(`/posts/bookmarks/${user._id}`);
-      console.log(res.data);
       setBookmarks(res.data);
     } catch (error) {
       console.error(error);
@@ -29,8 +28,6 @@ const Bookmarks = ({ setShowBookmark, socket }) => {
   useEffect(() => {
     fetchBookmarks();
   }, [user]);
-
-  console.log(user.bookmarks);
 
   return (
     <div>

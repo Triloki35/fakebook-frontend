@@ -38,7 +38,6 @@ const Receiver = ({ socket, callProp }) => {
 
   useEffect(()=>{
     socket.on("endCall",()=>{
-      console.log("endcall");
       window.location.href = "/messenger";
     })
   },[socket])
@@ -67,17 +66,14 @@ const Receiver = ({ socket, callProp }) => {
     const peer = new Peer({ initiator: false, trickle: false, stream:stream });
 
     peer?.on("signal", (data) => {
-      console.log(`in signal ${data}`);
       socket.emit("answerCall", { signal: data, to: call.from._id });
     });
 
     peer?.on("stream", (currentStream) => {
-      console.log(`in stream ${currentStream}`);
       friendVideoRef.current.srcObject = currentStream;
     });
 
     peer?.on('error', (err) => {
-      console.log(err);
       handleCallEnd();
     })
 
@@ -88,11 +84,6 @@ const Receiver = ({ socket, callProp }) => {
     socket.emit("endCall", { friendId: call?.from?._id });
     window.location.href = "/messenger";
   };
-
-  // console.log(friendVideoRef);
-
-  // console.log("Audio = "+ call.audio);
-  // console.log("Video = "+ call.video);
 
   return (
     <div className="receiverContainer">

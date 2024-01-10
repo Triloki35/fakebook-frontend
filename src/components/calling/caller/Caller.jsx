@@ -37,18 +37,14 @@ const Caller = ({ friend, socket, audio, video }) => {
 
   useEffect(() => {
     socket.on("endCall", () => {
-      console.log("endcall");
       window.location.href = "/messenger";
     });
   }, [socket]);
 
   const callUser = async () => {
-    // console.log("incalluser");
     const peer = new Peer({ initiator: true, trickle: false, stream: stream });
-    // console.log(peer);
 
     peer?.on("signal", (data) => {
-      // console.log(`in signal ${JSON.stringify(data)}`);
       socket?.emit("callUser", {
         friendId: friend._id,
         signal: data,
@@ -58,13 +54,11 @@ const Caller = ({ friend, socket, audio, video }) => {
       });
     });
 
-    peer?.on("stream", (currentStream) => {
-      // console.log(`in stream ${JSON.stringify(currentStream)}`);
+    peer?.on("stream", (currentStream) => {;
       friendVideoRef.current.srcObject = currentStream;
     });
 
     socket?.on("callAccepted", (signal) => {
-      // console.log(`callAccepted ${JSON.stringify(signal)}`);
       setCallAccepted(true);
       setCallProgress(false);
       setMainVideo(true);
@@ -77,9 +71,6 @@ const Caller = ({ friend, socket, audio, video }) => {
     window.location.href = "/messenger";
   };
 
-  // console.log(friendVideoRef);
-  console.log("audio = "+audio);
-  console.log("video = "+video);
 
   return (
     <div className="callerContainer">
