@@ -168,7 +168,7 @@ select option :disabled {
     width: 100vw;
     background-color: #f0f2f5;
     display: flex;
-    align-items: start;
+    align-items: flex-start;
     justify-content: center;
   }
   .registerWrapper {

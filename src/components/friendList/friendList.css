@@ -43,7 +43,7 @@
 
 @media screen and (max-width: 768px) {
   .rightBarFriends {
-    justify-content: start;
+    justify-content: flex-start;
     gap: 10px;
   }
 

@@ -140,7 +140,7 @@
 /* About section */
 /* Styling for input fields in the "About" section */
 #about-body{
-  justify-content: start;
+  justify-content: flex-start;
   margin-top: 0;
 }
 
