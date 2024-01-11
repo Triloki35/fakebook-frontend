@@ -7,6 +7,7 @@ import LinearProgress from "@mui/material/LinearProgress";
 
 const History = ({ conversation, lastMessage, curruser }) => {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
+  const API = process.env.REACT_APP_API;
   const [friend, setfriend] = useState(null);
   const [seen , setSeen] = useState(false);
 
@@ -16,7 +17,7 @@ const History = ({ conversation, lastMessage, curruser }) => {
     // console.log(friendId);
     const getFriend = async () => {
       try {
-        const friendInfo = await axios.get(`/users?userId=${friendId}`);
+        const friendInfo = await axios.get(`${API}users?userId=${friendId}`);
         // console.log(friendInfo.data);
         setfriend(friendInfo.data);
       } catch (error) {
@@ -32,7 +33,7 @@ const History = ({ conversation, lastMessage, curruser }) => {
     const getLastMsgStatus = async() => {
       if(lastMessage){
         try {
-         const res = await axios.get(`/messages/${lastMessage?._id}/seen`);
+         const res = await axios.get(`${API}messages/${lastMessage?._id}/seen`);
         //  console.log(res.data);
          setSeen(res.data.seen);
         } catch (error) {

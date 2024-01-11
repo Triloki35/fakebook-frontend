@@ -7,6 +7,7 @@ import { Cancel } from "@mui/icons-material";
 import axios from "axios";
 
 const Help = ({ setHelp }) => {
+  const API = process.env.REACT_APP_API;
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [image, setImage] = useState(null);
@@ -29,7 +30,7 @@ const Help = ({ setHelp }) => {
     formData.append("image", image);
 
     try {
-      const res = await axios.post("/mail/send-mail", formData, {
+      const res = await axios.post(`${API}mail/send-mail`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

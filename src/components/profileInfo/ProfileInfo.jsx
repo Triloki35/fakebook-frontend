@@ -9,6 +9,7 @@ import axios from "axios";
 import { Alert } from "@mui/material";
 
 const ProfileInfo = ({ user }) => {
+  const API = process.env.REACT_APP_API;
   const { user: currUser, dispatch } = useContext(AuthContext);
   const [isFriend, setIsFriend] = useState(false);
   const [isRequested, setIsRequested] = useState(false);
@@ -21,7 +22,7 @@ const ProfileInfo = ({ user }) => {
     // make change in local storage
     if (isFriend) {
       try {
-        const res = await axios.post(`/users/unfriend/${currUser._id}`, {
+        const res = await axios.post(`${API}users/unfriend/${currUser._id}`, {
           _id: user._id,
         });
         dispatch(UpdateUser(res.data));
@@ -32,7 +33,7 @@ const ProfileInfo = ({ user }) => {
     } else if (isRequested) {
       try {
         const res = await axios.post(
-          `/users/cancel-friend-request/${currUser._id}`,
+          `${API}users/cancel-friend-request/${currUser._id}`,
           { _id: user._id }
         );
         setIsRequested(false);
@@ -43,7 +44,7 @@ const ProfileInfo = ({ user }) => {
     } else if (isAsked) {
       try {
         const res = await axios.post(
-          "/users/accept-friend-request/" + currUser._id,
+          `${API}users/accept-friend-request/` + currUser._id,
           {
             friendId: user._id,
           }
@@ -62,7 +63,7 @@ const ProfileInfo = ({ user }) => {
           username: currUser.username,
         };
         const res = await axios.post(
-          `/users/friend-request/${user._id}`,
+          `${API}users/friend-request/${user._id}`,
           reqbody
         );
         // console.log(res.data);

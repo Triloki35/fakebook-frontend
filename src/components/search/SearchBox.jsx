@@ -7,6 +7,7 @@ import Post from "../post/Post";
 
 const SearchBox = ({ socket }) => {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
+  const API = process.env.REACT_APP_API;
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState({ users: [], posts: [] });
   const [selectedPost, setSelectedPost] = useState(null);
@@ -15,7 +16,7 @@ const SearchBox = ({ socket }) => {
     const fetchData = async () => {
       try {
         const response = await fetch(
-          `/search/search-results?query=${searchQuery}`
+          `${API}search/search-results?query=${searchQuery}`
         );
         const data = await response.json();
         setSearchResults(data);
@@ -30,7 +31,7 @@ const SearchBox = ({ socket }) => {
   const handleClick = async (postId) => {
     console.log("clicked");
     try {
-      const res = await axios.get("/posts/" + postId);
+      const res = await axios.get(`${API}posts/` + postId);
       setSelectedPost(res.data);
     } catch (error) {
       console.log(error);

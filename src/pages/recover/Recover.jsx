@@ -5,6 +5,7 @@ import { Alert, CircularProgress } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 const Recover = () => {
+  const API = process.env.REACT_APP_API;
   const [email, setEmail] = useState("");
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
@@ -30,7 +31,7 @@ const Recover = () => {
     setLoading(true);
     e.preventDefault();
     try {
-      const res = await axios.post("/auth/resend-otp", { email: email });
+      const res = await axios.post(`${API}auth/resend-otp`, { email: email });
       console.log(res.data);
       setMessage(res.data.message);
       setSuccess(true);
@@ -45,7 +46,7 @@ const Recover = () => {
     setLoading(true);
     e.preventDefault();
     try {
-      const res = await axios.post("/auth/verify-otp", {
+      const res = await axios.post(`${API}auth/verify-otp`, {
         email: email,
         otp: otp,
       });
@@ -67,7 +68,7 @@ const Recover = () => {
         alert("Password doesn't match");
     }else{
         try {
-            const res = await axios.put("/users/change-password",{email:email,password:password});
+            const res = await axios.put(`${API}users/change-password`,{email:email,password:password});
             console.log(res.data);
             setMessage(res.data.message);
             setRedirect(true);

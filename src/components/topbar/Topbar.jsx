@@ -22,6 +22,7 @@ import { CircularProgress } from "@mui/material";
 
 const Topbar = ({ socket, unseen}) => {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
+  const API = process.env.REACT_APP_API;
   const { user } = useContext(AuthContext);
   const [dropdown, setDropdown] = useState(false);
   const [activeBtn, setActivebtn] = useState(true);
@@ -44,7 +45,7 @@ const Topbar = ({ socket, unseen}) => {
   const fetchNotifications = async () => {
     try {
       setLoadingNotification(true);
-      const res = await axios.get(`/users/notifications/${user._id}`);
+      const res = await axios.get(`${API}users/notifications/${user._id}`);
       const sortedNotifications = res.data.sort((a, b) => {
         return new Date(b.createdAt) - new Date(a.createdAt);
       });

@@ -10,6 +10,7 @@ import {
 import Picker from "@emoji-mart/react";
 
 const Reply = ({ currentConversation, user, message, setMessage, socket }) => {
+  const API = process.env.REACT_APP_API;
   const fileInput = useRef();
   const replyText = useRef();
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
@@ -62,7 +63,7 @@ const Reply = ({ currentConversation, user, message, setMessage, socket }) => {
         formData.append("images", fileInput.current.files[i]);
       }
 
-      const res = await axios.post("/messages/", formData, {
+      const res = await axios.post(`${API}messages/`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

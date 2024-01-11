@@ -5,13 +5,15 @@ import "./chat.css";
 
 const Chat = ({ message, own, friend }) => {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
+  const API = process.env.REACT_APP_API;
+
   const [seen, setSeen] = useState(false);
   const [toggle, setToggle] = useState(false);
 
   useEffect(() => {
     const fetchStatus = async () => {
       try {
-        const res = await axios.get(`/messages/${message._id}/seen`);
+        const res = await axios.get(`${API}messages/${message._id}/seen`);
         setSeen(res.data.seen);
       } catch (error) {
         console.log(error);

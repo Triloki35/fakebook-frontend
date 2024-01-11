@@ -6,6 +6,7 @@ import { fetchFriendList } from '../../apiCalls';
 const OnlineFriend = ({user , onlineUsers, setCurrentConversation, setMessengerCenterVisible}) => {
   
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
+  const API = process.env.REACT_APP_API;
   const [friendList, setFriendList] = useState([]);
   const [activeFriend,setActiveFriend] = useState([]);
 
@@ -32,7 +33,7 @@ const OnlineFriend = ({user , onlineUsers, setCurrentConversation, setMessengerC
 
   const handleClick = async(friend) => {
     try {
-      const res = await axios.get(`/conversations/find/${user._id}/${friend._id}`);
+      const res = await axios.get(`${API}conversations/find/${user._id}/${friend._id}`);
       setCurrentConversation(res.data);
       // console.log(res.data);
     } catch (error) {

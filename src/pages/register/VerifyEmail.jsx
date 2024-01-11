@@ -4,6 +4,7 @@ import React, {useState} from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 const VerifyEmail = ({ email }) => {
+  const API = process.env.REACT_APP_API;
   const [otp, setOtp] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -14,7 +15,7 @@ const VerifyEmail = ({ email }) => {
     setLoading(true);
     e.preventDefault();
     try {
-      const res = await axios.post("/auth/verify-otp", {
+      const res = await axios.post(`${API}auth/verify-otp`, {
         email: email,
         otp: otp,
       });
@@ -31,7 +32,7 @@ const VerifyEmail = ({ email }) => {
   const sendAgain = async() => {
     setLoading(true);
     try {
-      const res = await axios.post("/auth/resend-otp", {email: email});
+      const res = await axios.post(`${API}auth/resend-otp`, {email: email});
       console.log(res.data);
       setMessage(res.data.message);
     } catch (error) {

@@ -9,6 +9,7 @@ import NoPost from "../post/NoPost";
 import "./bookmarks.css";
 
 const Bookmarks = ({ setShowBookmark, socket }) => {
+  const API = process.env.REACT_APP_API;
   const { user } = useContext(AuthContext);
   const [bookmarks, setBookmarks] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -17,7 +18,7 @@ const Bookmarks = ({ setShowBookmark, socket }) => {
   const fetchBookmarks = async () => {
     setLoading(true);
     try {
-      const res = await axios.get(`/posts/bookmarks/${user._id}`);
+      const res = await axios.get(`${API}posts/bookmarks/${user._id}`);
       setBookmarks(res.data);
     } catch (error) {
       console.error(error);

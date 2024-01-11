@@ -9,6 +9,7 @@ import { UpdateUser } from "../../context/AuthActions";
 import { CircularProgress } from "@mui/material";
 
 const FriendRequest = ({ setFriendRequestBandage }) => {
+  const API = process.env.REACT_APP_API;
   const { user, dispatch } = useContext(AuthContext);
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const [friendReq, setFriendReq] = useState([]);
@@ -18,7 +19,7 @@ const FriendRequest = ({ setFriendRequestBandage }) => {
     const fetchFriendRq = async () => {
       isLoading(true);
       try {
-        const res = await axios.get(`/users?userId=${user._id}`);
+        const res = await axios.get(`${API}users?userId=${user._id}`);
         console.log(res.data);
         setFriendReq(res.data.friendRequests);
         await dispatch(UpdateUser(res.data));
@@ -34,7 +35,7 @@ const FriendRequest = ({ setFriendRequestBandage }) => {
 
   const handleConfirm = async (f) => {
     try {
-      const res = await axios.post("/users/accept-friend-request/" + user._id, {
+      const res = await axios.post(`${API}users/accept-friend-request/` + user._id, {
         friendId: f._id,
       });
       // console.log(res.data);
@@ -49,7 +50,7 @@ const FriendRequest = ({ setFriendRequestBandage }) => {
 
   const handleDelete = async (f) => {
     try {
-      const res = await axios.post("/users/reject-friend-request/" + user._id, {
+      const res = await axios.post(`${API}users/reject-friend-request/` + user._id, {
         friendId: f._id,
       });
       console.log(res.data);

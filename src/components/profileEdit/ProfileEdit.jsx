@@ -6,6 +6,7 @@ import axios from "axios";
 
 export default function ProfileEdit({ isOpen, onClose, onChange }) {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
+  const API = process.env.REACT_APP_API;
   const { user } = useContext(AuthContext);
 
   const [selectedProfilePic, setSelectedProfilePic] = useState(null);
@@ -40,7 +41,7 @@ export default function ProfileEdit({ isOpen, onClose, onChange }) {
     formData.append("_id", user._id);
 
     try {
-      const res = await axios.post("/users/uploadProfilePic", formData);
+      const res = await axios.post(`${API}users/uploadProfilePic`, formData);
       console.log("Post uploaded successfully:", res.data);
 
       const userInfo = JSON.parse(localStorage.getItem("userInfo"));
@@ -69,7 +70,7 @@ export default function ProfileEdit({ isOpen, onClose, onChange }) {
     formData.append("_id", user._id);
 
     try {
-      const res = await axios.post("/users/uploadCoverPic", formData);
+      const res = await axios.post(`${API}users/uploadCoverPic`, formData);
       console.log("Post uploaded successfully:", res.data);
 
       const userInfo = JSON.parse(localStorage.getItem("userInfo"));
@@ -95,7 +96,7 @@ export default function ProfileEdit({ isOpen, onClose, onChange }) {
     };
 
     try {
-      const res = await axios.post("/users/updateAbout", aboutData);
+      const res = await axios.post(`${API}users/updateAbout`, aboutData);
       console.log("About updated successfully:", res.data);
 
       const userInfo = JSON.parse(localStorage.getItem("userInfo"));
@@ -116,7 +117,7 @@ export default function ProfileEdit({ isOpen, onClose, onChange }) {
 
   const handleSaveBio = async () => {
     try {
-      const res = await axios.post("/users/updateDesc", { desc: editedBio, _id: user._id });
+      const res = await axios.post(`${API}users/updateDesc`, { desc: editedBio, _id: user._id });
       console.log(res.data);
 
       const userInfo = JSON.parse(localStorage.getItem("userInfo"));

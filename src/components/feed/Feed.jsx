@@ -24,6 +24,7 @@ const Feed = ({
   bookmarksProp,
   helpProp,
 }) => {
+  const API = process.env.REACT_APP_API;
   const { user } = useContext(AuthContext);
   const [posts, setPosts] = useState([]);
   const [page, setPage] = useState(1);
@@ -41,8 +42,8 @@ const Feed = ({
     try {
       setLoading(true);
       const res = username
-        ? await axios.get(`/posts/profile/${username}?page=${page}`)
-        : await axios.get(`/posts/timeline/${user._id}?page=${page}`);
+        ? await axios.get(`${API}posts/profile/${username}?page=${page}`)
+        : await axios.get(`${API}posts/timeline/${user._id}?page=${page}`);
 
       const sortedPostsAscending = res.data.sort(
         (a, b) => new Date(b.createdAt) - new Date(a.createdAt)

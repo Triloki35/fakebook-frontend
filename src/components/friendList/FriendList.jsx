@@ -5,13 +5,14 @@ import { Link } from "react-router-dom";
 
 const FriendList = ({ user }) => {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
+  const API = process.env.REACT_APP_API;
   const [friendList, setFriendList] = useState([]);
   const [showAllFriends, setShowAllFriends] = useState(false);
 
   useEffect(() => {
     const getFriends = async () => {
       try {
-        const res = await axios.get("/users/friends/" + user._id);
+        const res = await axios.get(`${API}users/friends/` + user._id);
         setFriendList(res.data);
       } catch (error) {
         console.log(error);

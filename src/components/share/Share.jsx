@@ -30,11 +30,12 @@ const Share = ({socket}) => {
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   // console.log(user);
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
+  const API = process.env.REACT_APP_API;
 
   useEffect(() => {
     const getFriends = async () => {
       try {
-        const res = await axios.get("/users/friends/" + user._id);
+        const res = await axios.get(`${API}users/friends/` + user._id);
         setFriendList(res.data);
       } catch (error) {
         console.log(error);
@@ -85,7 +86,7 @@ const Share = ({socket}) => {
     });
 
     try {
-      const res = await axios.post("/posts/", formData, {
+      const res = await axios.post(`${API}posts/`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

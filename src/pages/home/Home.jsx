@@ -10,6 +10,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 function Home({ socket, unseenProp, callProp }) {
+  const API = process.env.REACT_APP_API;
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [openSideBar, setOpenSideBar] = useState(false);
   const [openRightBar, setOpenRightBar] = useState(false);
@@ -33,7 +34,7 @@ function Home({ socket, unseenProp, callProp }) {
   useEffect(() => {
     const fetchUnseenMsg = async () => {
       try {
-        const res = await axios.get(`/conversations/unseen/${user._id}`);
+        const res = await axios.get(`${API}conversations/unseen/${user._id}`);
         console.log(res.data);
         setUnseen(res.data.totalUnseenCount);
       } catch (error) {

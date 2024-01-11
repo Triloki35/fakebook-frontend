@@ -5,6 +5,7 @@ import axios from "axios";
 
 const SearchFriend = ({ userId, setCurrentConversation, setMessengerCenterVisible }) => {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
+  const API = process.env.REACT_APP_API;
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
 
@@ -12,7 +13,7 @@ const SearchFriend = ({ userId, setCurrentConversation, setMessengerCenterVisibl
     const handleSearch = async () => {
       try {
         const response = await axios.get(
-          `/users/search-friends/${userId}/${searchQuery}`
+          `${API}users/search-friends/${userId}/${searchQuery}`
         );
         console.log(response.data);
         setSearchResults(response.data);
@@ -31,7 +32,7 @@ const SearchFriend = ({ userId, setCurrentConversation, setMessengerCenterVisibl
 
   const handleClick = async(friend) => {
     try {
-      const res = await axios.get(`/conversations/find/${userId}/${friend._id}`);
+      const res = await axios.get(`${API}conversations/find/${userId}/${friend._id}`);
       setCurrentConversation(res.data);
       // console.log(res.data);
     } catch (error) {

@@ -15,6 +15,7 @@ import CountrySelect from "../news/CountrySelect";
 import { Link } from "react-router-dom";
 
 const Events = ({ setEvents }) => {
+  const API = process.env.REACT_APP_API;
   const [query, setQuery] = useState("");
   const [country, setCountry] = useState("");
   const [loading, setLoading] = useState(false);
@@ -24,7 +25,7 @@ const Events = ({ setEvents }) => {
     setLoading(true);
     try {
       const res = await axios.get(
-        `http://localhost:8000/api/search/search-events/${query}/${country}`
+        `${API}search/search-events/${query}/${country}`
       );
       setSearchResult(res.data);
     } catch (error) {

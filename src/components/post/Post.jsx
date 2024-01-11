@@ -19,6 +19,7 @@ import { Skeleton } from "@mui/material";
 const Post = ({ post, socket }) => {
   // console.log(socket);
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
+  const API = process.env.REACT_APP_API;
   const { user: currentUser, dispatch } = useContext(AuthContext);
   const [user, setUser] = useState(null);
   // const [user, setuser] = useState({});
@@ -42,7 +43,7 @@ const Post = ({ post, socket }) => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await axios.get(`/users?userId=${post.userId}`);
+        const res = await axios.get(`${API}users?userId=${post.userId}`);
         setUser(res.data);
       } catch (error) {
         console.log(error);
@@ -54,7 +55,7 @@ const Post = ({ post, socket }) => {
   // like
   const likeHandeler = async () => {
     try {
-      const res = await axios.put("/posts/" + post._id + "/like", {
+      const res = await axios.put(`${API}posts/` + post._id + "/like", {
         userId: currentUser._id,
       });
 
@@ -87,7 +88,7 @@ const Post = ({ post, socket }) => {
   useEffect(() => {
     const fetchComment = async () => {
       try {
-        const res = await axios.get(`/posts/comments/${post._id}`);
+        const res = await axios.get(`${API}posts/comments/${post._id}`);
         setPrevComment(res.data);
         // console.log(prevComment);
       } catch (error) {
@@ -105,7 +106,7 @@ const Post = ({ post, socket }) => {
         text: comment,
         profilePicture: currentUser.profilePicture,
       };
-      const res = await axios.post(`/posts/comments/${post._id}`, reqBody);
+      const res = await axios.post(`${API}posts/comments/${post._id}`, reqBody);
       console.log(res.data);
       setPrevComment((prev) => [...prev, reqBody]);
       setComment("");
@@ -128,7 +129,7 @@ const Post = ({ post, socket }) => {
   const handleCommentDelete = async (commentId) => {
     try {
       const res = await axios.delete(
-        `/post/comments/${post._id}/${commentId}`,
+        `${API}post/comments/${post._id}/${commentId}`,
         { userId: currentUser._id }
       );
       setPrevComment(res.data);
@@ -143,7 +144,7 @@ const Post = ({ post, socket }) => {
     console.log(post.userId);
     console.log(currentUser._id);
     try {
-      const res = await axios.delete(`/posts/${post._id}/${currentUser._id}`);
+      const res = await axios.delete(`${API}posts/${post._id}/${currentUser._id}`);
       console.log(res.data);
       window.location.reload();
     } catch (error) {
@@ -153,7 +154,7 @@ const Post = ({ post, socket }) => {
 
   const handleSavePost = async () => {
     try {
-      const res = await axios.post(`/posts/save-post/${currentUser._id}`, {
+      const res = await axios.post(`${API}posts/save-post/${currentUser._id}`, {
         postId: post._id,
       });
       dispatch(UpdateUser(res.data));

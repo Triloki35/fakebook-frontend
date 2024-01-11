@@ -7,6 +7,7 @@ import { AuthContext } from "../../context/AuthContext";
 import Suggestion from "./suggestion/Suggestion";
 
 function FriendSuggestions({socket}) {
+  const API = process.env.REACT_APP_API;
   const { user } = useContext(AuthContext);
 
   const [suggestions, setSuggestions] = useState([]);
@@ -21,7 +22,7 @@ function FriendSuggestions({socket}) {
       let dont = [];
       try {
         setLoading(true);
-        const res1 = await axios.get(`/users?userId=${user._id}`);
+        const res1 = await axios.get(`${API}users?userId=${user._id}`);
         const friendRequestIds = res1.data.friendRequests.map((fr) => fr._id);
         // console.log(friendRequestIds);
         dont = [
@@ -30,7 +31,7 @@ function FriendSuggestions({socket}) {
           ...friendRequestIds,
           user._id,
         ];
-        const res2 = await axios.get(`/users/friendsuggestion`, {
+        const res2 = await axios.get(`${API}users/friendsuggestion`, {
           params: { dont },
         });
         setSuggestions(res2.data);

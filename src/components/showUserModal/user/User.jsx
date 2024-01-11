@@ -5,12 +5,13 @@ import { Link } from "react-router-dom";
 
 const LikedUser = ({userId}) => {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
+  const API = process.env.REACT_APP_API;
   const [user, setUser] = useState();
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await axios.get(`users?userId=${userId}`);
+        const res = await axios.get(`${API}users?userId=${userId}`);
         setUser(res.data);
       } catch (error) {
         console.log(error);

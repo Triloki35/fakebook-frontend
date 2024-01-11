@@ -108,6 +108,7 @@ const ProfileMobile = ({
 };
 
 export default function Profile({ socket, unseenProp, callProp }) {
+  const API = process.env.REACT_APP_API;
   const { user: currUser } = useContext(AuthContext);
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const { username } = useParams();
@@ -137,7 +138,7 @@ export default function Profile({ socket, unseenProp, callProp }) {
     const fetchUnseenMsg = async () => {
       try {
         console.log(currUser);
-        const res = await axios.get(`/conversations/unseen/${currUser._id}`);
+        const res = await axios.get(`${API}conversations/unseen/${currUser._id}`);
         console.log(res.data);
         setUnseen(res.data.totalUnseenCount);
       } catch (error) {
@@ -163,7 +164,7 @@ export default function Profile({ socket, unseenProp, callProp }) {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const res = await axios.get(`/users?username=${username}`);
+        const res = await axios.get(`${API}users?username=${username}`);
         setUser(res.data);
       } catch (error) {
         console.log(error);

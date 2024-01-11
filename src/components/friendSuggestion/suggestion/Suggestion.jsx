@@ -15,6 +15,7 @@ const Suggestion = ({
   socket
 }) => {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
+  const API = process.env.REACT_APP_API;
   const { user, dispatch } = useContext(AuthContext);
 
   const [showUsersModal, setShowUsersModal] = useState(false);
@@ -24,7 +25,7 @@ const Suggestion = ({
     const fetchtMutualFriends = async () => {
       try {
         const res = await axios.get(
-          `/users/mutual-friends/${user._id}/${suggestion._id}`
+          `${API}users/mutual-friends/${user._id}/${suggestion._id}`
         );
         console.log(res.data);
         setMutualFriends(res.data);
@@ -46,7 +47,7 @@ const Suggestion = ({
         profilePicture: user.profilePicture,
         username: user.username,
       };
-      const res = await axios.post(`/users/friend-request/${userId}`, reqbody);
+      const res = await axios.post(`${API}users/friend-request/${userId}`, reqbody);
       // updating
       setSuggestions((prevSuggestions) =>
         prevSuggestions.filter((suggestion) => suggestion._id !== userId)

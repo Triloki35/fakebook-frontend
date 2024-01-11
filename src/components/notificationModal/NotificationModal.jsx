@@ -6,6 +6,7 @@ import { Cancel } from "@mui/icons-material";
 import { AuthContext } from "../../context/AuthContext";
 
 const NotificationModal = ({ notification, closeNotificationModal }) => {
+  const API = process.env.REACT_APP_API;
   const [post, setPost] = useState(null);
   const {user} = useContext(AuthContext);
 
@@ -15,7 +16,7 @@ const NotificationModal = ({ notification, closeNotificationModal }) => {
 
     const fetchPost = async () => {
       try {
-        const res = await axios.get("/posts/" + notification.postId);
+        const res = await axios.get(`${API}posts/` + notification.postId);
         setPost(res.data);
       } catch (error) {
         console.log(error);
@@ -25,7 +26,7 @@ const NotificationModal = ({ notification, closeNotificationModal }) => {
     const updateNotificationStatus = async () => {
       try {
         const res = await axios.patch(
-          `/users/update-notification/${notification._id}/${user._id}`
+          `${API}users/update-notification/${notification._id}/${user._id}`
         );
         console.log(res.data);
         const userInfo = JSON.parse(localStorage.getItem("userInfo"));

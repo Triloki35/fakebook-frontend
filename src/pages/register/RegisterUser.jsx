@@ -7,6 +7,7 @@ import VerifyEmail from "./VerifyEmail";
 import { CircularProgress } from "@mui/material";
 
 const RegisterUser = () => {
+  const API = process.env.REACT_APP_API;
   const username = useRef();
   const [email,setEmail] = useState("");
   const password = useRef();
@@ -33,7 +34,7 @@ const RegisterUser = () => {
       };
 
       try {
-        const res = await axios.post("/auth/register", user);
+        const res = await axios.post(`${API}auth/register`, user);
         console.log(res.data);
         // navigate("/login");
         setOtpSent(true);

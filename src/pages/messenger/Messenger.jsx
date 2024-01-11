@@ -11,6 +11,7 @@ import ConversationList from "../../components/conversationList/ConversationList
 import { useNavigate } from "react-router-dom";
 
 const Messenger = ({ socket, onlineUsers, unseenProp, callProp }) => {
+  const API = process.env.REACT_APP_API;
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [messengerCenterVisible, setMessengerCenterVisible] = useState(false);
   const { user } = useContext(AuthContext);
@@ -57,7 +58,7 @@ const Messenger = ({ socket, onlineUsers, unseenProp, callProp }) => {
   useEffect(() => {
     const fetchUnseenMsg = async () => {
       try {
-        const res = await axios.get(`/conversations/unseen/${user._id}`);
+        const res = await axios.get(`${API}conversations/unseen/${user._id}`);
         console.log(res.data);
         setUnseen(res.data.totalUnseenCount);
       } catch (error) {
@@ -71,7 +72,7 @@ const Messenger = ({ socket, onlineUsers, unseenProp, callProp }) => {
   useEffect(() => {
     const getConversation = async () => {
       try {
-        const res = await axios.get("/conversations/" + user._id);
+        const res = await axios.get(`${API}conversations/` + user._id);
         setConversation(res.data);
       } catch (error) {}
     };
@@ -86,7 +87,7 @@ const Messenger = ({ socket, onlineUsers, unseenProp, callProp }) => {
     const getFriend = async (friendId) => {
       if (friendId) {
         try {
-          const res = await axios.get(`/users?userId=${friendId}`);
+          const res = await axios.get(`${API}users?userId=${friendId}`);
           setFriend(res.data);
         } catch (error) {
           console.log(error);
@@ -100,7 +101,7 @@ const Messenger = ({ socket, onlineUsers, unseenProp, callProp }) => {
   useEffect(() => {
     const getMsg = async () => {
       try {
-        const res = await axios.get("/messages/" + currentConversation?._id, {
+        const res = await axios.get(`${API}messages/` + currentConversation?._id, {
           userId: user._id,
         });
         setMessage(res.data);
@@ -114,7 +115,7 @@ const Messenger = ({ socket, onlineUsers, unseenProp, callProp }) => {
   // mark last msg seen
   const markAllSeen = async (conversationId) => {
     try {
-      const res = await axios.put(`/messages/${conversationId}/seen`, {
+      const res = await axios.put(`${API}messages/${conversationId}/seen`, {
         userId: user._id,
       });
       console.log(res.data);
@@ -152,7 +153,7 @@ const Messenger = ({ socket, onlineUsers, unseenProp, callProp }) => {
       const markSeen = async () => {
         try {
           const res = await axios.put(
-            `/messages/seenByText/${arrivalMessage.text}`,
+            `${API}messages/seenByText/${arrivalMessage.text}`,
             { userId: user._id, senderId: arrivalMessage.senderId }
           );
         } catch (error) {
