@@ -2,3 +2,10 @@
     margin:0;
     font-family: 'Roboto', sans-serif;
 }
+
+@media screen and (max-width: 768px) {
+    #fakebook-body{
+        margin:0 !important;
+        font-family: 'Roboto', sans-serif !important;
+    }
+}
