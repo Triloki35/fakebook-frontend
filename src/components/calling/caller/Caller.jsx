@@ -33,7 +33,7 @@ const Caller = ({ friend, socket, audio, video }) => {
   useEffect(() => {
     if (stream) {
       // If the stream changes, update the peer's stream
-      peerRef.current.replaceStream(stream);
+      peerRef?.current?.replaceStream(stream);
     }
   }, [stream]);
 
@@ -91,7 +91,7 @@ const Caller = ({ friend, socket, audio, video }) => {
   return (
     <div className="callerContainer">
       <div className="callerWrapper">
-        {(!callAccepted || !video) && (
+        {(!callAccepted ) && (
           <div className="callerTop">
             <img src={PF + friend.profilePicture} alt="" />
             <h4 style={!video ? { color: "black" } : {}}>{friend.username}</h4>
