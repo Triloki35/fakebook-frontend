@@ -4,7 +4,6 @@ import ScaleLoader from "react-spinners/ScaleLoader";
 import { Call, CallEnd, PhoneDisabled, Videocam, VideocamOff } from "@mui/icons-material";
 import Peer from "simple-peer";
 import { AuthContext } from "../../../context/AuthContext";
-
 import * as process from "process";
 import Timer from "../../timer/Timer";
 
@@ -14,10 +13,11 @@ const Caller = ({ friend, socket, audio, video }) => {
   const [stream, setStream] = useState(null);
   const [callAccepted, setCallAccepted] = useState(false);
   const [callProgress, setCallProgress] = useState(false);
-  const [mainVideo,setMainVideo] = useState(false);
+  const [mainVideo, setMainVideo] = useState(true); // Default main video to user's video
 
   const ownVideoRef = useRef();
   const friendVideoRef = useRef();
+  const peerRef = useRef(); // Add a ref to store the peer instance
 
   window.process = process;
 
@@ -31,6 +31,13 @@ const Caller = ({ friend, socket, audio, video }) => {
   }, []);
 
   useEffect(() => {
+    if (stream) {
+      // If the stream changes, update the peer's stream
+      peerRef.current.replaceStream(stream);
+    }
+  }, [stream]);
+
+  useEffect(() => {
     socket.on("endCall", () => {
       window.location.href = "/messenger";
     });
@@ -39,18 +46,29 @@ const Caller = ({ friend, socket, audio, video }) => {
   const callUser = async () => {
     const peer = new Peer({ initiator: true, trickle: false, stream: stream });
 
+    // Store the peer instance in the ref
+    peerRef.current = peer;
+
     peer?.on("signal", (data) => {
       socket?.emit("callUser", {
         friendId: friend._id,
         signal: data,
         from: user,
-        audio:audio,
-        video:video
+        audio: audio,
+        video: video,
       });
     });
 
-    peer?.on("stream", (currentStream) => {;
+    peer?.on("stream", (currentStream) => {
       friendVideoRef.current.srcObject = currentStream;
+    });
+
+    peer?.on("close", () => {
+      // Handle disconnection, e.g., set the call to not accepted
+      setCallAccepted(false);
+      setCallProgress(false);
+      setMainVideo(true);
+      window.location.href = "/messenger";
     });
 
     socket?.on("callAccepted", (signal) => {
@@ -62,24 +80,27 @@ const Caller = ({ friend, socket, audio, video }) => {
   };
 
   const handleCallEnd = () => {
+    // Close the peer connection when the call ends
+    if (peerRef.current) {
+      peerRef.current.destroy();
+    }
     socket.emit("endCall", { friendId: friend._id });
     window.location.href = "/messenger";
   };
 
-
   return (
     <div className="callerContainer">
       <div className="callerWrapper">
-        {(!callAccepted || !video)&& (
+        {(!callAccepted || !video) && (
           <div className="callerTop">
             <img src={PF + friend.profilePicture} alt="" />
-            <h4 style={!video ? {color:"black"} : {}}>{friend.username}</h4>
+            <h4 style={!video ? { color: "black" } : {}}>{friend.username}</h4>
             {callProgress && (
-              <small style={!video ? {color:"black"} : {}}>
+              <small style={!video ? { color: "black" } : {}}>
                 Ringing
-                <ScaleLoader height={3} width={3} color={!video ?"black":"white"}/>
+                <ScaleLoader height={3} width={3} color={!video ? "black" : "white"} />
               </small>
-            ) }
+            )}
             {(!callProgress && !video && callAccepted) && <Timer />}
           </div>
         )}
@@ -94,10 +115,10 @@ const Caller = ({ friend, socket, audio, video }) => {
                   setCallProgress(true);
                 }}
               >
-                {!video ?<Call htmlColor="white"/> :<Videocam htmlColor="white" />} <span>&nbsp; Call</span>
+                {!video ? <Call htmlColor="white" /> : <Videocam htmlColor="white" />} <span>&nbsp; Call</span>
               </button>
               <button className="abortBtn" onClick={() => handleCallEnd()}>
-                {!video ? <PhoneDisabled htmlColor="white"/> :<VideocamOff htmlColor="white" />} <span>&nbsp; Abort</span>
+                {!video ? <PhoneDisabled htmlColor="white" /> : <VideocamOff htmlColor="white" />} <span>&nbsp; Abort</span>
               </button>
             </>
           ) : (
@@ -114,7 +135,7 @@ const Caller = ({ friend, socket, audio, video }) => {
         autoPlay
         playsInline
         muted
-        onClick={()=>setMainVideo((prev)=>!prev)}
+        onClick={() => setMainVideo((prev) => !prev)}
       />
 
       {callAccepted && (
@@ -123,7 +144,7 @@ const Caller = ({ friend, socket, audio, video }) => {
           ref={friendVideoRef}
           autoPlay
           playsInline
-          onClick={()=>setMainVideo((prev)=>!prev)}
+          onClick={() => setMainVideo((prev) => !prev)}
         />
       )}
     </div>

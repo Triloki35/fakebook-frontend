@@ -12,12 +12,12 @@ const Receiver = ({ socket, callProp }) => {
   const { call } = callProp;
   const [stream, setStream] = useState(null);
   const [callAccepted, setCallAccepted] = useState(false);
-  const [mainVideo,setMainVideo] = useState(false);
-
+  const [mainVideo, setMainVideo] = useState(false);
 
   const ownVideoRef = useRef();
   const friendVideoRef = useRef();
   const audioRef = useRef();
+  const peerRef = useRef(); // Add a ref to store the peer instance
 
   window.process = process;
 
@@ -27,14 +27,19 @@ const Receiver = ({ socket, callProp }) => {
       .then((currentStream) => {
         setStream(currentStream);
         ownVideoRef.current.srcObject = currentStream;
+
+        // If the peer instance exists, replace the stream
+        if (peerRef.current) {
+          peerRef.current.replaceStream(currentStream);
+        }
       });
   }, [call]);
 
-  useEffect(()=>{
-    socket.on("endCall",()=>{
+  useEffect(() => {
+    socket.on("endCall", () => {
       window.location.href = "/messenger";
-    })
-  },[socket])
+    });
+  }, [socket]);
 
   useEffect(() => {
     if (callAccepted) {
@@ -57,7 +62,14 @@ const Receiver = ({ socket, callProp }) => {
     setCallAccepted(true);
     setMainVideo(true);
 
-    const peer = new Peer({ initiator: false, trickle: false, stream:stream });
+    const peer = new Peer({
+      initiator: false,
+      trickle: false,
+      stream: stream,
+    });
+
+    // Store the peer instance in the ref
+    peerRef.current = peer;
 
     peer?.on("signal", (data) => {
       socket.emit("answerCall", { signal: data, to: call.from._id });
@@ -67,14 +79,24 @@ const Receiver = ({ socket, callProp }) => {
       friendVideoRef.current.srcObject = currentStream;
     });
 
-    peer?.on('error', (err) => {
+    peer?.on("close", () => {
+      // Handle disconnection, e.g., set the call to not accepted
+      setCallAccepted(false);
+      setMainVideo(true);
+      window.location.href = "/messenger";
+    });
+
+    peer?.on("error", (err) => {
       handleCallEnd();
-    })
+    });
 
     peer?.signal(call.signal);
   };
 
   const handleCallEnd = () => {
+    if (peerRef.current) {
+      peerRef.current.destroy();
+    }
     socket.emit("endCall", { friendId: call?.from?._id });
     window.location.href = "/messenger";
   };
@@ -85,11 +107,15 @@ const Receiver = ({ socket, callProp }) => {
         {(!callAccepted || !call.video) && (
           <div className="receiverTop">
             <img src={PF + call?.from.profilePicture} alt="" />
-            <h4 style={!call.video ? {color:"black"} : {}}>{call?.from.username}</h4>
-            {!callAccepted ? <small style={!call.video ? {color:"black"} : {}}>
-              {!call.video ? "Incoming call" : "Incoming video call"}
-              <ScaleLoader color={!call.video ?"black":"white"} height={3} width={3} />
-            </small> : <Timer/> }
+            <h4 style={!call.video ? { color: "black" } : {}}>{call?.from.username}</h4>
+            {!callAccepted ? (
+              <small style={!call.video ? { color: "black" } : {}}>
+                {!call.video ? "Incoming call" : "Incoming video call"}
+                <ScaleLoader color={!call.video ? "black" : "white"} height={3} width={3} />
+              </small>
+            ) : (
+              <Timer />
+            )}
           </div>
         )}
         <div className={callAccepted ? "receiverBottom" : "receiverBottom2"}>
@@ -110,7 +136,7 @@ const Receiver = ({ socket, callProp }) => {
         autoPlay
         playsInline
         muted
-        onClick={()=>setMainVideo((prev)=>!prev)}
+        onClick={() => setMainVideo((prev) => !prev)}
       />
 
       {callAccepted && (
@@ -119,11 +145,11 @@ const Receiver = ({ socket, callProp }) => {
           ref={friendVideoRef}
           autoPlay
           playsInline
-          onClick={()=>setMainVideo((prev)=>!prev)}
+          onClick={() => setMainVideo((prev) => !prev)}
         />
       )}
 
-      <audio ref={audioRef} src={PF+"messenger-ringtone.mp3"} loop />
+      <audio ref={audioRef} src={PF + "messenger-ringtone.mp3"} loop />
     </div>
   );
 };
