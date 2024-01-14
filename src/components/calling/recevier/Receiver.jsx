@@ -17,7 +17,7 @@ const Receiver = ({ socket, callProp }) => {
   const ownVideoRef = useRef();
   const friendVideoRef = useRef();
   const audioRef = useRef();
-  const peerRef = useRef(); // Add a ref to store the peer instance
+  const peerRef = useRef(); 
 
   window.process = process;
 
@@ -28,7 +28,6 @@ const Receiver = ({ socket, callProp }) => {
         setStream(currentStream);
         ownVideoRef.current.srcObject = currentStream;
 
-        // If the peer instance exists, replace the stream
         if (peerRef.current) {
           peerRef.current.replaceStream(currentStream);
         }
@@ -68,7 +67,6 @@ const Receiver = ({ socket, callProp }) => {
       stream: stream,
     });
 
-    // Store the peer instance in the ref
     peerRef.current = peer;
 
     peer?.on("signal", (data) => {
@@ -77,13 +75,6 @@ const Receiver = ({ socket, callProp }) => {
 
     peer?.on("stream", (currentStream) => {
       friendVideoRef.current.srcObject = currentStream;
-    });
-
-    peer?.on("close", () => {
-      // Handle disconnection, e.g., set the call to not accepted
-      setCallAccepted(false);
-      setMainVideo(true);
-      window.location.href = "/messenger";
     });
 
     peer?.on("error", (err) => {
