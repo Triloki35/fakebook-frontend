@@ -6,13 +6,13 @@ import SendIcon from "@mui/icons-material/Send";
 import { Cancel } from "@mui/icons-material";
 import axios from "axios";
 
-const Help = ({ setHelp }) => {
+const Help = ({ setHelp , feedback }) => {
   const API = process.env.REACT_APP_API;
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [image, setImage] = useState(null);
   const [message, setMessage] = useState("");
-  const [mode, setMode] = useState("bug");
+  const [mode, setMode] = useState(feedback ? "query" : "bug");
   const [loading, setLoading] = useState(false);
   const [completed, setCompleted] = useState(false);
   const [error, setError] = useState(null);
@@ -71,7 +71,7 @@ const Help = ({ setHelp }) => {
             color: mode === "query" ? "#fff" : undefined,
           }}
         >
-          Query
+          Feedback
         </ToggleButton>
       </ToggleButtonGroup>
 

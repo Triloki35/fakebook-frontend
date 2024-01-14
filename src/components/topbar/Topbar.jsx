@@ -19,8 +19,9 @@ import NotificationModal from "../notificationModal/NotificationModal";
 import FriendRequest from "../friend-request/FriendRequest";
 import SearchBox from "../search/SearchBox";
 import { CircularProgress } from "@mui/material";
+import HelpCompo from "../help/Help.jsx";
 
-const Topbar = ({ socket, unseen}) => {
+const Topbar = ({ socket, unseen }) => {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const API = process.env.REACT_APP_API;
   const { user } = useContext(AuthContext);
@@ -39,8 +40,11 @@ const Topbar = ({ socket, unseen}) => {
 
   // setting up modal
   const [showModal, setShowModal] = useState(false);
-  const [clickedNotification, setClickedNotification] = useState(null);  
+  const [clickedNotification, setClickedNotification] = useState(null);
 
+  const [help, setHelp] = useState(false);
+  const [feedback, setFeedback] = useState(false);
+  
   // fetching notification
   const fetchNotifications = async () => {
     try {
@@ -76,7 +80,6 @@ const Topbar = ({ socket, unseen}) => {
       console.log(data);
       setNotifications((prev) => [...prev, data]);
     });
-
   }, [socket]);
 
   const handleNotificationClick = (notification) => {
@@ -94,11 +97,11 @@ const Topbar = ({ socket, unseen}) => {
   }, [user]);
 
   // increment bandage
-  useEffect(()=>{
-    socket?.on("get-friendRequest",()=>{
-      setFriendRequestBandage((prev)=>prev+1);
-    })
-  },[socket])
+  useEffect(() => {
+    socket?.on("get-friendRequest", () => {
+      setFriendRequestBandage((prev) => prev + 1);
+    });
+  }, [socket]);
 
   const handleFriendRequestsClick = () => {
     setFriendRequestPanelVisible(!friendRequestPanelVisible);
@@ -151,7 +154,9 @@ const Topbar = ({ socket, unseen}) => {
               style={{ textDecoration: "none", color: "white" }}
             >
               <Chat />
-              {unseen!==0 && <span className="topbarIconBadge">{unseen}</span>}
+              {unseen !== 0 && (
+                <span className="topbarIconBadge">{unseen}</span>
+              )}
             </Link>
           </div>
           <div
@@ -212,7 +217,8 @@ const Topbar = ({ socket, unseen}) => {
                             <span className="notificationText">
                               {n.senderName}{" "}
                               {n.type === "tagged" && `${n.type} you in post`}
-                              {n.type === "commented" && `${n.type} on your post`}
+                              {n.type === "commented" &&
+                                `${n.type} on your post`}
                               {n.type === "liked" && `${n.type} your post`}
                             </span>
                           </li>
@@ -233,7 +239,8 @@ const Topbar = ({ socket, unseen}) => {
                             <span className="notificationText">
                               {n.senderName}{" "}
                               {n.type === "tagged" && `${n.type} you in post`}
-                              {n.type === "commented" && `${n.type} on your post`}
+                              {n.type === "commented" &&
+                                `${n.type} on your post`}
                               {n.type === "liked" && `${n.type} your post`}
                             </span>
                           </li>
@@ -292,10 +299,10 @@ const Topbar = ({ socket, unseen}) => {
                   <li>
                     <Settings /> <span>Settings</span>
                   </li>
-                  <li>
+                  <li onClick={() => setHelp((p) => !p)}>
                     <Help /> <span>Help</span>
                   </li>
-                  <li>
+                  <li  onClick={() => setFeedback((p) => !p)}>
                     <Feedback /> <span>Feedback</span>
                   </li>
                   <li onClick={handleLogout}>
@@ -313,6 +320,18 @@ const Topbar = ({ socket, unseen}) => {
           notification={clickedNotification}
           closeNotificationModal={closeNotificationModal}
         />
+      )}
+
+      {help && (
+        (<div className="topbarHelp">
+          <HelpCompo setHelp={setHelp}/>
+        </div>)
+      )}
+
+      {feedback && (
+        (<div className="topbarHelp">
+          <HelpCompo setHelp={setFeedback} feedback={feedback}/>
+        </div>)
       )}
     </div>
   );
