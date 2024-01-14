@@ -89,11 +89,7 @@ export default function Login() {
                 disabled={isFetching}
                 onClick={handleButtonClick}
               >
-                {isFetching ? (
-                  <CircularProgress color="inherit" size={"35px"} />
-                ) : (
-                  "Create new Account"
-                )}
+                Create new Account
               </button>
             </form>
           )}
