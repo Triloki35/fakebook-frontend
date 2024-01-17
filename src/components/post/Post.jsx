@@ -21,7 +21,7 @@ const Post = ({ post, socket }) => {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const API = process.env.REACT_APP_API;
   const { user: currentUser, dispatch } = useContext(AuthContext);
-  const [user, setUser] = useState(null);
+  // const [user, setUser] = useState(null);
   // const [user, setuser] = useState({});
 
   // like
@@ -38,19 +38,6 @@ const Post = ({ post, socket }) => {
   // for delete and save post
   const [optionBtn, setOptionBtn] = useState(false);
   const isDeleteButtonDisabled = currentUser._id !== post.userId;
-
-  // fetch user info
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const res = await axios.get(`${API}users?userId=${post.userId}`);
-        setUser(res.data);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchUser();
-  }, [post]);
 
   // like
   const likeHandeler = async () => {
@@ -144,7 +131,9 @@ const Post = ({ post, socket }) => {
     console.log(post.userId);
     console.log(currentUser._id);
     try {
-      const res = await axios.delete(`${API}posts/${post._id}/${currentUser._id}`);
+      const res = await axios.delete(
+        `${API}posts/${post._id}/${currentUser._id}`
+      );
       console.log(res.data);
       window.location.reload();
     } catch (error) {
@@ -170,22 +159,21 @@ const Post = ({ post, socket }) => {
         <div className="postTop">
           <div className="postTopLeft">
             <Link
-              to={`/profile/${user?.username}`}
+              to={`/profile/${post?.username}`}
               style={{ textDecoration: "none" }}
-            > 
-              <Avatar className="postProfileImg" src={PF + user?.profilePicture} />
+            >
+              <Avatar
+                className="postProfileImg"
+                src={PF + post?.profilePicture}
+              />
             </Link>
             <div className="ps-l-wrapper">
               <div style={{ display: "flex" }}>
                 <Link
-                  to={`/profile/${user?.username}`}
+                  to={`/profile/${post?.username}`}
                   style={{ textDecoration: "none", color: "black" }}
                 >
-                  {!user?.username ? (
-                    <Skeleton variant="text" sx={{ width: 100 , height:30 , marginLeft:1}} />
-                  ) : (
-                    <span className="postUsername">{user?.username}</span>
-                  )}
+                  <span className="postUsername">{post?.username}</span>
                 </Link>
                 <div>
                   {post.tags?.length === 1 && (

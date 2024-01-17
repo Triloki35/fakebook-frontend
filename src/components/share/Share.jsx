@@ -2,17 +2,13 @@ import React, { useContext, useState, useRef, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "./share.css";
 import axios from "axios";
-import {
-  PermMedia,
-  Label,
-  EmojiEmotions,
-  Cancel,
-} from "@mui/icons-material";
+import { PermMedia, Label, EmojiEmotions, Cancel } from "@mui/icons-material";
 import { AuthContext } from "../../context/AuthContext";
 import Picker from "@emoji-mart/react";
-import { Avatar } from "@mui/material";
+import { Alert, Avatar } from "@mui/material";
+import ScaleLoader from "react-spinners/ScaleLoader";
 
-const Share = ({socket}) => {
+const Share = ({ socket }) => {
   new Picker({
     data: async () => {
       const response = await fetch(
@@ -29,6 +25,9 @@ const Share = ({socket}) => {
   const [selectedTags, setSelectedTags] = useState([]);
   const [showOptions, setShowOptions] = useState(false);
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error,  setError] = useState(null);
+
   // console.log(user);
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const API = process.env.REACT_APP_API;
@@ -72,10 +71,13 @@ const Share = ({socket}) => {
   };
 
   const handleSubmit = async (event) => {
+    setLoading(true);
     event.preventDefault();
 
     const formData = new FormData();
     formData.append("userId", user._id);
+    formData.append("username", user.username);
+    formData.append("profilePicture", user.profilePicture);
     formData.append("username", user.username);
     formData.append("profilePicture", user.profilePicture);
     formData.append("desc", desc.current.value);
@@ -95,9 +97,13 @@ const Share = ({socket}) => {
 
       window.location.reload();
     } catch (error) {
-      console.error("Error uploading post:", error);
+      // console.error("Error uploading post:", error);
+      setError(error.response.data);
     }
+    setLoading(false);
   };
+
+  console.log(error);
 
   return (
     <div className="share">
@@ -107,16 +113,10 @@ const Share = ({socket}) => {
             to={`/profile/${user.username}`}
             style={{ textDecoration: "none" }}
           >
-            {/* <img
+            <Avatar
               className="shareProfileImg"
-              src={
-                user.profilePicture
-                  ? PF + user.profilePicture
-                  : `${PF}person/profile-picture/default-profilepic.png`
-              }
-              alt=""
-            /> */}
-            <Avatar className="shareProfileImg" src={PF + user.profilePicture}/>
+              src={PF + user.profilePicture}
+            />
           </Link>
           <input
             placeholder={"what's in your mind " + user.username + " ?"}
@@ -214,7 +214,11 @@ const Share = ({socket}) => {
             </div>
           </div>
           <button className="shareButton" type="submit">
-            Share
+            {loading ? (
+              <ScaleLoader color="white" height={5} width={3} />
+            ) : (
+              "Share"
+            )}
           </button>
         </div>
       </form>
@@ -228,6 +232,12 @@ const Share = ({socket}) => {
             maxFrequentRows="1"
           />
         </div>
+      )}
+
+      {error && (
+        <Alert className="story-message" severity="error" onClose={() => setError(null)}>
+          {error}
+        </Alert>
       )}
     </div>
   );

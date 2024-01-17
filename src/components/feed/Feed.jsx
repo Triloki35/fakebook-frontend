@@ -63,7 +63,7 @@ const Feed = ({
   };
 
   useEffect(() => {
-    if (fetchMore) fetchPosts();
+    if (fetchMore) fetchPosts(); 
   }, [page, username, user._id, fetchMore]);
 
   useEffect(() => {
@@ -86,38 +86,35 @@ const Feed = ({
   }, [fetchMore, loading]);
 
   const renderContent = () => {
-    if (jobs) {
-      return <Jobs setJobs={setJobs} />;
-    } else if (showVideos) {
-      return <Videos setShowVideos={setShowVideos} />;
-    } else if (news) {
-      return <News setNews={setNews} />;
-    } else if (events) {
-      return <Events setEvents={setEvents} />;
-    } else if (showBookmark) {
-      return <Bookmarks setShowBookmark={setShowBookmark} socket={socket} />;
-    } else if (help) {
-      return <Help setHelp={setHelp} />;
-    } else {
-      return (
-        <>
-          <Share socket={socket} />
-          {posts.length !== 0 ? (
-            posts.map((p) => <Post key={uuidv4()} post={p} socket={socket} />)
-          ) : (
-            <NoPost />
-          )}
-          {loading && (
-            <p style={{ textAlign: "center" }}>
-              <ClipLoader
-                color={"#1877F2"}
-                loading={true}
-                speedMultiplier={2}
-              />
-            </p>
-          )}
-        </>
-      );
+    switch (true) {
+      case jobs:
+        return <Jobs setJobs={setJobs} />;
+      case showVideos:
+        return <Videos setShowVideos={setShowVideos} />;
+      case news:
+        return <News setNews={setNews} />;
+      case events:
+        return <Events setEvents={setEvents} />;
+      case showBookmark:
+        return <Bookmarks setShowBookmark={setShowBookmark} socket={socket} />;
+      case help:
+        return <Help setHelp={setHelp} />;
+      default:
+        return (
+          <>
+            <Share socket={socket} />
+            {posts.length !== 0 ? (
+              posts.map((p) => <Post key={uuidv4()} post={p} socket={socket} />)
+            ) : (
+              <NoPost />
+            )}
+            {loading && (
+              <p className="loading-text">
+                <ClipLoader color={"#1877F2"} loading={true} speedMultiplier={2} />
+              </p>
+            )}
+          </>
+        );
     }
   };
 
