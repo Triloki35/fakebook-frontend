@@ -1,5 +1,6 @@
 import React from "react";
 import "./CoverAndProfilePics.css";
+import { Avatar } from "@mui/material";
 
 const CoverAndProfilePics = ({ user }) => {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
@@ -15,7 +16,7 @@ const CoverAndProfilePics = ({ user }) => {
         }
         alt=""
       />
-      <img
+      {/* <img
         className="profilePic"
         src={
           user?.profilePicture
@@ -23,7 +24,8 @@ const CoverAndProfilePics = ({ user }) => {
             : `${PF}person/profile-picture/default-profilepic.png`
         }
         alt=""
-      />
+      /> */}
+      <Avatar id="profilePic" src={PF + user?.profilePicture} />
     </div>
   );
 };

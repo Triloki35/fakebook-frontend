@@ -12,6 +12,7 @@ import Peer from "simple-peer";
 import { AuthContext } from "../../../context/AuthContext";
 import * as process from "process";
 import Timer from "../../timer/Timer";
+import { Avatar } from "@mui/material";
 
 const Caller = ({ friend, socket, audio, video }) => {
   const { user } = useContext(AuthContext);
@@ -86,9 +87,9 @@ const Caller = ({ friend, socket, audio, video }) => {
   return (
     <div className="callerContainer">
       <div className="callerWrapper">
-        {!callAccepted && (
+        {(!callAccepted || !video) && (
           <div className="callerTop">
-            <img src={PF + friend?.profilePicture} alt="" />
+            <Avatar src={PF + friend?.profilePicture}/>
             <h4 style={!video ? { color: "black" } : {}}>{friend.username}</h4>
             {callProgress && (
               <small style={!video ? { color: "black" } : {}}>

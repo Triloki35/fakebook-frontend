@@ -15,7 +15,7 @@ import {
 } from "@mui/icons-material";
 import { AuthContext } from "../../context/AuthContext";
 import { Link } from "react-router-dom";
-import { Alert } from "@mui/material";
+import { Alert, Avatar } from "@mui/material";
 import Help from "../help/Help";
 
 const Sidebar = ({ isMobile, openSideBar, setJobs, setShowVideos, setNews, setEvents, setShowBookmark, setHelp}) => {
@@ -128,7 +128,7 @@ const Sidebar = ({ isMobile, openSideBar, setJobs, setShowVideos, setNews, setEv
           {showMore && (
             <>
               <li className="sidebarListItem" onClick={handleAlert}>
-                <SchoolSharp />{" "}
+                <SchoolSharp />
                 <span className="sidebarListItemText">Courses</span>
               </li>
               <li className="sidebarListItem" onClick={handleAlert}>

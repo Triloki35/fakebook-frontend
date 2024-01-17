@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./friendList.css";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { Avatar } from "@mui/material";
 
 const FriendList = ({ user }) => {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
@@ -51,7 +52,7 @@ const FriendList = ({ user }) => {
               style={{ textDecoration: "none" }}
             >
               <div className="rightBarFriend">
-                <img
+                {/* <img
                   className="friendProfilePic"
                   src={
                     friend.profilePicture
@@ -59,7 +60,8 @@ const FriendList = ({ user }) => {
                       : `${PF}person/profile-picture/default-profilepic.png`
                   }
                   alt=""
-                />
+                /> */}
+                <Avatar className="friendProfilePic" src={PF + friend?.profilePictur} variant="rounded"/>
                 <span className="friendName">{friend.username}</span>
               </div>
             </Link>

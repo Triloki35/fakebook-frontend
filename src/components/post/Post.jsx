@@ -14,7 +14,7 @@ import { Link } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import { UpdateUser } from "../../context/AuthActions";
 import UsersModal from "../showUserModal/UsersModal";
-import { Skeleton } from "@mui/material";
+import { Avatar, Skeleton } from "@mui/material";
 
 const Post = ({ post, socket }) => {
   // console.log(socket);
@@ -172,30 +172,8 @@ const Post = ({ post, socket }) => {
             <Link
               to={`/profile/${user?.username}`}
               style={{ textDecoration: "none" }}
-            >
-              {/* <img
-                className="postProfileImg"
-                src={
-                  user?.profilePicture
-                    ? PF + user?.profilePicture
-                    : `${PF}person/profile-picture/default-profilepic.png`
-                }
-                alt=""
-              /> */}
-              {user?.profilePicture ? (
-                <img
-                  className="postProfileImg"
-                  src={
-                    user?.profilePicture
-                      ? PF + user?.profilePicture
-                      : `${PF}person/profile-picture/default-profilepic.png`
-                  }
-                  alt=""
-                />
-              ) : (
-                <Skeleton variant="circular" width={40} height={40} />
-              )}
-              {/* <Avatar src={PF + user?.profilePicture} /> */}
+            > 
+              <Avatar className="postProfileImg" src={PF + user?.profilePicture} />
             </Link>
             <div className="ps-l-wrapper">
               <div style={{ display: "flex" }}>

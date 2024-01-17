@@ -18,7 +18,7 @@ import { v4 as uuidv4 } from "uuid";
 import NotificationModal from "../notificationModal/NotificationModal";
 import FriendRequest from "../friend-request/FriendRequest";
 import SearchBox from "../search/SearchBox";
-import { CircularProgress } from "@mui/material";
+import { Avatar, CircularProgress } from "@mui/material";
 import HelpCompo from "../help/Help.jsx";
 
 const Topbar = ({ socket, unseen }) => {
@@ -209,11 +209,7 @@ const Topbar = ({ socket, unseen }) => {
                             className="notification unread"
                             onClick={() => handleNotificationClick(n)}
                           >
-                            <img
-                              className="notificationImg"
-                              src={PF + n.senderProfilePicture}
-                              alt="img"
-                            />
+                            <Avatar src={PF + n.senderProfilePicture}/>
                             <span className="notificationText">
                               {n.senderName}{" "}
                               {n.type === "tagged" && `${n.type} you in post`}
@@ -231,11 +227,7 @@ const Topbar = ({ socket, unseen }) => {
                             }
                             onClick={() => handleNotificationClick(n)}
                           >
-                            <img
-                              className="notificationImg"
-                              src={PF + n.senderProfilePicture}
-                              alt="img"
-                            />
+                            <Avatar src={PF + n.senderProfilePicture}/>
                             <span className="notificationText">
                               {n.senderName}{" "}
                               {n.type === "tagged" && `${n.type} you in post`}
@@ -257,16 +249,7 @@ const Topbar = ({ socket, unseen }) => {
             <FriendRequest setFriendRequestBandage={setFriendRequestBandage} />
           )}
         </div>
-        <img
-          src={
-            user.profilePicture
-              ? `${PF + user.profilePicture}`
-              : `${PF}person/profile-picture/default-profilepic.png`
-          }
-          alt="profile pic"
-          className="topbarImg"
-          onClick={handleDropDown}
-        />
+        <Avatar className="topbarImg" src={PF+user.profilePicture} onClick={handleDropDown}/>
 
         {dropdown && (
           <div className="dropdownContainer">

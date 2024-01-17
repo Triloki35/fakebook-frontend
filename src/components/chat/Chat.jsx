@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { format } from "timeago.js";
 import "./chat.css";
+import { Avatar } from "@mui/material";
 
 const Chat = ({ message, own, friend }) => {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
@@ -28,15 +29,7 @@ const Chat = ({ message, own, friend }) => {
   return (
     <div className={own ? "chat-common chatOwn" : "chat-common chat"}>
       {!own && (
-        <img
-          src={
-            friend?.profilePicture !== ""
-              ? PF + friend?.profilePicture
-              : PF + "person/profile-pic/default-profilePic.png"
-          }
-          alt="user"
-          className="chatImg"
-        />
+        <Avatar className="chatImg" src={PF + friend?.profilePicture}/>
       )}
 
       <div

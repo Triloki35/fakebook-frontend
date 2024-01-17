@@ -1,18 +1,17 @@
-.fl-top{
+.fl-top {
   margin-bottom: 10px;
 }
 
-.fl-top-up{
+.fl-top-up {
   display: flex;
   justify-content: space-between;
 }
 
 .friendProfilePic {
-  height: 100px;
-  width: 100px;
-  border-radius: 5px;
+  height: 100px !important;
+  width: 100px !important;
+  border-radius: 10px !important;
   object-fit: cover;
-  /* cursor: pointer; */
 }
 
 .rightBarFriends {
@@ -47,7 +46,7 @@
     gap: 10px;
   }
 
-  .rightBarFriend{
+  .rightBarFriend {
     margin-bottom: 0px;
   }
 }

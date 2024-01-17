@@ -4,6 +4,7 @@ import axios from "axios";
 import { format } from "timeago.js";
 import Stack from "@mui/material/Stack";
 import LinearProgress from "@mui/material/LinearProgress";
+import { Avatar } from "@mui/material";
 
 const History = ({ conversation, lastMessage, curruser }) => {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
@@ -47,15 +48,7 @@ const History = ({ conversation, lastMessage, curruser }) => {
     
   return (
     <div className="history" style={(lastMessage?.senderId !== curruser._id && seen===false) ? {background:"#e4e6eb"} : {}}>
-      <img
-        src={
-          friend?.profilePicture !== ""
-            ? PF + friend?.profilePicture
-            : PF + "person/profile-picture/default-profilePic.png"
-        }
-        alt="user"
-        className="historyImg"
-      />
+      <Avatar className="historyImg" src={PF + friend?.profilePicture}/>
       <div className="historyContainer">
         <span className="historyName">{friend?.username}</span>
         <div className="lastMsg">

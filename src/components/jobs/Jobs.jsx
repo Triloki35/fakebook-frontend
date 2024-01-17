@@ -103,7 +103,7 @@ function Jobs({ setJobs }) {
           searchResult.map((s, index) => (
             <ListItem key={index} divider={true}>
               <ListItemAvatar sx={{ marginBottom: "50px" }}>
-                <Avatar src={s.employer_logo} />
+                <Avatar src={s.employer_logo} alt={s.employer_name}/>
               </ListItemAvatar>
 
               <div className="job-list-text-container">

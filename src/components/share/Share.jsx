@@ -10,6 +10,7 @@ import {
 } from "@mui/icons-material";
 import { AuthContext } from "../../context/AuthContext";
 import Picker from "@emoji-mart/react";
+import { Avatar } from "@mui/material";
 
 const Share = ({socket}) => {
   new Picker({
@@ -106,7 +107,7 @@ const Share = ({socket}) => {
             to={`/profile/${user.username}`}
             style={{ textDecoration: "none" }}
           >
-            <img
+            {/* <img
               className="shareProfileImg"
               src={
                 user.profilePicture
@@ -114,7 +115,8 @@ const Share = ({socket}) => {
                   : `${PF}person/profile-picture/default-profilepic.png`
               }
               alt=""
-            />
+            /> */}
+            <Avatar className="shareProfileImg" src={PF + user.profilePicture}/>
           </Link>
           <input
             placeholder={"what's in your mind " + user.username + " ?"}

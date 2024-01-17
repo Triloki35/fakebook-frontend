@@ -2,6 +2,7 @@ import React from "react";
 import "./chatbar.css";
 import { Link } from "react-router-dom";
 import { Call, ChevronLeft, Info, Videocam } from "@mui/icons-material";
+import { Avatar } from "@mui/material";
 
 function Chatbar({ friend, isMobile, setMessengerCenterVisible }) {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
@@ -15,15 +16,7 @@ function Chatbar({ friend, isMobile, setMessengerCenterVisible }) {
             window.location.reload();
           }}
         />
-        <img
-          className="chatbarImg"
-          src={
-            friend?.profilePicture !== ""
-              ? PF + friend?.profilePicture
-              : PF + "person/profile-pic/default-profilePic.png"
-          }
-          alt=""
-        />
+        <Avatar className="chatbarImg" src={PF + friend?.profilePicture}/>
         <span className="chatbarName">{friend && friend.username}</span>
       </div>
       <div className="chatbarRight">

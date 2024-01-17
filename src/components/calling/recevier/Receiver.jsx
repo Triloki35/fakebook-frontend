@@ -6,6 +6,7 @@ import Peer from "simple-peer";
 
 import * as process from "process";
 import Timer from "../../timer/Timer";
+import { Avatar } from "@mui/material";
 
 const Receiver = ({ socket, callProp }) => {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
@@ -97,7 +98,7 @@ const Receiver = ({ socket, callProp }) => {
       <div className="receiverWrapper">
         {(!callAccepted || !call.video) && (
           <div className="receiverTop">
-            <img src={PF + call?.from.profilePicture} alt="" />
+            <Avatar src={PF + call?.from.profilePicture} />
             <h4 style={!call.video ? { color: "black" } : {}}>{call?.from.username}</h4>
             {!callAccepted ? (
               <small style={!call.video ? { color: "black" } : {}}>
