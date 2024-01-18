@@ -78,8 +78,6 @@ const Share = ({ socket }) => {
     formData.append("userId", user._id);
     formData.append("username", user.username);
     formData.append("profilePicture", user.profilePicture);
-    formData.append("username", user.username);
-    formData.append("profilePicture", user.profilePicture);
     formData.append("desc", desc.current.value);
     formData.append("image", image);
 
