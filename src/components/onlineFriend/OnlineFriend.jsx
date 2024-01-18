@@ -2,6 +2,7 @@ import React ,{useEffect , useState }from 'react';
 import "./onlineFriend.css";
 import axios from 'axios';
 import { fetchFriendList } from '../../apiCalls';
+import { Avatar } from "@mui/material";
 
 const OnlineFriend = ({user , onlineUsers, setCurrentConversation, setMessengerCenterVisible}) => {
   
@@ -50,11 +51,12 @@ const OnlineFriend = ({user , onlineUsers, setCurrentConversation, setMessengerC
       {activeFriend.map((f) => (
         <div className="onlineFriend" key={f._id} onClick={()=>{handleClick(f);setMessengerCenterVisible((prev)=>!prev)}}>
           <div className="onlineFriendContainer">
-            <img
+            {/* <img
               className="onlineFriendImg"
               src={user ? PF + f.profilePicture : PF + "person/profile-pic/10.jpeg"}
               alt=""
-            />
+            /> */}
+            <Avatar src={PF + f?.profilePicture}/>
             <span className="onlineSymbool"></span>
             <span className="onlineFriendName">
               {user && f.username }
