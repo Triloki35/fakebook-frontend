@@ -153,6 +153,17 @@ const Post = ({ post, socket }) => {
     }
   };
 
+  function arrayBufferToBase64(buffer) {
+    let binary = '';
+    const bytes = new Uint8Array(buffer);
+    const len = bytes.byteLength;
+    for (let i = 0; i < len; i++) {
+      binary += String.fromCharCode(bytes[i]);
+    }
+    return btoa(binary);
+  }
+  
+
   return (
     <div className="post">
       <div className="postWrapper">
@@ -246,7 +257,7 @@ const Post = ({ post, socket }) => {
         </div>
         <div className="postCenter">
           <span className="postText">{post?.desc}</span>
-          <img className="postImg" src={PF + post.img} alt="" />
+          <img className="postImg" src={`data:image/jpeg;base64,${arrayBufferToBase64(post.img.data)}`} alt="" />
         </div>
         <div className="postBottom">
           <div className="postBottomLeft">

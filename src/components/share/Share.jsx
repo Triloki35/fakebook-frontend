@@ -93,10 +93,16 @@ const Share = ({ socket }) => {
         },
       });
 
+      // const res = await axios.post(`http://localhost:8000/api/posts/`, formData, {
+      //   headers: {
+      //     "Content-Type": "multipart/form-data",
+      //   },
+      // });
+
       window.location.reload();
     } catch (error) {
       // console.error("Error uploading post:", error);
-      setError(error.response.data);
+      setError(error?.response?.data);
     }
     setLoading(false);
   };

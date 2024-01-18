@@ -44,6 +44,9 @@ const Feed = ({
       const res = username
         ? await axios.get(`${API}posts/profile/${username}?page=${page}`)
         : await axios.get(`${API}posts/timeline/${user._id}?page=${page}`);
+      // const res = username
+      //   ? await axios.get(`http://localhost:8000/api/posts/profile/${username}?page=${page}`)
+      //   : await axios.get(`http://localhost:8000/api/posts/timeline/${user._id}?page=${page}`);
 
       const sortedPostsAscending = res.data.sort(
         (a, b) => new Date(b.createdAt) - new Date(a.createdAt)
