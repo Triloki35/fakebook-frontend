@@ -3,6 +3,7 @@ import "./profileEdit.css";
 import { Cancel, Favorite, Home, LocationOn } from "@mui/icons-material";
 import { AuthContext } from "../../context/AuthContext";
 import axios from "axios";
+import { Alert } from "@mui/material";
 
 export default function ProfileEdit({ isOpen, onClose, onChange }) {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
@@ -25,6 +26,8 @@ export default function ProfileEdit({ isOpen, onClose, onChange }) {
   const [isEditingBio, setIsEditingBio] = useState(false);
   const [editedBio, setEditedBio] = useState(user.desc);
 
+  const [error, setError] = useState(null);
+
   const profilePicChange = (e) => {
     setSelectedProfilePic(e.target.files[0]);
     setProfilePicEdit(true);
@@ -42,15 +45,18 @@ export default function ProfileEdit({ isOpen, onClose, onChange }) {
 
     try {
       const res = await axios.post(`${API}users/uploadProfilePic`, formData);
+      // const res = await axios.post(
+      //   `http://localhost:8000/api/users/uploadProfilePic`,
+      //   formData
+      // );
       console.log("Post uploaded successfully:", res.data);
 
       const userInfo = JSON.parse(localStorage.getItem("userInfo"));
       userInfo.profilePicture = res.data.profilePicture;
       localStorage.setItem("userInfo", JSON.stringify(userInfo));
     } catch (error) {
-      console.error("Error uploading profile picture:", error);
+      setError("Error uploading profile picture");
     }
-
     setProfilePicEdit(false);
   };
 
@@ -70,14 +76,15 @@ export default function ProfileEdit({ isOpen, onClose, onChange }) {
     formData.append("_id", user._id);
 
     try {
-      const res = await axios.post(`${API}users/uploadCoverPic`, formData);
-      console.log("Post uploaded successfully:", res.data);
+      // const res = await axios.post(`${API}users/uploadCoverPic`, formData);
+      const res = await axios.post(`http://localhost:8000/api/users/uploadCoverPic`, formData);
+      // console.log("Post uploaded successfully:", res.data);
 
       const userInfo = JSON.parse(localStorage.getItem("userInfo"));
       userInfo.coverPicture = res.data.coverPicture;
       localStorage.setItem("userInfo", JSON.stringify(userInfo));
     } catch (error) {
-      console.error("Error uploading cover picture:", error);
+      setError("Error uploading cover picture");
     }
 
     setCoverPicEdit(false);
@@ -105,7 +112,7 @@ export default function ProfileEdit({ isOpen, onClose, onChange }) {
       userInfo.relationship = res.data.relationship;
       localStorage.setItem("userInfo", JSON.stringify(userInfo));
     } catch (error) {
-      console.error("Error updating about:", error);
+      setError("Error uploading about");
     }
 
     setIsEditingAbout(false);
@@ -117,14 +124,17 @@ export default function ProfileEdit({ isOpen, onClose, onChange }) {
 
   const handleSaveBio = async () => {
     try {
-      const res = await axios.post(`${API}users/updateDesc`, { desc: editedBio, _id: user._id });
+      const res = await axios.post(`${API}users/updateDesc`, {
+        desc: editedBio,
+        _id: user._id,
+      });
       console.log(res.data);
 
       const userInfo = JSON.parse(localStorage.getItem("userInfo"));
       userInfo.desc = res.data.desc;
       localStorage.setItem("userInfo", JSON.stringify(userInfo));
     } catch (error) {
-      console.log(error);
+      setError("Error uploading about");
     }
 
     setIsEditingBio(false);
@@ -141,7 +151,6 @@ export default function ProfileEdit({ isOpen, onClose, onChange }) {
         </div>
         <hr className="hr-style" />
         <div className="edit-bottom">
-
           <div className="edit-bottom-wrapper">
             <div className="edit-header">
               <h4>Profile Picture</h4>
@@ -160,9 +169,11 @@ export default function ProfileEdit({ isOpen, onClose, onChange }) {
                     Cancel
                   </button>
                 </div>
-              ) : <label htmlFor="profilePictureInput" className="edit-label">
-                Edit
-              </label>}
+              ) : (
+                <label htmlFor="profilePictureInput" className="edit-label">
+                  Edit
+                </label>
+              )}
               <input
                 type="file"
                 accept="image/*"
@@ -173,17 +184,24 @@ export default function ProfileEdit({ isOpen, onClose, onChange }) {
             </div>
             <div className="edit-body profile-body">
               {selectedProfilePic ? (
-                <img className="profile-picture" src={URL.createObjectURL(selectedProfilePic)} alt="Selected Profile" />
+                <img
+                  className="profile-picture"
+                  src={URL.createObjectURL(selectedProfilePic)}
+                  alt="Selected Profile"
+                />
               ) : (
-                <img className="profile-picture" src={
-                  user.profilePicture
-                    ? PF + user.profilePicture
-                    : `${PF}person/profile-picture/default-profilepic.png`
-                } alt="" />
+                <img
+                  className="profile-picture"
+                  src={
+                    user.profilePicture
+                      ? PF + user.profilePicture
+                      : `${PF}person/profile-picture/default-profilepic.png`
+                  }
+                  alt=""
+                />
               )}
             </div>
           </div>
-
 
           <div className="edit-bottom-wrapper">
             <div className="edit-header">
@@ -203,10 +221,12 @@ export default function ProfileEdit({ isOpen, onClose, onChange }) {
                     Cancel
                   </button>
                 </div>
-              ):<label htmlFor="coverPictureInput" className="edit-label">
-                Edit
-              </label>}
-              
+              ) : (
+                <label htmlFor="coverPictureInput" className="edit-label">
+                  Edit
+                </label>
+              )}
+
               <input
                 type="file"
                 accept="image/*"
@@ -217,13 +237,21 @@ export default function ProfileEdit({ isOpen, onClose, onChange }) {
             </div>
             <div className="edit-body edit-cover-pic">
               {selectedCoverPic ? (
-                <img className="cover-picture" src={URL.createObjectURL(selectedCoverPic)} alt="Selected Cover" />
+                <img
+                  className="cover-picture"
+                  src={URL.createObjectURL(selectedCoverPic)}
+                  alt="Selected Cover"
+                />
               ) : (
-                <img className="cover-picture" src={
-                  user.coverPicture
-                    ? PF + user.coverPicture
-                    : `${PF}person/cover-picture/default-coverpic.jpeg`
-                } alt="" />
+                <img
+                  className="cover-picture"
+                  src={
+                    user.coverPicture
+                      ? PF + user.coverPicture
+                      : `${PF}person/cover-picture/default-coverpic.jpeg`
+                  }
+                  alt=""
+                />
               )}
             </div>
           </div>
@@ -236,7 +264,10 @@ export default function ProfileEdit({ isOpen, onClose, onChange }) {
                   <button className="save" onClick={handleSaveAbout}>
                     Save
                   </button>
-                  <button className="cancel" onClick={() => setIsEditingAbout(false)}>
+                  <button
+                    className="cancel"
+                    onClick={() => setIsEditingAbout(false)}
+                  >
                     Cancel
                   </button>
                 </div>
@@ -246,7 +277,7 @@ export default function ProfileEdit({ isOpen, onClose, onChange }) {
             </div>
             <div className="edit-body" id="about-body">
               {isEditingAbout ? (
-                <form style={{display:"flex",flexDirection:"column"}}>
+                <form style={{ display: "flex", flexDirection: "column" }}>
                   <label>
                     Lives in:
                     <input
@@ -302,10 +333,12 @@ export default function ProfileEdit({ isOpen, onClose, onChange }) {
               ) : (
                 <ul>
                   <li className="aboutList">
-                    <Home className="icon" /> Lives in &nbsp; <b>{editedAbout.city}</b>
+                    <Home className="icon" /> Lives in &nbsp;{" "}
+                    <b>{editedAbout.city}</b>
                   </li>
                   <li className="aboutList">
-                    <LocationOn className="icon" /> From &nbsp; <b>{editedAbout.from}</b>
+                    <LocationOn className="icon" /> From &nbsp;{" "}
+                    <b>{editedAbout.from}</b>
                   </li>
                   <li className="aboutList">
                     <Favorite className="icon" /> {editedAbout.relationship}
@@ -322,7 +355,10 @@ export default function ProfileEdit({ isOpen, onClose, onChange }) {
                   <button className="save" onClick={handleSaveBio}>
                     Save
                   </button>
-                  <button className="cancel" onClick={() => setIsEditingBio(false)}>
+                  <button
+                    className="cancel"
+                    onClick={() => setIsEditingBio(false)}
+                  >
                     Cancel
                   </button>
                 </div>
@@ -339,17 +375,27 @@ export default function ProfileEdit({ isOpen, onClose, onChange }) {
                   className="bio-textarea"
                 />
               ) : (
-                <p style={{ textAlign: "center", color: "gray" }}>{editedBio}</p>
+                <p style={{ textAlign: "center", color: "gray" }}>
+                  {editedBio}
+                </p>
               )}
             </div>
           </div>
         </div>
         <hr className="hr-style" />
         <div className="close-btn-con">
-          <button className="close-btn" onClick={() => window.location.reload()}>
+          <button
+            className="close-btn"
+            onClick={() => window.location.reload()}
+          >
             Close
           </button>
         </div>
+        {error && (
+            <Alert className="profile-edit-error" severity="error" onClose={() => setError(null)}>
+              {error}
+            </Alert>
+          )}
       </div>
     </div>
   );

@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from "react";
 import "./suggestion.css";
 import { Link } from "react-router-dom";
-import { CircularProgress } from "@mui/material";
+import { Avatar, CircularProgress } from "@mui/material";
 import { AuthContext } from "../../../context/AuthContext";
 import axios from "axios";
 import { UpdateUser } from "../../../context/AuthActions";
@@ -85,14 +85,15 @@ const Suggestion = ({
           to={`/profile/${suggestion.username}`}
           style={{ textDecoration: "none", color: "black" }}
         >
-          <img
+          {/* <img
             src={
               suggestion.profilePicture
                 ? PF + suggestion.profilePicture
                 : PF + "person/profile-picture/default-profilepic.png"
             }
             alt=""
-          />
+          /> */}
+          <Avatar src={PF + suggestion.profilePicture} sx={{marginRight:"10px"}}/>
         </Link>
 
         <div className="fs-userInfo">

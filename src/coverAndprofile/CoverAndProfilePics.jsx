@@ -1,6 +1,7 @@
 import React from "react";
 import "./CoverAndProfilePics.css";
 import { Avatar } from "@mui/material";
+import { arrayBufferToBase64 } from "../base64Converter";
 
 const CoverAndProfilePics = ({ user }) => {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
@@ -12,20 +13,11 @@ const CoverAndProfilePics = ({ user }) => {
         src={
           user?.coverPicture
             ? PF + user.coverPicture
-            : `${PF}person/cover-picture/default-coverpic.jpeg`
+            : `data:image/jpeg;base64,${arrayBufferToBase64(user?.coverPicture.data)}`
         }
         alt=""
       />
-      {/* <img
-        className="profilePic"
-        src={
-          user?.profilePicture
-            ? PF + user.profilePicture
-            : `${PF}person/profile-picture/default-profilepic.png`
-        }
-        alt=""
-      /> */}
-      <Avatar id="profilePic" src={PF + user?.profilePicture} />
+      <Avatar id="profilePic" src={`data:image/jpeg;base64,${arrayBufferToBase64(user?.profilePicture.data)}`} />
     </div>
   );
 };

@@ -15,6 +15,7 @@ import { AuthContext } from "../../context/AuthContext";
 import { UpdateUser } from "../../context/AuthActions";
 import UsersModal from "../showUserModal/UsersModal";
 import { Avatar, Skeleton } from "@mui/material";
+import { arrayBufferToBase64 } from "../../base64Converter";
 
 const Post = ({ post, socket }) => {
   // console.log(socket);
@@ -152,16 +153,6 @@ const Post = ({ post, socket }) => {
       console.log(error);
     }
   };
-
-  function arrayBufferToBase64(buffer) {
-    let binary = '';
-    const bytes = new Uint8Array(buffer);
-    const len = bytes.byteLength;
-    for (let i = 0; i < len; i++) {
-      binary += String.fromCharCode(bytes[i]);
-    }
-    return btoa(binary);
-  }
   
 
   return (
@@ -175,7 +166,8 @@ const Post = ({ post, socket }) => {
             >
               <Avatar
                 className="postProfileImg"
-                src={PF + post?.profilePicture}
+                // src={PF + post?.profilePicture}
+                src={`data:image/jpeg;base64,${arrayBufferToBase64(post?.profilePicture.data)}`}
               />
             </Link>
             <div className="ps-l-wrapper">

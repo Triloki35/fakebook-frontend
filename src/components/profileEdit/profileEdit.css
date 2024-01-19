@@ -217,3 +217,8 @@
   margin-right: 5px;
   color: gray;
 }
+
+.profile-edit-error{
+  position: absolute;
+  left: 30%;
+}
