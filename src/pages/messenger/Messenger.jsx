@@ -104,6 +104,9 @@ const Messenger = ({ socket, onlineUsers, unseenProp, callProp }) => {
         const res = await axios.get(`${API}messages/` + currentConversation?._id, {
           userId: user._id,
         });
+        // const res = await axios.get(`http://localhost:8000/api/messages/` + currentConversation?._id, {
+        //   userId: user._id,
+        // });
         setMessage(res.data);
       } catch (error) {
         console.log(error);

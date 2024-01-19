@@ -30,14 +30,14 @@ const Reply = ({ currentConversation, user, message, setMessage, socket }) => {
 
   const handleImageChange = () => {
     const files = fileInput.current.files;
-
+  
     if (files.length > 0) {
       const reader = new FileReader();
-
+  
       reader.onload = (e) => {
         setImagePreview(e.target.result);
       };
-
+  
       reader.readAsDataURL(files[0]);
     } else {
       setImagePreview(null);
@@ -59,8 +59,8 @@ const Reply = ({ currentConversation, user, message, setMessage, socket }) => {
       formData.append("text", replyText.current.value);
 
       // Append selected images to formData
-      for (let i = 0; i < fileInput.current.files.length; i++) {
-        formData.append("images", fileInput.current.files[i]);
+      if (fileInput.current.files.length > 0) {
+        formData.append("image", fileInput.current.files[0]);
       }
 
       const res = await axios.post(`${API}messages/`, formData, {
@@ -68,6 +68,11 @@ const Reply = ({ currentConversation, user, message, setMessage, socket }) => {
           "Content-Type": "multipart/form-data",
         },
       });
+      // const res = await axios.post(`http://localhost:8000/api/messages/`, formData, {
+      //   headers: {
+      //     "Content-Type": "multipart/form-data",
+      //   },
+      // });
 
       setMessage([...message, res.data]);
 

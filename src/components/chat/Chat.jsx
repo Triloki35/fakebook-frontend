@@ -3,9 +3,9 @@ import axios from "axios";
 import { format } from "timeago.js";
 import "./chat.css";
 import { Avatar } from "@mui/material";
+import { arrayBufferToBase64 } from "../../base64Converter"
 
 const Chat = ({ message, own, friend }) => {
-  const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const API = process.env.REACT_APP_API;
 
   const [seen, setSeen] = useState(false);
@@ -29,7 +29,7 @@ const Chat = ({ message, own, friend }) => {
   return (
     <div className={own ? "chat-common chatOwn" : "chat-common chat"}>
       {!own && (
-        <Avatar className="chatImg" src={PF + friend?.profilePicture}/>
+        <Avatar className="chatImg" src={`data:image/jpeg;base64,${arrayBufferToBase64(friend?.profilePicture.data)}`}/>
       )}
 
       <div
@@ -38,9 +38,7 @@ const Chat = ({ message, own, friend }) => {
           setToggle(!toggle);
         }}
       >
-        {message.content.images.map((img) => (
-          <img src={PF + img} alt="" className="chatImgMsg" />
-        ))}
+        {message.content.image && <img src={`data:image/jpeg;base64,${arrayBufferToBase64(message.content.image.data)}`} alt="" className="chatImgMsg" />}
         <p className={message.content.text !=='' && ( own ? "chatTextMsgOwn" : "chatTextMsg ")}>
           {message.content.text !=='' && message.content.text}
         </p>

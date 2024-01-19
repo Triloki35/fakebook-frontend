@@ -12,8 +12,8 @@ const CoverAndProfilePics = ({ user }) => {
         className="coverPic"
         src={
           user?.coverPicture
-            ? PF + user.coverPicture
-            : `data:image/jpeg;base64,${arrayBufferToBase64(user?.coverPicture.data)}`
+            ? `data:image/jpeg;base64,${arrayBufferToBase64(user?.coverPicture.data)}`
+            : `${PF}person/cover-picture/default-coverpic.jpeg`
         }
         alt=""
       />
