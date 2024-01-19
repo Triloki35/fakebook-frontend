@@ -76,8 +76,8 @@ export default function ProfileEdit({ isOpen, onClose, onChange }) {
     formData.append("_id", user._id);
 
     try {
-      // const res = await axios.post(`${API}users/uploadCoverPic`, formData);
-      const res = await axios.post(`http://localhost:8000/api/users/uploadCoverPic`, formData);
+      const res = await axios.post(`${API}users/uploadCoverPic`, formData);
+      // const res = await axios.post(`http://localhost:8000/api/users/uploadCoverPic`, formData);
       // console.log("Post uploaded successfully:", res.data);
 
       const userInfo = JSON.parse(localStorage.getItem("userInfo"));
