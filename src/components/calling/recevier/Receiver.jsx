@@ -3,7 +3,7 @@ import "./receiver.css";
 import ScaleLoader from "react-spinners/ScaleLoader";
 import { Call, CallEnd } from "@mui/icons-material";
 import Peer from "simple-peer";
-
+import { arrayBufferToBase64 } from "../../../base64Converter";
 import * as process from "process";
 import Timer from "../../timer/Timer";
 import { Avatar } from "@mui/material";
@@ -98,7 +98,7 @@ const Receiver = ({ socket, callProp }) => {
       <div className="receiverWrapper">
         {(!callAccepted || !call.video) && (
           <div className="receiverTop">
-            <Avatar src={PF + call?.from.profilePicture} />
+            <Avatar src={`data:image/jpeg;base64,${arrayBufferToBase64(call?.from?.profilePicture?.data)}`} />
             <h4 style={!call.video ? { color: "black" } : {}}>{call?.from.username}</h4>
             {!callAccepted ? (
               <small style={!call.video ? { color: "black" } : {}}>

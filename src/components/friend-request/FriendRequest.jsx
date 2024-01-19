@@ -6,7 +6,8 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import { UpdateUser } from "../../context/AuthActions";
-import { CircularProgress } from "@mui/material";
+import { Avatar, CircularProgress } from "@mui/material";
+import { arrayBufferToBase64 } from "../../base64Converter";
 
 const FriendRequest = ({ setFriendRequestBandage }) => {
   const API = process.env.REACT_APP_API;
@@ -80,15 +81,7 @@ const FriendRequest = ({ setFriendRequestBandage }) => {
                 to={"/profile/" + f.username}
                 className="fr-img-container"
               >
-                <img
-                  className="fr-img"
-                  src={
-                    f.profilePicture
-                      ? `${PF + f.profilePicture}`
-                      : `${PF}person/profile-picture/default-profilepic.png`
-                  }
-                  alt=""
-                />
+                <Avatar className="fr-img" src={`data:image/jpeg;base64,${arrayBufferToBase64(f?.profilePicture?.data)}`}/>
                 <span className="fr-name">{f.username}</span>
               </Link>
               <div className="fr-btn-container">

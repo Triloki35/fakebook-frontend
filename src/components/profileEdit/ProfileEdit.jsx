@@ -3,7 +3,8 @@ import "./profileEdit.css";
 import { Cancel, Favorite, Home, LocationOn } from "@mui/icons-material";
 import { AuthContext } from "../../context/AuthContext";
 import axios from "axios";
-import { Alert } from "@mui/material";
+import { Alert, Avatar } from "@mui/material";
+import { arrayBufferToBase64 } from "../../base64Converter";
 
 export default function ProfileEdit({ isOpen, onClose, onChange }) {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
@@ -184,21 +185,9 @@ export default function ProfileEdit({ isOpen, onClose, onChange }) {
             </div>
             <div className="edit-body profile-body">
               {selectedProfilePic ? (
-                <img
-                  className="profile-picture"
-                  src={URL.createObjectURL(selectedProfilePic)}
-                  alt="Selected Profile"
-                />
+                <Avatar className="profile-picture" src={URL.createObjectURL(selectedProfilePic)}/>
               ) : (
-                <img
-                  className="profile-picture"
-                  src={
-                    user.profilePicture
-                      ? PF + user.profilePicture
-                      : `${PF}person/profile-picture/default-profilepic.png`
-                  }
-                  alt=""
-                />
+                <Avatar className="profile-picture" src={`data:image/jpeg;base64,${arrayBufferToBase64(user?.profilePicture?.data)}`}/>
               )}
             </div>
           </div>
@@ -237,17 +226,13 @@ export default function ProfileEdit({ isOpen, onClose, onChange }) {
             </div>
             <div className="edit-body edit-cover-pic">
               {selectedCoverPic ? (
-                <img
-                  className="cover-picture"
-                  src={URL.createObjectURL(selectedCoverPic)}
-                  alt="Selected Cover"
-                />
+                <Avatar className="cover-picture" src={URL.createObjectURL(selectedCoverPic)}/>
               ) : (
                 <img
                   className="cover-picture"
                   src={
                     user.coverPicture
-                      ? PF + user.coverPicture
+                      ? `data:image/jpeg;base64,${arrayBufferToBase64(user?.coverPicture?.data)}`
                       : `${PF}person/cover-picture/default-coverpic.jpeg`
                   }
                   alt=""

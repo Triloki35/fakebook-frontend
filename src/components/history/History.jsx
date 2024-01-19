@@ -5,9 +5,9 @@ import { format } from "timeago.js";
 import Stack from "@mui/material/Stack";
 import LinearProgress from "@mui/material/LinearProgress";
 import { Avatar } from "@mui/material";
+import { arrayBufferToBase64 } from "../../base64Converter";
 
 const History = ({ conversation, lastMessage, curruser }) => {
-  const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const API = process.env.REACT_APP_API;
   const [friend, setfriend] = useState(null);
   const [seen , setSeen] = useState(false);
@@ -48,7 +48,7 @@ const History = ({ conversation, lastMessage, curruser }) => {
     
   return (
     <div className="history" style={(lastMessage?.senderId !== curruser._id && seen===false) ? {background:"#e4e6eb"} : {}}>
-      <Avatar className="historyImg" src={PF + friend?.profilePicture}/>
+      <Avatar className="historyImg" src={`data:image/jpeg;base64,${arrayBufferToBase64(friend?.profilePicture?.data)}`}/>
       <div className="historyContainer">
         <span className="historyName">{friend?.username}</span>
         <div className="lastMsg">

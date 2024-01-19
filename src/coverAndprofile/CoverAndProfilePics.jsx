@@ -17,7 +17,7 @@ const CoverAndProfilePics = ({ user }) => {
         }
         alt=""
       />
-      <Avatar id="profilePic" src={`data:image/jpeg;base64,${arrayBufferToBase64(user?.profilePicture.data)}`} />
+      <Avatar id="profilePic" src={`data:image/jpeg;base64,${arrayBufferToBase64(user?.profilePicture?.data)}`} />
     </div>
   );
 };

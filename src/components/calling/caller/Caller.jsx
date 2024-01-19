@@ -13,6 +13,7 @@ import { AuthContext } from "../../../context/AuthContext";
 import * as process from "process";
 import Timer from "../../timer/Timer";
 import { Avatar } from "@mui/material";
+import { arrayBufferToBase64 } from "../../../base64Converter";
 
 const Caller = ({ friend, socket, audio, video }) => {
   const { user } = useContext(AuthContext);
@@ -89,7 +90,7 @@ const Caller = ({ friend, socket, audio, video }) => {
       <div className="callerWrapper">
         {(!callAccepted || !video) && (
           <div className="callerTop">
-            <Avatar src={PF + friend?.profilePicture}/>
+            <Avatar src={`data:image/jpeg;base64,${arrayBufferToBase64(friend?.profilePicture?.data)}`}/>
             <h4 style={!video ? { color: "black" } : {}}>{friend.username}</h4>
             {callProgress && (
               <small style={!video ? { color: "black" } : {}}>

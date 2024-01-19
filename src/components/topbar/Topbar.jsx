@@ -20,6 +20,7 @@ import FriendRequest from "../friend-request/FriendRequest";
 import SearchBox from "../search/SearchBox";
 import { Avatar, CircularProgress } from "@mui/material";
 import HelpCompo from "../help/Help.jsx";
+import { arrayBufferToBase64 } from "../../base64Converter.js";
 
 const Topbar = ({ socket, unseen }) => {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
@@ -209,7 +210,7 @@ const Topbar = ({ socket, unseen }) => {
                             className="notification unread"
                             onClick={() => handleNotificationClick(n)}
                           >
-                            <Avatar src={PF + n.senderProfilePicture}/>
+                            <Avatar src={`data:image/jpeg;base64,${arrayBufferToBase64(n?.senderProfilePicture?.data)}`}/>
                             <span className="notificationText">
                               {n.senderName}{" "}
                               {n.type === "tagged" && `${n.type} you in post`}
@@ -227,7 +228,7 @@ const Topbar = ({ socket, unseen }) => {
                             }
                             onClick={() => handleNotificationClick(n)}
                           >
-                            <Avatar src={PF + n.senderProfilePicture}/>
+                            <Avatar src={`data:image/jpeg;base64,${arrayBufferToBase64(n?.senderProfilePicture?.data)}`}/>
                             <span className="notificationText">
                               {n.senderName}{" "}
                               {n.type === "tagged" && `${n.type} you in post`}
@@ -249,7 +250,7 @@ const Topbar = ({ socket, unseen }) => {
             <FriendRequest setFriendRequestBandage={setFriendRequestBandage} />
           )}
         </div>
-        <Avatar className="topbarImg" src={PF+user.profilePicture} onClick={handleDropDown}/>
+        <Avatar className="topbarImg" src={`data:image/jpeg;base64,${arrayBufferToBase64(user?.profilePicture?.data)}`}  onClick={handleDropDown}/>
 
         {dropdown && (
           <div className="dropdownContainer">
@@ -264,7 +265,7 @@ const Topbar = ({ socket, unseen }) => {
                     <img
                       src={
                         user.profilePicture
-                          ? PF + user.profilePicture
+                          ? `data:image/jpeg;base64,${arrayBufferToBase64(user?.profilePicture?.data)}`
                           : `${PF}person/profile-picture/default-profilepic.png`
                       }
                       alt="profile pic"

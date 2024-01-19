@@ -166,8 +166,7 @@ const Post = ({ post, socket }) => {
             >
               <Avatar
                 className="postProfileImg"
-                // src={PF + post?.profilePicture}
-                src={`data:image/jpeg;base64,${arrayBufferToBase64(post?.profilePicture.data)}`}
+                src={`data:image/jpeg;base64,${arrayBufferToBase64(post?.profilePicture?.data)}`}
               />
             </Link>
             <div className="ps-l-wrapper">
@@ -249,7 +248,7 @@ const Post = ({ post, socket }) => {
         </div>
         <div className="postCenter">
           <span className="postText">{post?.desc}</span>
-          <img className="postImg" src={`data:image/jpeg;base64,${arrayBufferToBase64(post.img.data)}`} alt="" />
+          <img className="postImg" src={`data:image/jpeg;base64,${arrayBufferToBase64(post?.img?.data)}`} alt="" />
         </div>
         <div className="postBottom">
           <div className="postBottomLeft">
@@ -290,8 +289,9 @@ const Post = ({ post, socket }) => {
             <ul className="prev-comments">
               {prevComment?.map((c) => (
                 <li className="prev-comment" key={c._id}>
-                  <img src={PF + c.profilePicture} alt="" />
-                  <div>
+                  {/* <img src={PF + c.profilePicture} alt="" /> */}
+                  <Avatar src={`data:image/jpeg;base64,${arrayBufferToBase64(c?.profilePicture?.data)}`}/>
+                  <div className="prev-comment-div">
                     <span>
                       <b>{c.senderName}</b>
                       <small className="comment-time">

@@ -7,6 +7,7 @@ import { AuthContext } from "../../context/AuthContext";
 import Picker from "@emoji-mart/react";
 import { Alert, Avatar } from "@mui/material";
 import ScaleLoader from "react-spinners/ScaleLoader";
+import { arrayBufferToBase64 } from "../../base64Converter";
 
 const Share = ({ socket }) => {
   new Picker({
@@ -119,7 +120,7 @@ const Share = ({ socket }) => {
           >
             <Avatar
               className="shareProfileImg"
-              src={PF + user.profilePicture}
+              src={`data:image/jpeg;base64,${arrayBufferToBase64(user?.profilePicture?.data)}`}
             />
           </Link>
           <input
@@ -193,14 +194,7 @@ const Share = ({ socket }) => {
                           : handleTagSelect(f)
                       }
                     >
-                      <img
-                        src={
-                          f.profilePicture
-                            ? `${process.env.REACT_APP_PUBLIC_FOLDER}${f.profilePicture}`
-                            : `${process.env.REACT_APP_PUBLIC_FOLDER}person/profile-picture/default-profilepic.png`
-                        }
-                        alt=""
-                      />
+                      <Avatar src={`data:image/jpeg;base64,${arrayBufferToBase64(f?.profilePicture?.data)}`} />
                       <span>{f.username}</span>
                     </div>
                   ))

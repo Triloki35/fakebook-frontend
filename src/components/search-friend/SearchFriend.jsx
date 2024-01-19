@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import "./searchFriend.css";
 import { Search } from "@mui/icons-material";
 import axios from "axios";
+import { Avatar } from "@mui/material";
+import { arrayBufferToBase64 } from "../../base64Converter";
 
 const SearchFriend = ({ userId, setCurrentConversation, setMessengerCenterVisible }) => {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
@@ -58,7 +60,7 @@ const SearchFriend = ({ userId, setCurrentConversation, setMessengerCenterVisibl
           <ul className="sf-result-list">
             {searchResults.map((friend) => (
               <li className="sf-result-item" key={friend._id} onClick={()=>{handleClick(friend);setMessengerCenterVisible((prev)=>!prev)}}>
-                <img src={PF + friend.profilePicture} alt="" />
+                <Avatar src={`data:image/jpeg;base64,${arrayBufferToBase64(friend?.profilePicture?.data)}`}/>
                 <span>{friend.username}</span>
               </li>
             ))}

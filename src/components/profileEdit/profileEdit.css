@@ -120,12 +120,9 @@
   filter: brightness(1.1);
 }
 
-
-/* profile-picture */
 .profile-picture{
-  height: 100px;
-  width: 100px;
-  border-radius: 50%;
+  height: 100px !important;
+  width: 100px !important;
 }
 
 /* cover-picture */

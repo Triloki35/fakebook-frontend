@@ -6,13 +6,14 @@ import { AuthContext } from "../../../context/AuthContext";
 import axios from "axios";
 import { UpdateUser } from "../../../context/AuthActions";
 import UsersModal from "../../showUserModal/UsersModal";
+import { arrayBufferToBase64 } from "../../../base64Converter";
 
 const Suggestion = ({
   suggestion,
   setSuggestions,
   setLoadingStates,
   loadingStates,
-  socket
+  socket,
 }) => {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const API = process.env.REACT_APP_API;
@@ -27,7 +28,7 @@ const Suggestion = ({
         const res = await axios.get(
           `${API}users/mutual-friends/${user._id}/${suggestion._id}`
         );
-        console.log(res.data);
+        // console.log(res.data);
         setMutualFriends(res.data);
       } catch (error) {
         console.log(error);
@@ -47,12 +48,15 @@ const Suggestion = ({
         profilePicture: user.profilePicture,
         username: user.username,
       };
-      const res = await axios.post(`${API}users/friend-request/${userId}`, reqbody);
+      const res = await axios.post(
+        `${API}users/friend-request/${userId}`,
+        reqbody
+      );
       // updating
       setSuggestions((prevSuggestions) =>
         prevSuggestions.filter((suggestion) => suggestion._id !== userId)
       );
-      socket.emit("send-friendRequest",{  userId:userId });
+      socket.emit("send-friendRequest", { userId: userId });
       localStorage.setItem("userInfo", JSON.stringify(res.data));
       dispatch(UpdateUser(res.data));
     } catch (error) {
@@ -85,15 +89,12 @@ const Suggestion = ({
           to={`/profile/${suggestion.username}`}
           style={{ textDecoration: "none", color: "black" }}
         >
-          {/* <img
-            src={
-              suggestion.profilePicture
-                ? PF + suggestion.profilePicture
-                : PF + "person/profile-picture/default-profilepic.png"
-            }
-            alt=""
-          /> */}
-          <Avatar src={PF + suggestion.profilePicture} sx={{marginRight:"10px"}}/>
+          <Avatar
+            src={`data:image/jpeg;base64,${arrayBufferToBase64(
+              suggestion?.profilePicture?.data
+            )}`}
+            sx={{ marginRight: "10px" }}
+          />
         </Link>
 
         <div className="fs-userInfo">

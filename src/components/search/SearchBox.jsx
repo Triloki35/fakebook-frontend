@@ -4,6 +4,8 @@ import { Cancel, Search } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import Post from "../post/Post";
+import { Avatar } from "@mui/material";
+import { arrayBufferToBase64 } from "../../base64Converter";
 
 const SearchBox = ({ socket }) => {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
@@ -63,15 +65,7 @@ const SearchBox = ({ socket }) => {
                     className="result-user"
                     to={"/profile/" + user.username}
                   >
-                    <img
-                      src={
-                        user.profilePicture
-                          ? PF + user.profilePicture
-                          : `${PF}person/profile-picture/default-profilepic.png`
-                      }
-                      className="sr-pp"
-                      alt=""
-                    />
+                    <Avatar className="sr-pp" src={`data:image/jpeg;base64,${arrayBufferToBase64(user?.profilePicture?.data)}`} />
                     <span>{user.username}</span>
                   </Link>
                 </li>
@@ -85,7 +79,7 @@ const SearchBox = ({ socket }) => {
             <ul className="result-list">
               {searchResults.posts.map((post) => (
                 <li key={post._id} onClick={() => handleClick(post._id)}>
-                  <img src={PF + post.img} className="sr-post" alt="" />
+                  <img src={`data:image/jpeg;base64,${arrayBufferToBase64(post?.img?.data)}`} className="sr-post" alt="" />
                   <span>{post.desc}</span>
                 </li>
               ))}

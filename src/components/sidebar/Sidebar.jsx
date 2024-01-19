@@ -15,8 +15,8 @@ import {
 } from "@mui/icons-material";
 import { AuthContext } from "../../context/AuthContext";
 import { Link } from "react-router-dom";
-import { Alert, Avatar } from "@mui/material";
-import Help from "../help/Help";
+import { Alert} from "@mui/material";
+import { arrayBufferToBase64 } from "../../base64Converter";
 
 const Sidebar = ({ isMobile, openSideBar, setJobs, setShowVideos, setNews, setEvents, setShowBookmark, setHelp}) => {
   const { user } = useContext(AuthContext);
@@ -80,7 +80,7 @@ const Sidebar = ({ isMobile, openSideBar, setJobs, setShowVideos, setNews, setEv
             <img
               src={
                 user.profilePicture
-                  ? PF + user.profilePicture
+                  ?`data:image/jpeg;base64,${arrayBufferToBase64(user.profilePicture?.data)}`
                   : `${PF}person/profile-picture/default-profilepic.png`
               }
               alt=""

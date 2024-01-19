@@ -2,9 +2,10 @@ import React, { useEffect, useState } from "react";
 import "./user.css";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import { Avatar } from "@mui/material";
+import { arrayBufferToBase64 } from "../../../base64Converter";
 
 const LikedUser = ({userId}) => {
-  const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const API = process.env.REACT_APP_API;
   const [user, setUser] = useState();
 
@@ -26,18 +27,9 @@ const LikedUser = ({userId}) => {
       style={{ textDecoration: "none" }}
       className="lm-bottom"
     >
-      <img
-        className="lm-bottom-img"
-        src={
-          user?.profilePicture
-            ? PF + user.profilePicture
-            : `${PF}person/profile-picture/default-profilepic.png`
-        }
-        alt=""
-      />
+      <Avatar className="lm-bottom-img" src={`data:image/jpeg;base64,${arrayBufferToBase64(user?.profilePicture?.data)}`}/>
       <div className="lmb-nameContainer">
         <span>{user?.username}</span>
-        {/* <small>5 mutual friends</small> */}
       </div>
     </Link>
   );
@@ -51,18 +43,9 @@ const TagedUser = ({user}) => {
       style={{ textDecoration: "none" }}
       className="lm-bottom"
     >
-      <img
-        className="lm-bottom-img"
-        src={
-          user?.profilePicture
-            ? PF + user.profilePicture
-            : `${PF}person/profile-picture/default-profilepic.png`
-        }
-        alt=""
-      />
+      <Avatar className="lm-bottom-img" src={`data:image/jpeg;base64,${arrayBufferToBase64(user?.profilePicture?.data)}`} />
       <div className="lmb-nameContainer">
         <span>{user?.username}</span>
-        {/* <small>5 mutual friends</small> */}
       </div>
     </Link>
   );

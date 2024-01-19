@@ -3,10 +3,9 @@ import "./onlineFriend.css";
 import axios from 'axios';
 import { fetchFriendList } from '../../apiCalls';
 import { Avatar } from "@mui/material";
+import { arrayBufferToBase64 } from "../../base64Converter";
 
 const OnlineFriend = ({user , onlineUsers, setCurrentConversation, setMessengerCenterVisible}) => {
-  
-  const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const API = process.env.REACT_APP_API;
   const [friendList, setFriendList] = useState([]);
   const [activeFriend,setActiveFriend] = useState([]);
@@ -51,12 +50,7 @@ const OnlineFriend = ({user , onlineUsers, setCurrentConversation, setMessengerC
       {activeFriend.map((f) => (
         <div className="onlineFriend" key={f._id} onClick={()=>{handleClick(f);setMessengerCenterVisible((prev)=>!prev)}}>
           <div className="onlineFriendContainer">
-            {/* <img
-              className="onlineFriendImg"
-              src={user ? PF + f.profilePicture : PF + "person/profile-pic/10.jpeg"}
-              alt=""
-            /> */}
-            <Avatar src={PF + f?.profilePicture}/>
+            <Avatar src={`data:image/jpeg;base64,${arrayBufferToBase64(f?.profilePicture?.data)}`}/>
             <span className="onlineSymbool"></span>
             <span className="onlineFriendName">
               {user && f.username }

@@ -3,6 +3,7 @@ import "./chatbar.css";
 import { Link } from "react-router-dom";
 import { Call, ChevronLeft, Info, Videocam } from "@mui/icons-material";
 import { Avatar } from "@mui/material";
+import { arrayBufferToBase64 } from "../../base64Converter";
 
 function Chatbar({ friend, isMobile, setMessengerCenterVisible }) {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
@@ -16,7 +17,7 @@ function Chatbar({ friend, isMobile, setMessengerCenterVisible }) {
             window.location.reload();
           }}
         />
-        <Avatar className="chatbarImg" src={PF + friend?.profilePicture}/>
+        <Avatar className="chatbarImg" src={`data:image/jpeg;base64,${arrayBufferToBase64(friend?.profilePicture?.data)}`}/>
         <span className="chatbarName">{friend && friend.username}</span>
       </div>
       <div className="chatbarRight">
