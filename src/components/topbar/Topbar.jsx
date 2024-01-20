@@ -9,6 +9,10 @@ import {
   Logout,
   Feedback,
   ArrowForwardIos,
+  Delete,
+  Lock,
+  Key,
+  ArrowBack,
 } from "@mui/icons-material";
 
 import { Link } from "react-router-dom";
@@ -21,6 +25,7 @@ import SearchBox from "../search/SearchBox";
 import { Avatar, CircularProgress } from "@mui/material";
 import HelpCompo from "../help/Help.jsx";
 import { arrayBufferToBase64 } from "../../base64Converter.js";
+import AccountSettings from "./AccountSettings.jsx";
 
 const Topbar = ({ socket, unseen }) => {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
@@ -43,9 +48,10 @@ const Topbar = ({ socket, unseen }) => {
   const [showModal, setShowModal] = useState(false);
   const [clickedNotification, setClickedNotification] = useState(null);
 
+  const [setting, setSetting] = useState(false);
   const [help, setHelp] = useState(false);
   const [feedback, setFeedback] = useState(false);
-  
+
   // fetching notification
   const fetchNotifications = async () => {
     try {
@@ -210,7 +216,11 @@ const Topbar = ({ socket, unseen }) => {
                             className="notification unread"
                             onClick={() => handleNotificationClick(n)}
                           >
-                            <Avatar src={`data:image/jpeg;base64,${arrayBufferToBase64(n?.senderProfilePicture?.data)}`}/>
+                            <Avatar
+                              src={`data:image/jpeg;base64,${arrayBufferToBase64(
+                                n?.senderProfilePicture?.data
+                              )}`}
+                            />
                             <span className="notificationText">
                               {n.senderName}{" "}
                               {n.type === "tagged" && `${n.type} you in post`}
@@ -228,7 +238,11 @@ const Topbar = ({ socket, unseen }) => {
                             }
                             onClick={() => handleNotificationClick(n)}
                           >
-                            <Avatar src={`data:image/jpeg;base64,${arrayBufferToBase64(n?.senderProfilePicture?.data)}`}/>
+                            <Avatar
+                              src={`data:image/jpeg;base64,${arrayBufferToBase64(
+                                n?.senderProfilePicture?.data
+                              )}`}
+                            />
                             <span className="notificationText">
                               {n.senderName}{" "}
                               {n.type === "tagged" && `${n.type} you in post`}
@@ -250,7 +264,13 @@ const Topbar = ({ socket, unseen }) => {
             <FriendRequest setFriendRequestBandage={setFriendRequestBandage} />
           )}
         </div>
-        <Avatar className="topbarImg" src={`data:image/jpeg;base64,${arrayBufferToBase64(user?.profilePicture?.data)}`}  onClick={handleDropDown}/>
+        <Avatar
+          className="topbarImg"
+          src={`data:image/jpeg;base64,${arrayBufferToBase64(
+            user?.profilePicture?.data
+          )}`}
+          onClick={handleDropDown}
+        />
 
         {dropdown && (
           <div className="dropdownContainer">
@@ -265,7 +285,9 @@ const Topbar = ({ socket, unseen }) => {
                     <img
                       src={
                         user.profilePicture
-                          ? `data:image/jpeg;base64,${arrayBufferToBase64(user?.profilePicture?.data)}`
+                          ? `data:image/jpeg;base64,${arrayBufferToBase64(
+                              user?.profilePicture?.data
+                            )}`
                           : `${PF}person/profile-picture/default-profilepic.png`
                       }
                       alt="profile pic"
@@ -280,18 +302,24 @@ const Topbar = ({ socket, unseen }) => {
               </Link>
               <div className="ddbottom">
                 <ul>
-                  <li>
-                    <Settings /> <span>Settings</span>
-                  </li>
-                  <li onClick={() => setHelp((p) => !p)}>
-                    <Help /> <span>Help</span>
-                  </li>
-                  <li  onClick={() => setFeedback((p) => !p)}>
-                    <Feedback /> <span>Feedback</span>
-                  </li>
-                  <li onClick={handleLogout}>
-                    <Logout /> <span>Logout</span>
-                  </li>
+                  {!setting ? (
+                    <>
+                      <li onClick={() => setSetting((p) => !p)}>
+                        <Settings /> <span>Settings</span>
+                      </li>
+                      <li onClick={() => setHelp((p) => !p)}>
+                        <Help /> <span>Help</span>
+                      </li>
+                      <li onClick={() => setFeedback((p) => !p)}>
+                        <Feedback /> <span>Feedback</span>
+                      </li>
+                      <li onClick={handleLogout}>
+                        <Logout /> <span>Logout</span>
+                      </li>
+                    </>
+                  ) : (
+                    <AccountSettings setSetting={setSetting} userId={user._id}/>
+                  )}
                 </ul>
               </div>
             </div>
@@ -307,15 +335,15 @@ const Topbar = ({ socket, unseen }) => {
       )}
 
       {help && (
-        (<div className="topbarHelp">
-          <HelpCompo setHelp={setHelp}/>
-        </div>)
+        <div className="topbarHelp">
+          <HelpCompo setHelp={setHelp} />
+        </div>
       )}
 
       {feedback && (
-        (<div className="topbarHelp">
-          <HelpCompo setHelp={setFeedback} feedback={feedback}/>
-        </div>)
+        <div className="topbarHelp">
+          <HelpCompo setHelp={setFeedback} feedback={feedback} />
+        </div>
       )}
     </div>
   );

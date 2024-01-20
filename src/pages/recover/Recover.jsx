@@ -154,7 +154,7 @@ const Recover = () => {
       return (
         <form className="loginBox recoverForm" onSubmit={sendOtp}>
           <div className="recover-title">
-            <h3>Recover Your Account</h3>
+            <h3>Change Your Account Password</h3>
             <hr />
             <p>Please enter your email address to get otp for your account.</p>
           </div>
