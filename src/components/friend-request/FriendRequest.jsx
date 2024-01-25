@@ -9,7 +9,7 @@ import { UpdateUser } from "../../context/AuthActions";
 import { Avatar, CircularProgress } from "@mui/material";
 import { arrayBufferToBase64 } from "../../base64Converter";
 
-const FriendRequest = ({ setFriendRequestBandage }) => {
+const FriendRequest = ({ setFriendRequestBandage, socket }) => {
   const API = process.env.REACT_APP_API;
   const { user, dispatch } = useContext(AuthContext);
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
@@ -36,14 +36,26 @@ const FriendRequest = ({ setFriendRequestBandage }) => {
 
   const handleConfirm = async (f) => {
     try {
-      const res = await axios.post(`${API}users/accept-friend-request/` + user._id, {
-        friendId: f._id,
-      });
+      const res = await axios.post(
+        `${API}users/accept-friend-request/` + user._id,
+        {
+          friendId: f._id,
+        }
+      );
       // console.log(res.data);
       localStorage.setItem("userInfo", JSON.stringify(res.data));
       setFriendReq(res.data.friendRequests);
       setFriendRequestBandage(res.data.friendRequests.length);
       dispatch(UpdateUser(res.data));
+      socket?.emit("Notification", {
+        postId: null,
+        senderId: user._id,
+        receiverId: f._id,
+        senderName: user.username,
+        senderProfilePicture: user.profilePicture,
+        type: "accepted",
+        status: false,
+      });
     } catch (error) {
       console.log(error);
     }
@@ -51,9 +63,12 @@ const FriendRequest = ({ setFriendRequestBandage }) => {
 
   const handleDelete = async (f) => {
     try {
-      const res = await axios.post(`${API}users/reject-friend-request/` + user._id, {
-        friendId: f._id,
-      });
+      const res = await axios.post(
+        `${API}users/reject-friend-request/` + user._id,
+        {
+          friendId: f._id,
+        }
+      );
       console.log(res.data);
       dispatch(UpdateUser(res.data));
       localStorage.setItem("userInfo", JSON.stringify(res.data));
@@ -81,7 +96,12 @@ const FriendRequest = ({ setFriendRequestBandage }) => {
                 to={"/profile/" + f.username}
                 className="fr-img-container"
               >
-                <Avatar className="fr-img" src={`data:image/jpeg;base64,${arrayBufferToBase64(f?.profilePicture?.data)}`}/>
+                <Avatar
+                  className="fr-img"
+                  src={`data:image/jpeg;base64,${arrayBufferToBase64(
+                    f?.profilePicture?.data
+                  )}`}
+                />
                 <span className="fr-name">{f.username}</span>
               </Link>
               <div className="fr-btn-container">

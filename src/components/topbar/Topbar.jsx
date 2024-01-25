@@ -227,6 +227,8 @@ const Topbar = ({ socket, unseen }) => {
                               {n.type === "commented" &&
                                 `${n.type} on your post`}
                               {n.type === "liked" && `${n.type} your post`}
+                              {n.type === "accepted" &&
+                                `${n.type} your friend request`}
                             </span>
                           </li>
                         );
@@ -261,7 +263,7 @@ const Topbar = ({ socket, unseen }) => {
           )}
 
           {friendRequestPanelVisible && (
-            <FriendRequest setFriendRequestBandage={setFriendRequestBandage} />
+            <FriendRequest socket={socket} setFriendRequestBandage={setFriendRequestBandage} />
           )}
         </div>
         <Avatar
@@ -318,7 +320,10 @@ const Topbar = ({ socket, unseen }) => {
                       </li>
                     </>
                   ) : (
-                    <AccountSettings setSetting={setSetting} userId={user._id}/>
+                    <AccountSettings
+                      setSetting={setSetting}
+                      userId={user._id}
+                    />
                   )}
                 </ul>
               </div>

@@ -97,7 +97,7 @@ export default function Login() {
       </div>
       <footer className="footer">
         <p>
-          &copy; 2024 Your Website. All rights reserved. Designed by triloki35
+          &copy; 2024 fakebook. All rights reserved. Designed by triloki35
         </p>
       </footer>
     </div>

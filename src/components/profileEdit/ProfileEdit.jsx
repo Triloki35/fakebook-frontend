@@ -226,7 +226,7 @@ export default function ProfileEdit({ isOpen, onClose, onChange }) {
             </div>
             <div className="edit-body edit-cover-pic">
               {selectedCoverPic ? (
-                <Avatar className="cover-picture" src={URL.createObjectURL(selectedCoverPic)}/>
+                <img className="cover-picture" src={URL.createObjectURL(selectedCoverPic)} alt=""/>      
               ) : (
                 <img
                   className="cover-picture"

@@ -20,7 +20,7 @@ export default function Register() {
       </div>
       <footer className="footer">
         <p>
-          &copy; 2024 Your Website. All rights reserved. Designed by triloki35
+          &copy; 2024 Your fakebook. All rights reserved. Designed by triloki35
         </p>
       </footer>
     </div>
