@@ -26,7 +26,7 @@ const Post = ({ post, socket }) => {
   // const [user, setuser] = useState({});
 
   // like
-  const [like, setLike] = useState(post.likes.length);
+  const [like, setLike] = useState(post?.likes?.length);
   const [isLiked, setisLiked] = useState(post.likes.includes(currentUser._id));
   const [showUsersModal, setShowUsersModal] = useState(false);
   // tag

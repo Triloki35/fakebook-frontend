@@ -50,6 +50,10 @@ const Recover = () => {
         email: email,
         otp: otp,
       });
+      // const res = await axios.post(`http://localhost:8000/api/auth/verify-otp`, {
+      //   email: email,
+      //   otp: otp,
+      // });
       console.log(res.data);
       setMessage(res.data.message);
       setVerified(true);

@@ -19,12 +19,16 @@ const VerifyEmail = ({ email }) => {
         email: email,
         otp: otp,
       });
+      // const res = await axios.post(`http://localhost:8000/api/auth/verify-otp`, {
+      //   email: email,
+      //   otp: otp,
+      // });
       console.log(res.data);
       setMessage(res.data.message);
       navigate("/login");
     } catch (error) {
       console.log(error);
-      setError(error.response.data.error);
+      setError(error?.response?.data?.error);
     }
     setLoading(false);
   };

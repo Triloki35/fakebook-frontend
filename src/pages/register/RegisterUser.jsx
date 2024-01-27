@@ -10,8 +10,8 @@ const RegisterUser = () => {
   const API = process.env.REACT_APP_API;
   const username = useRef();
   const [email,setEmail] = useState("");
-  const password = useRef();
-  const matchPassword = useRef();
+  const [password,setPassword] = useState("");
+  const [matchPassword,setMatchPassword] = useState("");
   const [dob, setDob] = useState(null);
   const [gender, setGender] = useState("");
   const [error, setError] = useState(null);
@@ -22,13 +22,13 @@ const RegisterUser = () => {
     setLoading(true);
     e.preventDefault();
 
-    if (matchPassword.current.value !== password.current.value) {
+    if (matchPassword !== password) {
       matchPassword.current.setCustomValidity("Password doesn't match");
     } else {
       const user = {
         username: username.current.value,
         email: email,
-        password: password.current.value,
+        password: password,
         dob: dob,
         gender: gender,
       };
@@ -106,14 +106,14 @@ const RegisterUser = () => {
             type="password"
             className="registerInput"
             placeholder="Password"
-            ref={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
           <input
             required
             type="password"
             className="registerInput"
             placeholder="Repeat Password"
-            ref={matchPassword}
+            onChange={(e) => setMatchPassword(e.target.value)}
           />
           <button className="registerButton" type="submit">
             {loading ? <CircularProgress color="inherit" size={"35px"} /> :"Sign Up"}
