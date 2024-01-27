@@ -34,6 +34,9 @@ function FriendSuggestions({socket}) {
         const res2 = await axios.get(`${API}users/friendsuggestion`, {
           params: { dont },
         });
+        // const res2 = await axios.get(`http://localhost:8000/api/users/friendsuggestion`, {
+        //   params: { dont },
+        // });
         setSuggestions(res2.data);
         // intializing loadingStaes
         const initialLoadingStates = {};

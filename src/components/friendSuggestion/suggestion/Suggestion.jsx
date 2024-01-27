@@ -21,6 +21,8 @@ const Suggestion = ({
 
   const [showUsersModal, setShowUsersModal] = useState(false);
   const [mutualFriends, setMutualFriends] = useState([]);
+  const [loadingAdd, setLoadingAdd] = useState(false);
+  const [loadingRemove, setLoadingRemove] = useState(false);
 
   useEffect(() => {
     const fetchtMutualFriends = async () => {
@@ -28,7 +30,6 @@ const Suggestion = ({
         const res = await axios.get(
           `${API}users/mutual-friends/${user._id}/${suggestion._id}`
         );
-        // console.log(res.data);
         setMutualFriends(res.data);
       } catch (error) {
         console.log(error);
@@ -38,10 +39,7 @@ const Suggestion = ({
   }, [suggestion]);
 
   const SendRequest = async (userId) => {
-    setLoadingStates((prevLoadingStates) => ({
-      ...prevLoadingStates,
-      [userId]: true,
-    }));
+    setLoadingAdd(true);
     try {
       const reqbody = {
         _id: user._id,
@@ -52,7 +50,6 @@ const Suggestion = ({
         `${API}users/friend-request/${userId}`,
         reqbody
       );
-      // updating
       setSuggestions((prevSuggestions) =>
         prevSuggestions.filter((suggestion) => suggestion._id !== userId)
       );
@@ -62,24 +59,15 @@ const Suggestion = ({
     } catch (error) {
       console.log(error);
     }
-    setLoadingStates((prevLoadingStates) => ({
-      ...prevLoadingStates,
-      [userId]: false,
-    }));
+    setLoadingAdd(false);
   };
 
   const removeFromSuggestion = async (id) => {
-    setLoadingStates((prevLoadingStates) => ({
-      ...prevLoadingStates,
-      [id]: true,
-    }));
+    setLoadingRemove(true);
     setSuggestions((prevSuggestions) =>
       prevSuggestions.filter((suggestion) => suggestion._id !== id)
     );
-    setLoadingStates((prevLoadingStates) => ({
-      ...prevLoadingStates,
-      [id]: false,
-    }));
+    setLoadingRemove(false);
   };
 
   return (
@@ -110,9 +98,9 @@ const Suggestion = ({
         <button
           className="fs-confirm"
           onClick={() => SendRequest(suggestion._id)}
-          disabled={loadingStates[suggestion._id]}
+          disabled={loadingAdd}
         >
-          {!loadingStates[suggestion._id] ? (
+          {!loadingAdd ? (
             "Add"
           ) : (
             <CircularProgress color="inherit" size="15px" />
@@ -121,9 +109,9 @@ const Suggestion = ({
         <button
           className="fs-delete"
           onClick={() => removeFromSuggestion(suggestion._id)}
-          disabled={loadingStates[suggestion._id]}
+          disabled={loadingRemove}
         >
-          {!loadingStates[suggestion._id] ? (
+          {!loadingRemove ? (
             "Remove"
           ) : (
             <CircularProgress color="primary" size="15px" />
