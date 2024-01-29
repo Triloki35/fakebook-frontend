@@ -123,6 +123,13 @@ const Topbar = ({ socket, unseen }) => {
     window.location.href = "/";
   };
 
+  const notificationMessages = {
+    tagged: "tagged you in post",
+    commented: "commented on your post",
+    liked: "liked your post",
+    accepted: "accepted your friend request",
+  };
+
   // console.log(notification);
 
   return (
@@ -222,13 +229,9 @@ const Topbar = ({ socket, unseen }) => {
                               )}`}
                             />
                             <span className="notificationText">
-                              {n.senderName}{" "}
-                              {n.type === "tagged" && `${n.type} you in post`}
-                              {n.type === "commented" &&
-                                `${n.type} on your post`}
-                              {n.type === "liked" && `${n.type} your post`}
-                              {n.type === "accepted" &&
-                                `${n.type} your friend request`}
+                              {`${n.senderName} ${
+                                notificationMessages[n.type]
+                              }`}
                             </span>
                           </li>
                         );
@@ -246,11 +249,9 @@ const Topbar = ({ socket, unseen }) => {
                               )}`}
                             />
                             <span className="notificationText">
-                              {n.senderName}{" "}
-                              {n.type === "tagged" && `${n.type} you in post`}
-                              {n.type === "commented" &&
-                                `${n.type} on your post`}
-                              {n.type === "liked" && `${n.type} your post`}
+                              {`${n.senderName} ${
+                                notificationMessages[n.type]
+                              }`}
                             </span>
                           </li>
                         );
@@ -263,7 +264,10 @@ const Topbar = ({ socket, unseen }) => {
           )}
 
           {friendRequestPanelVisible && (
-            <FriendRequest socket={socket} setFriendRequestBandage={setFriendRequestBandage} />
+            <FriendRequest
+              socket={socket}
+              setFriendRequestBandage={setFriendRequestBandage}
+            />
           )}
         </div>
         <Avatar

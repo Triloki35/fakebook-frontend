@@ -27,7 +27,7 @@ const Post = ({ post, socket }) => {
 
   // like
   const [like, setLike] = useState(post?.likes?.length);
-  const [isLiked, setisLiked] = useState(post.likes.includes(currentUser._id));
+  const [isLiked, setisLiked] = useState(post?.likes?.includes(currentUser._id));
   const [showUsersModal, setShowUsersModal] = useState(false);
   // tag
   const [istag, setIstag] = useState(false);
@@ -154,6 +154,8 @@ const Post = ({ post, socket }) => {
     }
   };
   
+  console.log(post);
+  // console.log(currentUser.profilePicture);
 
   return (
     <div className="post">
@@ -168,6 +170,7 @@ const Post = ({ post, socket }) => {
                 className="postProfileImg"
                 src={`data:image/jpeg;base64,${arrayBufferToBase64(post?.profilePicture?.data)}`}
               />
+              {/* <img className="postProfileImg" src={`data:image/jpeg;base64,${arrayBufferToBase64(post?.profilePicture?.data)}`} alt="" srcset="" /> */}
             </Link>
             <div className="ps-l-wrapper">
               <div style={{ display: "flex" }}>

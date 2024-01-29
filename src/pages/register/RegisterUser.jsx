@@ -10,8 +10,8 @@ const RegisterUser = () => {
   const API = process.env.REACT_APP_API;
   const username = useRef();
   const [email,setEmail] = useState("");
-  const [password,setPassword] = useState("");
-  const [matchPassword,setMatchPassword] = useState("");
+  const password = useRef();
+  const matchPassword = useRef();
   const [dob, setDob] = useState(null);
   const [gender, setGender] = useState("");
   const [error, setError] = useState(null);
@@ -21,22 +21,29 @@ const RegisterUser = () => {
   const handleRegister = async (e) => {
     setLoading(true);
     e.preventDefault();
-
-    if (matchPassword !== password) {
-      matchPassword.current.setCustomValidity("Password doesn't match");
+  
+    // console.log("Match Password:", matchPassword.current.value);
+    // console.log("Password:", password.current.value);
+  
+    if (matchPassword.current.value !== password.current.value) {
+      // matchPassword.current.setCustomValidity("Password doesn't match");
+      console.log("Custom Validity Set:", matchPassword.current.validity.valid);
     } else {
+      matchPassword.current.setCustomValidity("");
+      // console.log("Custom Validity Reset:", matchPassword.current.validity.valid);
+  
       const user = {
         username: username.current.value,
         email: email,
-        password: password,
+        password: password.current.value,
         dob: dob,
         gender: gender,
       };
-
+  
       try {
         const res = await axios.post(`${API}auth/register`, user);
+        // const res = await axios.post(`http://localhost:8000/api/auth/register`, user);
         console.log(res.data);
-        // navigate("/login");
         setOtpSent(true);
       } catch (error) {
         setError(error.response.data.error);
@@ -45,6 +52,8 @@ const RegisterUser = () => {
     }
     setLoading(false);
   };
+  
+  
 
   return (
     <>
@@ -106,14 +115,14 @@ const RegisterUser = () => {
             type="password"
             className="registerInput"
             placeholder="Password"
-            onChange={(e) => setPassword(e.target.value)}
+            ref={password}
           />
           <input
             required
             type="password"
             className="registerInput"
             placeholder="Repeat Password"
-            onChange={(e) => setMatchPassword(e.target.value)}
+            ref={matchPassword}
           />
           <button className="registerButton" type="submit">
             {loading ? <CircularProgress color="inherit" size={"35px"} /> :"Sign Up"}

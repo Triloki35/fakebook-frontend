@@ -78,7 +78,7 @@ const Share = ({ socket }) => {
     const formData = new FormData();
     formData.append("userId", user._id);
     formData.append("username", user.username);
-    formData.append("profilePicture", user.profilePicture);
+    // formData.append("profilePicture", user.profilePicture);
     formData.append("desc", desc.current.value);
     formData.append("image", image);
 
@@ -88,17 +88,17 @@ const Share = ({ socket }) => {
     });
 
     try {
-      const res = await axios.post(`${API}posts/`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
-
-      // const res = await axios.post(`http://localhost:8000/api/posts/`, formData, {
+      // const res = await axios.post(`${API}posts/`, formData, {
       //   headers: {
       //     "Content-Type": "multipart/form-data",
       //   },
       // });
+
+      const res = await axios.post(`http://localhost:8000/api/posts/`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
       window.location.reload();
     } catch (error) {

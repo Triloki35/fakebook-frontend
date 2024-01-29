@@ -9,16 +9,16 @@ const ProfileDetails = ({user}) => {
     <ul className="rightBarInfo">
       <li className="rightBarInfoItems">
         <Home style={{ marginRight: "5px", color: "gray" }} /> <b>Lives in</b> &nbsp;
-        <b>{user?.city}</b>
+        {user?.city}
       </li>
       <li className="rightBarInfoItems">
         <LocationOn style={{ marginRight: "5px", color: "gray" }} /> <b>From</b>
         &nbsp;
-        <b>{user?.from}</b>
+        {user?.from}
       </li>
       <li className="rightBarInfoItems">
         <Favorite style={{ marginRight: "5px", color: "gray" }} />
-        <b>{user?.relationship}</b>
+        {user?.relationship}
       </li>
     </ul>
     </>

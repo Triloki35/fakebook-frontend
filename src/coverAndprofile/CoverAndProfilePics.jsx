@@ -5,6 +5,8 @@ import { arrayBufferToBase64 } from "../base64Converter";
 
 const CoverAndProfilePics = ({ user }) => {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
+
+  // console.log(user);
   
   return (
     <div className="coverContainer">

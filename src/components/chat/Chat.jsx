@@ -29,7 +29,7 @@ const Chat = ({ message, own, friend }) => {
   return (
     <div className={own ? "chat-common chatOwn" : "chat-common chat"}>
       {!own && (
-        <Avatar className="chatImg" src={`data:image/jpeg;base64,${arrayBufferToBase64(friend?.profilePicture.data)}`}/>
+        <Avatar className="chatImg" src={`data:image/jpeg;base64,${arrayBufferToBase64(friend?.profilePicture?.data)}`}/>
       )}
 
       <div
