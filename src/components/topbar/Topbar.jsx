@@ -15,7 +15,7 @@ import {
   ArrowBack,
 } from "@mui/icons-material";
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import axios from "axios";
 import { v4 as uuidv4 } from "uuid";
@@ -30,6 +30,7 @@ import AccountSettings from "./AccountSettings.jsx";
 const Topbar = ({ socket, unseen }) => {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const API = process.env.REACT_APP_API;
+  const navigate = useNavigate();
   const { user } = useContext(AuthContext);
   const [dropdown, setDropdown] = useState(false);
   const [activeBtn, setActivebtn] = useState(true);
@@ -40,7 +41,7 @@ const Topbar = ({ socket, unseen }) => {
   const [notificationBandage, setNotificationBandage] = useState(0);
   const [unread, setunread] = useState(false);
 
-  const [friendRequestBandage, setFriendRequestBandage] = useState();
+  const [friendRequestBandage, setFriendRequestBandage] = useState(0);
   const [friendRequestPanelVisible, setFriendRequestPanelVisible] =
     useState(false);
 
@@ -57,12 +58,13 @@ const Topbar = ({ socket, unseen }) => {
     try {
       setLoadingNotification(true);
       const res = await axios.get(`${API}users/notifications/${user._id}`);
-      const sortedNotifications = res.data.sort((a, b) => {
+      // const res = await axios.get(`http://localhost:8000/api/users/notifications/${user._id}`);
+      console.log(res.data);
+      const sortedNotifications = res.data.notifications?.sort((a, b) => {
         return new Date(b.createdAt) - new Date(a.createdAt);
       });
-      // console.log(sortedNotifications);
       setNotifications(sortedNotifications);
-      // updating local storage
+      setNotificationBandage(res.data.unreadNotificationsCount);
       const userInfo = JSON.parse(localStorage.getItem("userInfo"));
       userInfo.notifications = res.data;
       localStorage.setItem("userInfo", JSON.stringify(userInfo));
@@ -72,14 +74,11 @@ const Topbar = ({ socket, unseen }) => {
       setLoadingNotification(false);
     }
   };
+
   //  setting bandage whenever notification change
   useEffect(() => {
-    if (notifications && Array.isArray(notifications)) {
-      setNotificationBandage(
-        notifications.filter((n) => n?.status === false).length
-      );
-    }
-  }, [notifications]);
+    fetchNotifications();
+  }, []);
 
   // socket event for notification
   useEffect(() => {
@@ -89,9 +88,20 @@ const Topbar = ({ socket, unseen }) => {
     });
   }, [socket]);
 
-  const handleNotificationClick = (notification) => {
-    setClickedNotification(notification);
-    setShowModal(true);
+  const handleNotificationClick = async (notification) => {
+    if (notification.type === "accepted") {
+      notification.status = true;
+      const res = await axios.patch(
+        `${API}users/update-notification/${notification._id}/${user._id}`
+      );
+      const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+      userInfo.notifications = res.data;
+      localStorage.setItem("userInfo", JSON.stringify(userInfo));
+      navigate("/profile/" + notification.senderName);
+    } else {
+      setClickedNotification(notification);
+      setShowModal(true);
+    }
   };
 
   const closeNotificationModal = () => {
@@ -100,7 +110,21 @@ const Topbar = ({ socket, unseen }) => {
 
   // friend-request
   useEffect(() => {
-    setFriendRequestBandage(user?.friendRequests?.length);
+    const fetchFriendRq = async () => {
+      try {
+        const res = await axios.get(
+          `${API}/users/friend-requests/${user._id}`
+        );
+        // const res = await axios.get(
+        //   `http://localhost:8000/api/users/friend-requests/${user._id}`
+        // );
+        // console.log(res.data);
+        setFriendRequestBandage(res.data.friendRequests.length);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchFriendRq();
   }, [user]);
 
   // increment bandage
@@ -130,7 +154,7 @@ const Topbar = ({ socket, unseen }) => {
     accepted: "accepted your friend request",
   };
 
-  // console.log(notification);
+  console.log(notifications);
 
   return (
     <div className="topbarContainer">

@@ -11,8 +11,6 @@ import { arrayBufferToBase64 } from "../../../base64Converter";
 const Suggestion = ({
   suggestion,
   setSuggestions,
-  setLoadingStates,
-  loadingStates,
   socket,
 }) => {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
@@ -43,13 +41,16 @@ const Suggestion = ({
     try {
       const reqbody = {
         _id: user._id,
-        profilePicture: user.profilePicture,
         username: user.username,
       };
       const res = await axios.post(
         `${API}users/friend-request/${userId}`,
         reqbody
       );
+      // const res = await axios.post(
+      //   `http://localhost:8000/api/users/friend-request/${userId}`,
+      //   reqbody
+      // );
       setSuggestions((prevSuggestions) =>
         prevSuggestions.filter((suggestion) => suggestion._id !== userId)
       );

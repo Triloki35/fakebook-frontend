@@ -42,6 +42,12 @@ const FriendRequest = ({ setFriendRequestBandage, socket }) => {
           friendId: f._id,
         }
       );
+      // const res = await axios.post(
+      //   `http://localhost:8000/api/users/accept-friend-request/` + user._id,
+      //   {
+      //     friendId: f._id,
+      //   }
+      // );
       // console.log(res.data);
       localStorage.setItem("userInfo", JSON.stringify(res.data));
       setFriendReq(res.data.friendRequests);
