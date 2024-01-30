@@ -59,7 +59,7 @@ const Caller = ({ friend, socket, audio, video }) => {
       socket?.emit("callUser", {
         friendId: friend._id,
         signal: data,
-        from: user,
+        from: { _id: user._id, username: user.username },
         audio: audio,
         video: video,
       });

@@ -23,6 +23,7 @@ export default function App() {
   useEffect(() => {
     if(user){
       const newSocket = io("https://fakebook-socket-2j3s.onrender.com");
+      // const newSocket = io("http://localhost:8800");
       setSocket(newSocket);
 
       newSocket.emit("addUser", user._id);

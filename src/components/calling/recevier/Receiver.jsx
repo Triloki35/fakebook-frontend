@@ -7,11 +7,14 @@ import { arrayBufferToBase64 } from "../../../base64Converter";
 import * as process from "process";
 import Timer from "../../timer/Timer";
 import { Avatar } from "@mui/material";
+import axios from "axios";
 
 const Receiver = ({ socket, callProp }) => {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
+  const API = process.env.REACT_APP_API;
   const { call } = callProp;
   const [stream, setStream] = useState(null);
+  const [friendProfilePic , setFriendProfilePic] = useState(null);
   const [callAccepted, setCallAccepted] = useState(false);
   const [mainVideo, setMainVideo] = useState(false);
 
@@ -21,6 +24,18 @@ const Receiver = ({ socket, callProp }) => {
   const peerRef = useRef(); 
 
   window.process = process;
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const res = await axios.get(`${API}users?userId=${call?.from?._id}`);
+        setFriendProfilePic(res.data.profilePicture);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchUserData();
+  }, [call]);
 
   useEffect(() => {
     navigator.mediaDevices
@@ -98,7 +113,7 @@ const Receiver = ({ socket, callProp }) => {
       <div className="receiverWrapper">
         {(!callAccepted || !call.video) && (
           <div className="receiverTop">
-            <Avatar src={`data:image/jpeg;base64,${arrayBufferToBase64(call?.from?.profilePicture?.data)}`} />
+            <Avatar src={`data:image/jpeg;base64,${arrayBufferToBase64(friendProfilePic?.data)}`} />
             <h4 style={!call.video ? { color: "black" } : {}}>{call?.from.username}</h4>
             {!callAccepted ? (
               <small style={!call.video ? { color: "black" } : {}}>
@@ -141,7 +156,8 @@ const Receiver = ({ socket, callProp }) => {
         />
       )}
 
-      <audio ref={audioRef} src={PF + "messenger-ringtone.mp3"} loop />
+      <audio ref={audioRef} src={process.env.PUBLIC_URL + '/messenger-ringtone.mp3'} loop />
+
     </div>
   );
 };
