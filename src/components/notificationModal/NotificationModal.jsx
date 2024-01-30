@@ -29,9 +29,9 @@ const NotificationModal = ({ notification, closeNotificationModal }) => {
           `${API}users/update-notification/${notification._id}/${user._id}`
         );
         console.log(res.data);
-        const userInfo = JSON.parse(localStorage.getItem("userInfo"));
-        userInfo.notifications = res.data
-        localStorage.setItem("userInfo",JSON.stringify(userInfo));
+        // const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+        // userInfo.notifications = res.data
+        // localStorage.setItem("userInfo",JSON.stringify(userInfo));
       } catch (error) {
         console.log(error);
       }

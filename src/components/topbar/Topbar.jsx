@@ -65,9 +65,9 @@ const Topbar = ({ socket, unseen }) => {
       });
       setNotifications(sortedNotifications);
       setNotificationBandage(res.data.unreadNotificationsCount);
-      const userInfo = JSON.parse(localStorage.getItem("userInfo"));
-      userInfo.notifications = res.data;
-      localStorage.setItem("userInfo", JSON.stringify(userInfo));
+      // const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+      // userInfo.notifications = res.data;
+      // localStorage.setItem("userInfo", JSON.stringify(userInfo));
     } catch (error) {
       console.log(error);
     } finally {
