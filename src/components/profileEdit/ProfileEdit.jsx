@@ -5,11 +5,12 @@ import { AuthContext } from "../../context/AuthContext";
 import axios from "axios";
 import { Alert, Avatar } from "@mui/material";
 import { arrayBufferToBase64 } from "../../base64Converter";
+import { UpdateUser } from "../../context/AuthActions";
 
 export default function ProfileEdit({ isOpen, onClose, onChange }) {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const API = process.env.REACT_APP_API;
-  const { user } = useContext(AuthContext);
+  const { user, dispatch } = useContext(AuthContext);
 
   const [selectedProfilePic, setSelectedProfilePic] = useState(null);
   const [profilePicEdit, setProfilePicEdit] = useState(false);
@@ -50,10 +51,10 @@ export default function ProfileEdit({ isOpen, onClose, onChange }) {
       //   `http://localhost:8000/api/users/uploadProfilePic`,
       //   formData
       // );
-      console.log("Post uploaded successfully:", res.data);
+      // console.log("uploaded successfully:", res.data);
 
-      const userInfo = JSON.parse(localStorage.getItem("userInfo"));
-      userInfo.profilePicture = res.data.profilePicture;
+      dispatch(UpdateUser(res.data));
+      const { notifications, bookmarks, ...userInfo } = res.data;
       localStorage.setItem("userInfo", JSON.stringify(userInfo));
     } catch (error) {
       setError("Error uploading profile picture");
@@ -79,11 +80,11 @@ export default function ProfileEdit({ isOpen, onClose, onChange }) {
     try {
       const res = await axios.post(`${API}users/uploadCoverPic`, formData);
       // const res = await axios.post(`http://localhost:8000/api/users/uploadCoverPic`, formData);
-      // console.log("Post uploaded successfully:", res.data);
-
-      const userInfo = JSON.parse(localStorage.getItem("userInfo"));
-      userInfo.coverPicture = res.data.coverPicture;
+      // console.log("uploaded successfully:", res.data);
+      dispatch(UpdateUser(res.data));
+      const { notifications, bookmarks, ...userInfo } = res.data;
       localStorage.setItem("userInfo", JSON.stringify(userInfo));
+
     } catch (error) {
       setError("Error uploading cover picture");
     }
@@ -105,12 +106,9 @@ export default function ProfileEdit({ isOpen, onClose, onChange }) {
 
     try {
       const res = await axios.post(`${API}users/updateAbout`, aboutData);
-      console.log("About updated successfully:", res.data);
-
-      const userInfo = JSON.parse(localStorage.getItem("userInfo"));
-      userInfo.city = res.data.city;
-      userInfo.from = res.data.from;
-      userInfo.relationship = res.data.relationship;
+      // console.log("About updated successfully:", res.data);
+      dispatch(UpdateUser(res.data));
+      const { notifications, bookmarks, ...userInfo } = res.data;
       localStorage.setItem("userInfo", JSON.stringify(userInfo));
     } catch (error) {
       setError("Error uploading about");
@@ -131,8 +129,8 @@ export default function ProfileEdit({ isOpen, onClose, onChange }) {
       });
       console.log(res.data);
 
-      const userInfo = JSON.parse(localStorage.getItem("userInfo"));
-      userInfo.desc = res.data.desc;
+      dispatch(UpdateUser(res.data));
+      const { notifications, bookmarks, ...userInfo } = res.data;
       localStorage.setItem("userInfo", JSON.stringify(userInfo));
     } catch (error) {
       setError("Error uploading about");

@@ -148,7 +148,7 @@ const Post = ({ post, socket }) => {
         postId: post._id,
       });
       dispatch(UpdateUser(res.data));
-      localStorage.setItem("userInfo", JSON.stringify(res.data));
+      // localStorage.setItem("userInfo", JSON.stringify(res.data));
     } catch (error) {
       console.log(error);
     }

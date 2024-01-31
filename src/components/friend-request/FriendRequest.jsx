@@ -24,7 +24,8 @@ const FriendRequest = ({ setFriendRequestBandage, socket }) => {
         console.log(res.data);
         setFriendReq(res.data.friendRequests);
         await dispatch(UpdateUser(res.data));
-        localStorage.setItem("userInfo", JSON.stringify(res.data));
+        const { notifications, bookmarks, ...userInfo } = res.data;
+        localStorage.setItem("userInfo", JSON.stringify(userInfo));
         console.log(user);
       } catch (error) {
         console.log(error);
@@ -35,6 +36,7 @@ const FriendRequest = ({ setFriendRequestBandage, socket }) => {
   }, []);
 
   const handleConfirm = async (f) => {
+    isLoading(true);
     try {
       const res = await axios.post(
         `${API}users/accept-friend-request/` + user._id,
@@ -49,7 +51,8 @@ const FriendRequest = ({ setFriendRequestBandage, socket }) => {
       //   }
       // );
       // console.log(res.data);
-      localStorage.setItem("userInfo", JSON.stringify(res.data));
+      const { notifications, bookmarks, ...userInfo } = res.data;
+      localStorage.setItem("userInfo", JSON.stringify(userInfo));
       setFriendReq(res.data.friendRequests);
       setFriendRequestBandage(res.data.friendRequests.length);
       dispatch(UpdateUser(res.data));
@@ -65,6 +68,7 @@ const FriendRequest = ({ setFriendRequestBandage, socket }) => {
     } catch (error) {
       console.log(error);
     }
+    isLoading(false);
   };
 
   const handleDelete = async (f) => {
@@ -77,7 +81,8 @@ const FriendRequest = ({ setFriendRequestBandage, socket }) => {
       );
       console.log(res.data);
       dispatch(UpdateUser(res.data));
-      localStorage.setItem("userInfo", JSON.stringify(res.data));
+      const { notifications, bookmarks, ...userInfo } = res.data;
+      localStorage.setItem("userInfo", JSON.stringify(userInfo));
       setFriendReq(res.data.friendRequests);
       setFriendRequestBandage(res.data.friendRequests.length);
     } catch (error) {
@@ -112,10 +117,18 @@ const FriendRequest = ({ setFriendRequestBandage, socket }) => {
               </Link>
               <div className="fr-btn-container">
                 <button className="fr-confirm" onClick={() => handleConfirm(f)}>
-                  Confirm
+                  {!loading ? (
+                    "Confirm"
+                  ) : (
+                    <CircularProgress color="inherit" size="15px" />
+                  )}
                 </button>
                 <button className="fr-delete" onClick={() => handleDelete(f)}>
-                  Delete
+                  {!loading ? (
+                    "Delete"
+                  ) : (
+                    <CircularProgress color="inherit" size="15px" />
+                  )}
                 </button>
               </div>
             </li>

@@ -55,7 +55,8 @@ const Suggestion = ({
         prevSuggestions.filter((suggestion) => suggestion._id !== userId)
       );
       socket.emit("send-friendRequest", { userId: userId });
-      localStorage.setItem("userInfo", JSON.stringify(res.data));
+      const { notifications, bookmarks, ...userInfo } = res.data;
+      localStorage.setItem("userInfo", JSON.stringify(userInfo));
       dispatch(UpdateUser(res.data));
     } catch (error) {
       console.log(error);

@@ -50,8 +50,9 @@ const ProfileInfo = ({ user }) => {
           }
         );
         setIsAsked(false);
-        localStorage.setItem("userInfo", JSON.stringify(res.data));
         dispatch(UpdateUser(res.data));
+        const { notifications, bookmarks, ...userInfo } = res.data;
+        localStorage.setItem("userInfo", JSON.stringify(userInfo));
       } catch (error) {
         console.log(error);
       }
@@ -73,7 +74,8 @@ const ProfileInfo = ({ user }) => {
         console.log(error);
       }
     }
-    localStorage.setItem("userInfo", JSON.stringify(currUser));
+    const { notifications, bookmarks, ...userInfo } = currUser;
+    localStorage.setItem("userInfo", JSON.stringify(userInfo));
   };
 
   const handleEdit = () => {
@@ -143,8 +145,9 @@ const ProfileInfo = ({ user }) => {
         <div className="copy-message">Copied profile URL</div>
       )}
       {showStoryMessage && (
-      
-        <Alert className="story-message" severity="info">Coming soon...!!</Alert>
+        <Alert className="story-message" severity="info">
+          Coming soon...!!
+        </Alert>
       )}
     </div>
   );
