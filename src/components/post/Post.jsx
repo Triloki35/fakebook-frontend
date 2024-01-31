@@ -154,7 +154,7 @@ const Post = ({ post, socket }) => {
     }
   };
   
-  console.log(post);
+  // console.log(post);
   // console.log(currentUser.profilePicture);
 
   return (

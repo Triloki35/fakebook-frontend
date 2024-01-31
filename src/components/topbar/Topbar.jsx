@@ -110,7 +110,7 @@ const Topbar = ({ socket, unseen }) => {
     const fetchFriendRq = async () => {
       try {
         const res = await axios.get(
-          `${API}/users/friend-requests/${user._id}`
+          `${API}users/friend-requests/${user._id}`
         );
         // const res = await axios.get(
         //   `http://localhost:8000/api/users/friend-requests/${user._id}`
@@ -151,7 +151,7 @@ const Topbar = ({ socket, unseen }) => {
     accepted: "accepted your friend request",
   };
 
-  console.log(notifications);
+  // console.log(notifications);
 
   return (
     <div className="topbarContainer">
