@@ -17,9 +17,9 @@ const NoPost = () => {
             <div className="postCenter">
               <Skeleton variant="rounded" style={{width:"100%"}} height={300} />
             </div>
-            <div className="postBottom">
+            {/* <div className="postBottom">
               <Skeleton variant="text" style={{width:"100%"}} sx={{ fontSize: "2rem" }} />
-            </div>
+            </div> */}
           </div>
         </div>
       );

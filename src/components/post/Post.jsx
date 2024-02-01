@@ -257,13 +257,13 @@ const Post = ({ post, socket }) => {
           <div className="postBottomLeft">
             <img
               className="likeIcon"
-              src={`${PF}like.png`}
+              src={PF + 'like.png'}
               onClick={likeHandeler}
               alt=""
             />
             <img
               className="likeIcon"
-              src={`${PF}heart.png`}
+              src={PF + 'heart.png'}
               onClick={likeHandeler}
               alt=""
             />

@@ -156,7 +156,7 @@ const Receiver = ({ socket, callProp }) => {
         />
       )}
 
-      <audio ref={audioRef} src={process.env.PUBLIC_URL + '/messenger-ringtone.mp3'} loop />
+      <audio ref={audioRef} src={PF + 'messenger-ringtone.mp3'} loop />
 
     </div>
   );

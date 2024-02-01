@@ -229,9 +229,9 @@ export default function ProfileEdit({ isOpen, onClose, onChange }) {
                 <img
                   className="cover-picture"
                   src={
-                    user.coverPicture
+                    user?.coverPicture
                       ? `data:image/jpeg;base64,${arrayBufferToBase64(user?.coverPicture?.data)}`
-                      : `${PF}person/cover-picture/default-coverpic.jpeg`
+                      : process.env.PUBLIC_URL + '/assets/default-cover.jpeg'
                   }
                   alt=""
                 />
