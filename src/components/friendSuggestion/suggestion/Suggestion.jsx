@@ -83,7 +83,7 @@ const Suggestion = ({
             src={`data:image/jpeg;base64,${arrayBufferToBase64(
               suggestion?.profilePicture?.data
             )}`}
-            sx={{ marginRight: "10px" }}
+            sx={{ marginRight: "10px", width:"50px"}}
           />
         </Link>
 
