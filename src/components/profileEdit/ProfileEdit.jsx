@@ -3,7 +3,7 @@ import "./profileEdit.css";
 import { Cancel, Favorite, Home, LocationOn } from "@mui/icons-material";
 import { AuthContext } from "../../context/AuthContext";
 import axios from "axios";
-import { Alert, Avatar } from "@mui/material";
+import { Alert, Avatar, CircularProgress } from "@mui/material";
 import { arrayBufferToBase64 } from "../../base64Converter";
 import { UpdateUser } from "../../context/AuthActions";
 
@@ -11,6 +11,8 @@ export default function ProfileEdit({ isOpen, onClose, onChange }) {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const API = process.env.REACT_APP_API;
   const { user, dispatch } = useContext(AuthContext);
+
+  const [loading, setLoading] = useState(false);
 
   const [selectedProfilePic, setSelectedProfilePic] = useState(null);
   const [profilePicEdit, setProfilePicEdit] = useState(false);
@@ -36,6 +38,7 @@ export default function ProfileEdit({ isOpen, onClose, onChange }) {
   };
 
   const ProfilePicSave = async () => {
+    setLoading(true);
     if (!selectedProfilePic) {
       console.error("No profile picture selected.");
       return;
@@ -59,6 +62,7 @@ export default function ProfileEdit({ isOpen, onClose, onChange }) {
     } catch (error) {
       setError("Error uploading profile picture");
     }
+    setLoading(false);
     setProfilePicEdit(false);
   };
 
@@ -68,6 +72,7 @@ export default function ProfileEdit({ isOpen, onClose, onChange }) {
   };
 
   const CoverPicSave = async () => {
+    setLoading(true);
     if (!selectedCoverPic) {
       console.error("No Cover picture selected.");
       return;
@@ -84,11 +89,11 @@ export default function ProfileEdit({ isOpen, onClose, onChange }) {
       dispatch(UpdateUser(res.data));
       const { notifications, bookmarks, ...userInfo } = res.data;
       localStorage.setItem("userInfo", JSON.stringify(userInfo));
-
     } catch (error) {
       setError("Error uploading cover picture");
     }
 
+    setLoading(false);
     setCoverPicEdit(false);
   };
 
@@ -97,6 +102,7 @@ export default function ProfileEdit({ isOpen, onClose, onChange }) {
   };
 
   const handleSaveAbout = async () => {
+    setLoading(true);
     const aboutData = {
       city: editedAbout.city,
       from: editedAbout.from,
@@ -114,6 +120,7 @@ export default function ProfileEdit({ isOpen, onClose, onChange }) {
       setError("Error uploading about");
     }
 
+    setLoading(false);
     setIsEditingAbout(false);
   };
 
@@ -122,6 +129,7 @@ export default function ProfileEdit({ isOpen, onClose, onChange }) {
   };
 
   const handleSaveBio = async () => {
+    setLoading(true);
     try {
       const res = await axios.post(`${API}users/updateDesc`, {
         desc: editedBio,
@@ -135,7 +143,7 @@ export default function ProfileEdit({ isOpen, onClose, onChange }) {
     } catch (error) {
       setError("Error uploading about");
     }
-
+    setLoading(false);
     setIsEditingBio(false);
   };
 
@@ -156,7 +164,7 @@ export default function ProfileEdit({ isOpen, onClose, onChange }) {
               {profilePicEdit ? (
                 <div className="edit-buttons profile-buttons">
                   <button className="save" onClick={ProfilePicSave}>
-                    Save
+                    {!loading ? "Save" : <CircularProgress color="inherit" size="17px"/>}
                   </button>
                   <button
                     className="cancel"
@@ -183,9 +191,17 @@ export default function ProfileEdit({ isOpen, onClose, onChange }) {
             </div>
             <div className="edit-body profile-body">
               {selectedProfilePic ? (
-                <Avatar className="profile-picture" src={URL.createObjectURL(selectedProfilePic)}/>
+                <Avatar
+                  className="profile-picture"
+                  src={URL.createObjectURL(selectedProfilePic)}
+                />
               ) : (
-                <Avatar className="profile-picture" src={`data:image/jpeg;base64,${arrayBufferToBase64(user?.profilePicture?.data)}`}/>
+                <Avatar
+                  className="profile-picture"
+                  src={`data:image/jpeg;base64,${arrayBufferToBase64(
+                    user?.profilePicture?.data
+                  )}`}
+                />
               )}
             </div>
           </div>
@@ -196,7 +212,7 @@ export default function ProfileEdit({ isOpen, onClose, onChange }) {
               {coverPicEdit ? (
                 <div className="edit-buttons">
                   <button className="save" onClick={CoverPicSave}>
-                    Save
+                    {!loading ? "Save" : <CircularProgress color="inherit" size="17px" />}
                   </button>
                   <button
                     className="cancel"
@@ -224,14 +240,20 @@ export default function ProfileEdit({ isOpen, onClose, onChange }) {
             </div>
             <div className="edit-body edit-cover-pic">
               {selectedCoverPic ? (
-                <img className="cover-picture" src={URL.createObjectURL(selectedCoverPic)} alt=""/>      
+                <img
+                  className="cover-picture"
+                  src={URL.createObjectURL(selectedCoverPic)}
+                  alt=""
+                />
               ) : (
                 <img
                   className="cover-picture"
                   src={
                     user?.coverPicture
-                      ? `data:image/jpeg;base64,${arrayBufferToBase64(user?.coverPicture?.data)}`
-                      : process.env.PUBLIC_URL + '/assets/default-cover.jpeg'
+                      ? `data:image/jpeg;base64,${arrayBufferToBase64(
+                          user?.coverPicture?.data
+                        )}`
+                      : process.env.PUBLIC_URL + "/assets/default-cover.jpeg"
                   }
                   alt=""
                 />
@@ -245,7 +267,7 @@ export default function ProfileEdit({ isOpen, onClose, onChange }) {
               {isEditingAbout ? (
                 <div className="edit-buttons">
                   <button className="save" onClick={handleSaveAbout}>
-                    Save
+                    {!loading ? "Save" : <CircularProgress color="inherit" size="17px"/>}
                   </button>
                   <button
                     className="cancel"
@@ -331,13 +353,14 @@ export default function ProfileEdit({ isOpen, onClose, onChange }) {
               )}
             </div>
           </div>
+
           <div className="edit-bottom-wrapper">
             <div className="edit-header">
               <h4>Bio</h4>
               {isEditingBio ? (
                 <div className="edit-buttons">
                   <button className="save" onClick={handleSaveBio}>
-                    Save
+                    {!loading ? "Save" : <CircularProgress color="inherit" size="17px" />}
                   </button>
                   <button
                     className="cancel"
@@ -376,10 +399,14 @@ export default function ProfileEdit({ isOpen, onClose, onChange }) {
           </button>
         </div>
         {error && (
-            <Alert className="profile-edit-error" severity="error" onClose={() => setError(null)}>
-              {error}
-            </Alert>
-          )}
+          <Alert
+            className="profile-edit-error"
+            severity="error"
+            onClose={() => setError(null)}
+          >
+            {error}
+          </Alert>
+        )}
       </div>
     </div>
   );
