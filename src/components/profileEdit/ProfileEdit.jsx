@@ -307,7 +307,7 @@ export default function ProfileEdit({ isOpen, onClose, onChange }) {
                         })
                       }
                     >
-                      <option value="" disabled>Select Relationship Status</option>
+                      <option value="">Select Relationship Status</option>
                       <option value="Single">Single</option>
                       <option value="Married">Married</option>
                       <option value="Committed">Committed</option>
