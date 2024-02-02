@@ -13,6 +13,7 @@ const LikedUser = ({userId}) => {
     const fetchUser = async () => {
       try {
         const res = await axios.get(`${API}users?userId=${userId}`);
+        // const res = await axios.get(`http://localhost:8000/api/users?userId=${userId}`);
         setUser(res.data);
       } catch (error) {
         console.log(error);

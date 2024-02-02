@@ -88,6 +88,7 @@ const Messenger = ({ socket, onlineUsers, unseenProp, callProp }) => {
       if (friendId) {
         try {
           const res = await axios.get(`${API}users?userId=${friendId}`);
+          // const res = await axios.get(`http://localhost:8000/api/users?userId=${friendId}`);
           setFriend(res.data);
         } catch (error) {
           console.log(error);

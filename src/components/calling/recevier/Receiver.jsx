@@ -29,6 +29,7 @@ const Receiver = ({ socket, callProp }) => {
     const fetchUserData = async () => {
       try {
         const res = await axios.get(`${API}users?userId=${call?.from?._id}`);
+        // const res = await axios.get(`http://localhost:8000/api/users?userId=${call?.from?._id}`);
         setFriendProfilePic(res.data.profilePicture);
       } catch (error) {
         console.log(error);

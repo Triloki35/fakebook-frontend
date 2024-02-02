@@ -19,6 +19,7 @@ const History = ({ conversation, lastMessage, curruser }) => {
     const getFriend = async () => {
       try {
         const friendInfo = await axios.get(`${API}users?userId=${friendId}`);
+        // const friendInfo = await axios.get(`http://localhost:8000/api/users?userId=${friendId}`);
         // console.log(friendInfo.data);
         setfriend(friendInfo.data);
       } catch (error) {

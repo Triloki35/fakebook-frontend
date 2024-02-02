@@ -165,6 +165,7 @@ export default function Profile({ socket, unseenProp, callProp }) {
     const fetchUserData = async () => {
       try {
         const res = await axios.get(`${API}users?username=${username}`);
+        // const res = await axios.get(`http://localhost:8000/api/users?username=${username}`);
         setUser(res.data);
       } catch (error) {
         console.log(error);

@@ -22,11 +22,18 @@ function FriendSuggestions({socket}) {
       let dont = [];
       try {
         setLoading(true);
-        const res1 = await axios.get(`${API}users?userId=${user._id}`);
+        const res1 = await axios.get(
+          `${API}users/friend-requests/${user._id}`
+        );
+        // const res1 = await axios.get(
+        //   `http://localhost:8000/api/users/friend-requests/${user._id}`
+        // );
+        
+
         const friendRequestIds = res1.data.friendRequests.map((fr) => fr._id);
         // console.log(friendRequestIds);
         dont = [
-          ...res1.data.friends,
+          ...user.friends,
           ...user.sentRequest,
           ...friendRequestIds,
           user._id,
@@ -62,8 +69,8 @@ function FriendSuggestions({socket}) {
       </div>
       <div className="suggestionListContainer">
         <ul className="suggestionList">
-          {suggestions.map((s) => (
-            <Suggestion suggestion={s} setSuggestions={setSuggestions} setLoadingStates={setLoadingStates} loadingStates={loadingStates} socket={socket}/>
+          {suggestions.map((s,i) => (
+            <Suggestion key={i} suggestion={s} setSuggestions={setSuggestions} setLoadingStates={setLoadingStates} loadingStates={loadingStates} socket={socket}/>
           ))}
         </ul>
       </div>
