@@ -138,6 +138,11 @@
   background-color: #ddecfd;
 }
 
+.suggestion-skeleton{
+  display: flex;
+  margin-top: 5px;
+}
+
 @media screen and (max-width: 768px){
   .suggestionListContainer{
     height: auto;

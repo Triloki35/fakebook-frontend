@@ -5,6 +5,7 @@ import { CircularProgress } from "@mui/material";
 import { MoreHoriz } from "@mui/icons-material";
 import { AuthContext } from "../../context/AuthContext";
 import Suggestion from "./suggestion/Suggestion";
+import SuggestionSkeletonList from "./SuggestionSkeletonList";
 
 function FriendSuggestions({socket}) {
   const API = process.env.REACT_APP_API;
@@ -69,9 +70,10 @@ function FriendSuggestions({socket}) {
       </div>
       <div className="suggestionListContainer">
         <ul className="suggestionList">
-          {suggestions.map((s,i) => (
+        {suggestions.length === 0 ? (<SuggestionSkeletonList/>) : suggestions.map((s,i) => (
             <Suggestion key={i} suggestion={s} setSuggestions={setSuggestions} setLoadingStates={setLoadingStates} loadingStates={loadingStates} socket={socket}/>
           ))}
+          
         </ul>
       </div>
       {loading && (
