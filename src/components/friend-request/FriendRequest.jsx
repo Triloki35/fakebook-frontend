@@ -24,7 +24,7 @@ const FriendRequest = ({ setFriendRequestBandage, socket }) => {
     const fetchFriendRq = async () => {
       isLoading(true);
       try {
-        const res = await axios.get(`${API}/users/friend-requests/${user._id}`);
+        const res = await axios.get(`${API}users/friend-requests/${user._id}`);
         // const res = await axios.get(`http://localhost:8000/api/users/friend-requests/${user._id}`);
         console.log(res.data);
         setFriendReq(res.data.friendRequests);
