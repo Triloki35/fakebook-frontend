@@ -58,9 +58,9 @@ const Suggestion = ({
         prevSuggestions.filter((suggestion) => suggestion._id !== userId)
       );
       socket.emit("send-friendRequest", { userId: userId });
-      const { notifications, bookmarks, ...userInfo } = res.data;
+      const { notifications, bookmarks, ...userInfo } = res.data.sender;
       localStorage.setItem("userInfo", JSON.stringify(userInfo));
-      dispatch(UpdateUser(res.data));
+      dispatch(UpdateUser(res.data.sender));
     } catch (error) {
       console.log(error);
       setError("Failed to send friend request. Please try again later.");
