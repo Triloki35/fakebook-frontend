@@ -1,7 +1,7 @@
 import React, { useContext, useState, useEffect } from "react";
 import "./suggestion.css";
 import { Link } from "react-router-dom";
-import { Avatar, CircularProgress } from "@mui/material";
+import { Alert, Avatar, CircularProgress } from "@mui/material";
 import { AuthContext } from "../../../context/AuthContext";
 import axios from "axios";
 import { UpdateUser } from "../../../context/AuthActions";
@@ -21,6 +21,8 @@ const Suggestion = ({
   const [mutualFriends, setMutualFriends] = useState([]);
   const [loadingAdd, setLoadingAdd] = useState(false);
   const [loadingRemove, setLoadingRemove] = useState(false);
+  const [sucess,setSucess] = useState(null);
+  const [error,setError] = useState(null);
 
   useEffect(() => {
     const fetchtMutualFriends = async () => {
@@ -51,6 +53,7 @@ const Suggestion = ({
       //   `http://localhost:8000/api/users/friend-request/${userId}`,
       //   reqbody
       // );
+      setSucess(res.data.message);
       setSuggestions((prevSuggestions) =>
         prevSuggestions.filter((suggestion) => suggestion._id !== userId)
       );
@@ -60,6 +63,7 @@ const Suggestion = ({
       dispatch(UpdateUser(res.data));
     } catch (error) {
       console.log(error);
+      setError("Failed to send friend request. Please try again later.");
     }
     setLoadingAdd(false);
   };
@@ -83,7 +87,7 @@ const Suggestion = ({
             src={`data:image/jpeg;base64,${arrayBufferToBase64(
               suggestion?.profilePicture?.data
             )}`}
-            sx={{ marginRight: "10px", width:"50px"}}
+            sx={{ marginRight: "10px", width:"50px",height:"50px"}}
           />
         </Link>
 
@@ -125,6 +129,17 @@ const Suggestion = ({
           setShowUsersModal={setShowUsersModal}
           users={mutualFriends}
         />
+      )}
+      { sucess && (
+        <Alert className="sugesstion-alert" severity="success" onClose={() => setSucess(null)}>
+          {sucess}
+        </Alert>
+      )}
+
+      {error && (
+        <Alert className="sugesstion-alert" severity="error" onClose={() => setError(null)}>
+          {error}
+        </Alert>
       )}
     </li>
   );

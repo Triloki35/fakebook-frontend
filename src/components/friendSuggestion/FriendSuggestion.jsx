@@ -13,10 +13,6 @@ function FriendSuggestions({socket}) {
 
   const [suggestions, setSuggestions] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [loadingStates, setLoadingStates] = useState({});
-  
-
-  
 
   useEffect(() => {
     const fetchSuggestions = async () => {
@@ -51,7 +47,6 @@ function FriendSuggestions({socket}) {
         res2.data.forEach((suggestion) => {
           initialLoadingStates[suggestion._id] = false;
         });
-        setLoadingStates(initialLoadingStates);
       } catch (error) {
         console.log(error);
       } finally {
@@ -71,7 +66,7 @@ function FriendSuggestions({socket}) {
       <div className="suggestionListContainer">
         <ul className="suggestionList">
         {suggestions.length === 0 ? (<SuggestionSkeletonList/>) : suggestions.map((s,i) => (
-            <Suggestion key={i} suggestion={s} setSuggestions={setSuggestions} setLoadingStates={setLoadingStates} loadingStates={loadingStates} socket={socket}/>
+            <Suggestion key={i} suggestion={s} setSuggestions={setSuggestions} socket={socket}/>
           ))}
           
         </ul>

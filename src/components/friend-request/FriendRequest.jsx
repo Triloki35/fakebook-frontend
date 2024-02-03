@@ -15,16 +15,19 @@ const FriendRequest = ({ setFriendRequestBandage, socket }) => {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const [friendReq, setFriendReq] = useState([]);
   const [loading, isLoading] = useState(false);
+  const [cnfLoading, setCnfLoading] = useState(false);
+  const [canLoading, setCanLoading] = useState(false);
+
+  console.log(user);
 
   useEffect(() => {
     const fetchFriendRq = async () => {
       isLoading(true);
       try {
-        // const res = await axios.get(`${API}users?userId=${user._id}`);
-        const res = await axios.get(`http://localhost:8000/api/users?userId=${user._id}`);
+        const res = await axios.get(`${API}/users/friend-requests/${user._id}`);
+        // const res = await axios.get(`http://localhost:8000/api/users/friend-requests/${user._id}`);
         console.log(res.data);
         setFriendReq(res.data.friendRequests);
-        await dispatch(UpdateUser(res.data));
         const { notifications, bookmarks, ...userInfo } = res.data;
         localStorage.setItem("userInfo", JSON.stringify(userInfo));
         console.log(user);
@@ -37,7 +40,7 @@ const FriendRequest = ({ setFriendRequestBandage, socket }) => {
   }, []);
 
   const handleConfirm = async (f) => {
-    isLoading(true);
+    setCnfLoading(true);
     try {
       const res = await axios.post(
         `${API}users/accept-friend-request/` + user._id,
@@ -55,7 +58,7 @@ const FriendRequest = ({ setFriendRequestBandage, socket }) => {
       const { notifications, bookmarks, ...userInfo } = res.data;
       localStorage.setItem("userInfo", JSON.stringify(userInfo));
       setFriendReq(res.data.friendRequests);
-      setFriendRequestBandage(res.data.friendRequests.length);
+      setFriendRequestBandage(res.data?.friendRequests?.length);
       dispatch(UpdateUser(res.data));
       socket?.emit("Notification", {
         postId: null,
@@ -69,10 +72,11 @@ const FriendRequest = ({ setFriendRequestBandage, socket }) => {
     } catch (error) {
       console.log(error);
     }
-    isLoading(false);
+    setCnfLoading(false);
   };
 
   const handleDelete = async (f) => {
+    setCanLoading(true);
     try {
       const res = await axios.post(
         `${API}users/reject-friend-request/` + user._id,
@@ -85,10 +89,11 @@ const FriendRequest = ({ setFriendRequestBandage, socket }) => {
       const { notifications, bookmarks, ...userInfo } = res.data;
       localStorage.setItem("userInfo", JSON.stringify(userInfo));
       setFriendReq(res.data.friendRequests);
-      setFriendRequestBandage(res.data.friendRequests.length);
+      setFriendRequestBandage(res.data.friendRequests?.length);
     } catch (error) {
       console.log(error);
     }
+    setCanLoading(false);
   };
 
   // console.log(user);
@@ -118,14 +123,14 @@ const FriendRequest = ({ setFriendRequestBandage, socket }) => {
               </Link>
               <div className="fr-btn-container">
                 <button className="fr-confirm" onClick={() => handleConfirm(f)}>
-                  {!loading ? (
+                  {!cnfLoading ? (
                     "Confirm"
                   ) : (
                     <CircularProgress color="inherit" size="15px" />
                   )}
                 </button>
                 <button className="fr-delete" onClick={() => handleDelete(f)}>
-                  {!loading ? (
+                  {!canLoading ? (
                     "Delete"
                   ) : (
                     <CircularProgress color="inherit" size="15px" />
@@ -140,7 +145,7 @@ const FriendRequest = ({ setFriendRequestBandage, socket }) => {
             <CircularProgress />
           </div>
         ) : (
-          friendReq.length === 0 && (
+          friendReq?.length === 0 && (
             <div className="fr-loading">No request found</div>
           )
         )}
