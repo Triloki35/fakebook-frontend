@@ -30,12 +30,12 @@ const PostTop = ({
   const handleSavePost = async () => {
     setIsBookmarked((p)=>!p);
     try {
-      // const res = await axios.post(`${API}posts/save-post/${currentUser._id}`, {
-      //   postId: post._id,
-      // });
-      const res = await axios.post(`http://localhost:8000/api/posts/save-post/${currentUser._id}`, {
+      const res = await axios.post(`${API}posts/save-post/${currentUser._id}`, {
         postId: post._id,
       });
+      // const res = await axios.post(`http://localhost:8000/api/posts/save-post/${currentUser._id}`, {
+      //   postId: post._id,
+      // });
       dispatch(UpdateUser(res.data));
     } catch (error) {
       console.log(error);

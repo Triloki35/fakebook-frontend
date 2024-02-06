@@ -27,12 +27,12 @@ const PostBottom = ({
     !isLiked && post.likes.push(currentUser._id);
     setisLiked(!isLiked);
     try {
-      // const res = await axios.put(`${API}posts/` + post._id + "/like", {
-      //   userId: currentUser._id,
-      // });
-      const res = await axios.put(`http://localhost:8000/api/posts/` + post._id + "/like", {
+      const res = await axios.put(`${API}posts/` + post._id + "/like", {
         userId: currentUser._id,
       });
+      // const res = await axios.put(`http://localhost:8000/api/posts/` + post._id + "/like", {
+      //   userId: currentUser._id,
+      // });
 
       // socket emmit event when liked
       if (res.data.action === "liked") {
@@ -56,10 +56,10 @@ const PostBottom = ({
     try {
       setLoadingComments(true);
 
-      // const res = await axios.get(`${API}posts/comments/${post._id}`);
-      const res = await axios.get(
-        `http://localhost:8000/api/posts/comments/${post._id}`
-      );
+      const res = await axios.get(`${API}posts/comments/${post._id}`);
+      // const res = await axios.get(
+      //   `http://localhost:8000/api/posts/comments/${post._id}`
+      // );
       console.log(res.data);
       setPrevComment(res.data);
       // console.log(prevComment);
