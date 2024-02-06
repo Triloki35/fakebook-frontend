@@ -167,6 +167,13 @@
     border-top: 1px solid gray;
 }
 
+.no-comments{
+    text-align: center;
+    color: lightgray;
+    font-size: small;
+    font-weight: 500;
+}
+
 .prev-comments{
     list-style: none;
     padding: 0;
@@ -195,6 +202,7 @@
     margin-left: 5px;
     border-radius: 10px;
     text-align: start;
+    position: relative;
 }
 
 .prev-comment div span{
@@ -245,4 +253,31 @@
 .comment-btn:hover{
     color: #3385f2;
     cursor: pointer;
+}
+
+.delete-comment,.delete-comment-disable{
+    background: white;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    position: absolute;
+    right: -45px;
+    top: 5px;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    padding: 5px 5px;
+    border-radius: 15px;
+}
+
+.delete-comment:hover {
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+    cursor: pointer;
+}
+
+.delete-comment-disable:hover{
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+    cursor:not-allowed;
+}
+
+.delete-icon{
+    color: red;
 }

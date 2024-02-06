@@ -28,6 +28,7 @@ const Share = ({ socket }) => {
   const [showEmojiPicker, setShowEmojiPicker] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error,  setError] = useState(null);
+  const tagOptionsRef = useRef();
 
   // console.log(user);
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
@@ -54,10 +55,30 @@ const Share = ({ socket }) => {
     setShowOptions(!showOptions);
   };
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      const labelForTagOption = document.getElementById("select"); 
+      const isClickOnLabel = labelForTagOption.contains(event.target); 
+      if (
+        tagOptionsRef.current &&
+        !tagOptionsRef.current.contains(event.target) &&
+        !isClickOnLabel
+      ) {
+        setShowOptions(false);
+      }
+    };
+  
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [tagOptionsRef]);
+  
+
   const handleTagSelect = (friend) => {
-    // Check if the friend is already selected
     if (!selectedTags.some((tag) => tag._id === friend._id)) {
-      setSelectedTags((prevTags) => [...prevTags, friend]);
+      const { username, _id } = friend;
+      setSelectedTags((prevTags) => [...prevTags, { username, _id }]);
     }
   };
 
@@ -165,8 +186,10 @@ const Share = ({ socket }) => {
             {/* Select input for tags */}
             <label
               htmlFor="select"
+              id="select"
               className="shareOption"
               onClick={handleTagClick}
+              ref={tagOptionsRef}
             >
               <Label id="tag-label" htmlColor="green" className="shareIcon" />
               <span id="tag-span" className="shareOptionText">
@@ -174,7 +197,7 @@ const Share = ({ socket }) => {
               </span>
             </label>
             {showOptions && (
-              <div className="tagOptions">
+              <div ref={tagOptionsRef} className="tagOptions">
                 {friendList.length === 0 ? (
                   <div className="noTag">
                     <h3>No friend found</h3>

@@ -1,110 +1,84 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useContext, useRef, useEffect } from "react";
 import "./post.css";
-import {
-  Bookmark,
-  BookmarkBorder,
-  Delete,
-  MoreHoriz,
-  MoreVert,
-  Send,
-} from "@mui/icons-material";
+import { Delete, MoreVert, Send } from "@mui/icons-material";
 import axios from "axios";
 import { format } from "timeago.js";
-import { Link } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
-import { UpdateUser } from "../../context/AuthActions";
 import UsersModal from "../showUserModal/UsersModal";
-import { Avatar, Skeleton } from "@mui/material";
+import { Avatar, CircularProgress, LinearProgress, Skeleton } from "@mui/material";
 import { arrayBufferToBase64 } from "../../base64Converter";
+import PostTop from "./PostTop";
+import PostCenter from "./PostCenter";
+import PostBottom from "./PostBottom";
 
 const Post = ({ post, socket }) => {
-  // console.log(socket);
-  const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const API = process.env.REACT_APP_API;
-  const { user: currentUser, dispatch } = useContext(AuthContext);
-  // const [user, setUser] = useState(null);
-  // const [user, setuser] = useState({});
+  const { user: currentUser } = useContext(AuthContext);
 
   // like
   const [like, setLike] = useState(post?.likes?.length);
-  const [isLiked, setisLiked] = useState(post?.likes?.includes(currentUser._id));
+  const [isLiked, setisLiked] = useState(
+    post?.likes?.includes(currentUser._id)
+  );
   const [showUsersModal, setShowUsersModal] = useState(false);
+
   // tag
   const [istag, setIstag] = useState(false);
+
   // comment box
+  const [commentsLength, setCommentsLength] = useState(post?.comments);
   const [commentBox, setCommentBox] = useState(false);
   const [comment, setComment] = useState("");
   const [prevComment, setPrevComment] = useState([]);
+  const [loadingComments, setLoadingComments] = useState(false);
+  const [sendingComment, setSendingComment] = useState(false);
+  const [deleteComment, setDeleteComment] = useState({});
+  const [loadingDeleteComment,setLoadingDeleteComment]=useState(false);
 
   // for delete and save post
   const [optionBtn, setOptionBtn] = useState(false);
   const isDeleteButtonDisabled = currentUser._id !== post.userId;
 
-  // like
-  const likeHandeler = async () => {
-    try {
-      const res = await axios.put(`${API}posts/` + post._id + "/like", {
-        userId: currentUser._id,
-      });
+   // useRef for delete-comment div
 
-      // socket emmit event when liked
-      if (res.data.action === "liked") {
-        currentUser._id !== post.userId &&
-          socket?.emit("Notification", {
-            postId: post._id,
-            senderName: currentUser.username,
-            senderProfilePicture: currentUser.profilePicture,
-            receiverId: post.userId,
-            type: "liked",
-            status: false,
-          });
-      }
-    } catch (error) {
-      console.log(error);
-    }
 
-    setLike(isLiked ? like - 1 : like + 1);
-    setisLiked(!isLiked);
+   const toggleDeleteComment = (commentId) => {
+    setDeleteComment((prev) => ({
+      ...prev,
+      [commentId]: !prev[commentId],
+    }));
   };
 
   // comments handle
-
   const handleComments = (event) => {
     setComment(event.target.value);
   };
 
-  useEffect(() => {
-    const fetchComment = async () => {
-      try {
-        const res = await axios.get(`${API}posts/comments/${post._id}`);
-        setPrevComment(res.data);
-        // console.log(prevComment);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchComment();
-  }, [post]);
-
   const postComment = async () => {
+    setSendingComment(true);
     try {
       const reqBody = {
         senderId: currentUser._id,
         senderName: currentUser.username,
         text: comment,
-        profilePicture: currentUser.profilePicture,
       };
       const res = await axios.post(`${API}posts/comments/${post._id}`, reqBody);
+      // const res = await axios.post(
+      //   `http://localhost:8000/api/posts/comments/${post._id}`,
+      //   reqBody
+      // );
       console.log(res.data);
+
+      reqBody.profilePicture = currentUser.profilePicture;
       setPrevComment((prev) => [...prev, reqBody]);
       setComment("");
-
+      setCommentsLength((p) => p + 1);
       // socket event
       currentUser._id !== post.userId &&
         socket?.emit("Notification", {
           postId: post._id,
           senderName: currentUser.username,
-          senderProfilePicture: currentUser.profilePicture,
+          // senderProfilePicture: currentUser.profilePicture,
           receiverId: post.userId,
           type: "commented",
           status: false,
@@ -112,207 +86,121 @@ const Post = ({ post, socket }) => {
     } catch (error) {
       console.log(error);
     }
+    setSendingComment(false);
   };
 
   const handleCommentDelete = async (commentId) => {
+    setLoadingDeleteComment(true);
     try {
+      // const res = await axios.delete(
+      //   `http://localhost:8000/api/posts/comments/${post._id}/${commentId}/${currentUser._id }`
+      // );
       const res = await axios.delete(
-        `${API}post/comments/${post._id}/${commentId}`,
-        { userId: currentUser._id }
+        `${API}posts/comments/${post._id}/${commentId}/${currentUser._id }`
       );
       setPrevComment(res.data);
+      setCommentsLength((p)=>p-1);
     } catch (error) {
       console.log(error);
     }
+    setLoadingDeleteComment(false);
   };
 
-  //delete and save
-
-  const handleDeletePost = async () => {
-    console.log(post.userId);
-    console.log(currentUser._id);
-    try {
-      const res = await axios.delete(
-        `${API}posts/${post._id}/${currentUser._id}`
+  const CommentSkelton = (cnt) => {
+    const skeletons = [];
+    for (let i = 0; i < cnt; i++) {
+      skeletons.push(
+        <li className="prev-comment" key={i}>
+          <Skeleton variant="circular" width={30} height={30} />
+          <Skeleton
+            variant="rounded"
+            width={100}
+            height={40}
+            sx={{ marginLeft: "5px" }}
+          />
+        </li>
       );
-      console.log(res.data);
-      window.location.reload();
-    } catch (error) {
-      console.log(error);
     }
+    return skeletons;
   };
 
-  const handleSavePost = async () => {
-    try {
-      const res = await axios.post(`${API}posts/save-post/${currentUser._id}`, {
-        postId: post._id,
-      });
-      dispatch(UpdateUser(res.data));
-      // localStorage.setItem("userInfo", JSON.stringify(res.data));
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  
   // console.log(post);
-  // console.log(currentUser.profilePicture);
+  // console.log(prevComment);
+  // console.log(currentUser);
 
   return (
     <div className="post">
       <div className="postWrapper">
-        <div className="postTop">
-          <div className="postTopLeft">
-            <Link
-              to={`/profile/${post?.username}`}
-              style={{ textDecoration: "none" }}
-            >
-              <Avatar
-                className="postProfileImg"
-                src={`data:image/jpeg;base64,${arrayBufferToBase64(post?.profilePicture?.data)}`}
-              />
-              {/* <img className="postProfileImg" src={`data:image/jpeg;base64,${arrayBufferToBase64(post?.profilePicture?.data)}`} alt="" srcset="" /> */}
-            </Link>
-            <div className="ps-l-wrapper">
-              <div style={{ display: "flex" }}>
-                <Link
-                  to={`/profile/${post?.username}`}
-                  style={{ textDecoration: "none", color: "black" }}
-                >
-                  <span className="postUsername">{post?.username}</span>
-                </Link>
-                <div>
-                  {post.tags?.length === 1 && (
-                    <small>
-                      &nbsp; is with{" "}
-                      <Link
-                        to={`/profile/${post.tags[0].username}`}
-                        style={{ textDecoration: "none", color: "black" }}
-                      >
-                        {" "}
-                        <b> {post.tags[0].username}</b>
-                      </Link>
-                    </small>
-                  )}
-                  {post.tags?.length > 1 && (
-                    <small>
-                      &nbsp; is with{" "}
-                      <Link
-                        to={`/profile/${post.tags[0].username}`}
-                        style={{ textDecoration: "none", color: "black" }}
-                      >
-                        {" "}
-                        <b> {post.tags[0].username}</b>
-                      </Link>{" "}
-                      and{" "}
-                      <b
-                        className="other-tag"
-                        onClick={() => {
-                          setShowUsersModal(!showUsersModal);
-                          setIstag(true);
-                        }}
-                      >
-                        {post.tags.length} others
-                      </b>
-                    </small>
-                  )}
-                </div>
-              </div>
-              <span className="postDate">{format(post.createdAt)}</span>
-            </div>
-          </div>
+        <PostTop
+          post={post}
+          showUsersModal={showUsersModal}
+          setShowUsersModal={setShowUsersModal}
+          setIstag={setIstag}
+          optionBtn={optionBtn}
+          isDeleteButtonDisabled={isDeleteButtonDisabled}
+          setOptionBtn={setOptionBtn}
+        />
 
-          <div className="postTopRight">
-            {optionBtn && (
-              <div className="postOptionBtnContainer">
-                <div className="postSaveBtn" onClick={handleSavePost}>
-                  {currentUser.bookmarks.includes(post._id) ? (
-                    <Bookmark />
-                  ) : (
-                    <BookmarkBorder />
-                  )}
-                  <span>Save</span>
-                </div>
-                <div
-                  className={
-                    isDeleteButtonDisabled ? "disabledStyle" : "postDeleteBtn"
-                  }
-                  onClick={handleDeletePost}
-                >
-                  <Delete />
-                  <span>Delete</span>
-                </div>
-              </div>
-            )}
-            <MoreHoriz
-              className="postTopRightIcon"
-              onClick={() => setOptionBtn(!optionBtn)}
-            />
-          </div>
-        </div>
-        <div className="postCenter">
-          <span className="postText">{post?.desc}</span>
-          <img className="postImg" src={`data:image/jpeg;base64,${arrayBufferToBase64(post?.img?.data)}`} alt="" />
-        </div>
-        <div className="postBottom">
-          <div className="postBottomLeft">
-            <img
-              className="likeIcon"
-              src={PF + 'like.png'}
-              onClick={likeHandeler}
-              alt=""
-            />
-            <img
-              className="likeIcon"
-              src={PF + 'heart.png'}
-              onClick={likeHandeler}
-              alt=""
-            />
-            <span
-              className="postLikeCounter"
-              onClick={() => setShowUsersModal(!showUsersModal)}
-            >
-              {like} people like it
-            </span>
-          </div>
+        <PostCenter post={post} />
 
-          <div className="postBottomRight">
-            <span
-              className="postCommentText"
-              onClick={() => {
-                setCommentBox(!commentBox);
-              }}
-            >
-              {prevComment?.length > 0 && prevComment.length} comments{" "}
-            </span>
-          </div>
-        </div>
+        <PostBottom
+          post={post}
+          showUsersModal={showUsersModal}
+          setShowUsersModal={setShowUsersModal}
+          setCommentBox={setCommentBox}
+          commentBox={commentBox}
+          socket={socket}
+          setisLiked={setisLiked}
+          isLiked={isLiked}
+          setLike={setLike}
+          like={like}
+          setLoadingComments={setLoadingComments}
+          setPrevComment={setPrevComment}
+          commentsLength={commentsLength}
+        />
 
         {commentBox && (
           <div className="comment-box-container">
             <ul className="prev-comments">
-              {prevComment?.map((c) => (
-                <li className="prev-comment" key={c._id}>
-                  {/* <img src={PF + c.profilePicture} alt="" /> */}
-                  <Avatar src={`data:image/jpeg;base64,${arrayBufferToBase64(c?.profilePicture?.data)}`}/>
-                  <div className="prev-comment-div">
-                    <span>
-                      <b>{c.senderName}</b>
-                      <small className="comment-time">
-                        &nbsp; {format(c.createdAt)}
-                      </small>
-                      {(currentUser._id === c.senderId ||
-                        post.userId === currentUser._id) && (
+              {commentsLength === 0 ? (
+                <p className="no-comments">
+                  Be the first to comment on this post!
+                </p>
+              ) : loadingComments ? (
+                CommentSkelton(post.comments)
+              ) : (
+                prevComment?.map((c) => (
+                  <li className="prev-comment" key={c._id}>
+                    <Avatar
+                      src={`data:image/jpeg;base64,${arrayBufferToBase64(
+                        c?.profilePicture?.data
+                      )}`}
+                    />
+                    <div className="prev-comment-div">
+                      <span>
+                        <b>{c.senderName}</b>
+                        <small className="comment-time">
+                          &nbsp; {format(c.createdAt)}
+                        </small>
                         <MoreVert
                           className="comment-option"
                           fontSize="10px"
-                          onClick={() => handleCommentDelete(c._id)}
+                          onClick={()=>toggleDeleteComment(c._id)}
                         />
-                      )}
-                    </span>
-                    {c.text}
-                  </div>
-                </li>
-              ))}
+                        {deleteComment[c._id] && (
+                          <div
+                            className={(currentUser._id === post.userId || currentUser._id === c.senderId) ? "delete-comment" : "delete-comment-disable"}
+                            onClick={() => handleCommentDelete(c._id)}
+                          >
+                          {loadingDeleteComment ? <CircularProgress size="20px" className="delete-icon"/> :<Delete className="delete-icon"/>}
+                          </div>
+                        )}
+                      </span>
+                      {c.text}
+                    </div>
+                  </li>
+                ))
+              )}
             </ul>
 
             <div className="comment-input-container">
@@ -323,13 +211,18 @@ const Post = ({ post, socket }) => {
                 onChange={handleComments}
                 value={comment}
               />
-              <button className="comment-btn" onClick={postComment}>
-                <Send />
+              <button
+                className="comment-btn"
+                onClick={postComment}
+                disabled={(comment === "" || sendingComment) && true}
+              >
+                {sendingComment ? <CircularProgress size="25px"/> :<Send />}
               </button>
             </div>
           </div>
         )}
       </div>
+
       {showUsersModal && (
         <UsersModal
           setShowUsersModal={setShowUsersModal}
