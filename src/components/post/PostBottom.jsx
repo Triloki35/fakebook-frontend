@@ -37,14 +37,7 @@ const PostBottom = ({
       // socket emmit event when liked
       if (res.data.action === "liked") {
         currentUser._id !== post.userId &&
-          socket?.emit("Notification", {
-            postId: post._id,
-            senderName: currentUser.username,
-            senderProfilePicture: currentUser.profilePicture,
-            receiverId: post.userId,
-            type: "liked",
-            status: false,
-          });
+          socket?.emit("Notification", {receiverId: post.userId});
       }
     } catch (error) {
       console.log(error);

@@ -60,15 +60,7 @@ const FriendRequest = ({ setFriendRequestBandage, socket }) => {
       setFriendReq(res.data.friendRequests);
       setFriendRequestBandage(res.data?.friendRequests?.length);
       dispatch(UpdateUser(res.data));
-      socket?.emit("Notification", {
-        postId: null,
-        senderId: user._id,
-        receiverId: f._id,
-        senderName: user.username,
-        senderProfilePicture: user.profilePicture,
-        type: "accepted",
-        status: false,
-      });
+      socket?.emit("Notification", {receiverId: f._id});
     } catch (error) {
       console.log(error);
     }

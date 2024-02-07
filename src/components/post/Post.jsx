@@ -75,14 +75,7 @@ const Post = ({ post, socket }) => {
       setCommentsLength((p) => p + 1);
       // socket event
       currentUser._id !== post.userId &&
-        socket?.emit("Notification", {
-          postId: post._id,
-          senderName: currentUser.username,
-          // senderProfilePicture: currentUser.profilePicture,
-          receiverId: post.userId,
-          type: "commented",
-          status: false,
-        });
+      socket?.emit("Notification", {receiverId: post.userId});
     } catch (error) {
       console.log(error);
     }

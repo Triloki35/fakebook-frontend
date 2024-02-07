@@ -120,7 +120,9 @@ const Share = ({ socket }) => {
       //     "Content-Type": "multipart/form-data",
       //   },
       // });
-
+      selectedTags.forEach((tag) => {
+        socket?.emit("Notification", {receiverId: tag._id});
+      });
       window.location.reload();
     } catch (error) {
       // console.error("Error uploading post:", error);

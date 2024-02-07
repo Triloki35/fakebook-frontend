@@ -26,6 +26,7 @@ import { Avatar, CircularProgress } from "@mui/material";
 import HelpCompo from "../help/Help.jsx";
 import { arrayBufferToBase64 } from "../../base64Converter.js";
 import AccountSettings from "./AccountSettings.jsx";
+import NotificationPannel from "./NotificationPannel.jsx";
 
 const Topbar = ({ socket, unseen }) => {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
@@ -64,7 +65,6 @@ const Topbar = ({ socket, unseen }) => {
         return new Date(b.createdAt) - new Date(a.createdAt);
       });
       setNotifications(sortedNotifications);
-      setNotificationBandage(res.data.unreadNotificationsCount);
     } catch (error) {
       console.log(error);
     } finally {
@@ -74,32 +74,26 @@ const Topbar = ({ socket, unseen }) => {
 
   //  setting bandage whenever notification change
   useEffect(() => {
-    fetchNotifications();
+    const getUnreadNotificationLength = async () => {
+      try {
+        // const res = await axios.get(`${API}users/unread-notifications-count/${user._id}`);
+        const res = await axios.get(
+          `http://localhost:8000/api/users/unread-notifications-count/${user._id}`
+        );
+        setNotificationBandage(res.data.unreadNotificationsCount);
+      } catch (error) {
+        console.log("failed to update notificaton bandage");
+      }
+    };
+    getUnreadNotificationLength();
   }, []);
 
   // socket event for notification
   useEffect(() => {
-    socket?.on("Notification", (data) => {
-      console.log(data);
-      setNotifications((prev) => [...prev, data]);
+    socket?.on("Notification", () => {
+      setNotificationBandage((prev) => prev + 1);
     });
   }, [socket]);
-
-  const handleNotificationClick = async (notification) => {
-    if (notification.type === "accepted") {
-      notification.status = true;
-      const res = await axios.patch(
-        `${API}users/update-notification/${notification._id}/${user._id}`
-      );
-      const userInfo = JSON.parse(localStorage.getItem("userInfo"));
-      userInfo.notifications = res.data;
-      localStorage.setItem("userInfo", JSON.stringify(userInfo));
-      navigate("/profile/" + notification.senderName);
-    } else {
-      setClickedNotification(notification);
-      setShowModal(true);
-    }
-  };
 
   const closeNotificationModal = () => {
     setShowModal(false);
@@ -109,9 +103,7 @@ const Topbar = ({ socket, unseen }) => {
   useEffect(() => {
     const fetchFriendRq = async () => {
       try {
-        const res = await axios.get(
-          `${API}users/friend-requests/${user._id}`
-        );
+        const res = await axios.get(`${API}users/friend-requests/${user._id}`);
         // const res = await axios.get(
         //   `http://localhost:8000/api/users/friend-requests/${user._id}`
         // );
@@ -142,13 +134,6 @@ const Topbar = ({ socket, unseen }) => {
   const handleLogout = () => {
     localStorage.clear();
     window.location.href = "/";
-  };
-
-  const notificationMessages = {
-    tagged: "tagged you in post",
-    commented: "commented on your post",
-    liked: "liked your post",
-    accepted: "accepted your friend request",
   };
 
   // console.log(notifications);
@@ -207,81 +192,18 @@ const Topbar = ({ socket, unseen }) => {
             )}
           </div>
           {toggleNotification && (
-            <div className="notificationContainer">
-              <div className="notificationWrapper">
-                <h3 className="notificationHeading">Notifications</h3>
-                <div className="notificationbtnContainer">
-                  <button
-                    className={activeBtn ? "activebtn" : "notificationbtn"}
-                    onClick={() => {
-                      setActivebtn(!activeBtn);
-                      setunread(!unread);
-                    }}
-                  >
-                    All
-                  </button>
-                  <button
-                    style={{ marginLeft: "5px" }}
-                    className={!activeBtn ? "activebtn" : "notificationbtn"}
-                    onClick={() => {
-                      setActivebtn(!activeBtn);
-                      setunread(!unread);
-                    }}
-                  >
-                    Unread
-                  </button>
-                </div>
-                <ul className="notificationList">
-                  {loadingNotification ? (
-                    <CircularProgress color="primary" />
-                  ) : notifications.length === 0 ? (
-                    <li>No notifiactions found</li>
-                  ) : (
-                    notifications?.map((n) => {
-                      if (unread && !n.status) {
-                        return (
-                          <li
-                            className="notification unread"
-                            onClick={() => handleNotificationClick(n)}
-                          >
-                            <Avatar
-                              src={`data:image/jpeg;base64,${arrayBufferToBase64(
-                                n?.senderProfilePicture?.data
-                              )}`}
-                            />
-                            <span className="notificationText">
-                              {`${n.senderName} ${
-                                notificationMessages[n.type]
-                              }`}
-                            </span>
-                          </li>
-                        );
-                      } else if (!unread) {
-                        return (
-                          <li
-                            className={
-                              !n.status ? "notification unread" : "notification"
-                            }
-                            onClick={() => handleNotificationClick(n)}
-                          >
-                            <Avatar
-                              src={`data:image/jpeg;base64,${arrayBufferToBase64(
-                                n?.senderProfilePicture?.data
-                              )}`}
-                            />
-                            <span className="notificationText">
-                              {`${n.senderName} ${
-                                notificationMessages[n.type]
-                              }`}
-                            </span>
-                          </li>
-                        );
-                      }
-                    })
-                  )}
-                </ul>
-              </div>
-            </div>
+            <NotificationPannel
+              setActivebtn={setActivebtn}
+              activeBtn={activeBtn}
+              setunread={setunread}
+              unread={unread}
+              loadingNotification={loadingNotification}
+              notifications={notifications}
+              setNotificationBandage={setNotificationBandage}
+              setClickedNotification={setClickedNotification}
+              setShowModal={setShowModal}
+              fetchNotifications={fetchNotifications}
+            />
           )}
 
           {friendRequestPanelVisible && (
