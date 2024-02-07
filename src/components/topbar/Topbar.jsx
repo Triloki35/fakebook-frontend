@@ -76,10 +76,10 @@ const Topbar = ({ socket, unseen }) => {
   useEffect(() => {
     const getUnreadNotificationLength = async () => {
       try {
-        // const res = await axios.get(`${API}users/unread-notifications-count/${user._id}`);
-        const res = await axios.get(
-          `http://localhost:8000/api/users/unread-notifications-count/${user._id}`
-        );
+        const res = await axios.get(`${API}users/unread-notifications-count/${user._id}`);
+        // const res = await axios.get(
+        //   `http://localhost:8000/api/users/unread-notifications-count/${user._id}`
+        // );
         setNotificationBandage(res.data.unreadNotificationsCount);
       } catch (error) {
         console.log("failed to update notificaton bandage");
