@@ -9,10 +9,6 @@ import {
   Logout,
   Feedback,
   ArrowForwardIos,
-  Delete,
-  Lock,
-  Key,
-  ArrowBack,
 } from "@mui/icons-material";
 
 import { Link, useNavigate } from "react-router-dom";
@@ -22,7 +18,7 @@ import { v4 as uuidv4 } from "uuid";
 import NotificationModal from "../notificationModal/NotificationModal";
 import FriendRequest from "../friend-request/FriendRequest";
 import SearchBox from "../search/SearchBox";
-import { Avatar, CircularProgress } from "@mui/material";
+import { Avatar } from "@mui/material";
 import HelpCompo from "../help/Help.jsx";
 import { arrayBufferToBase64 } from "../../base64Converter.js";
 import AccountSettings from "./AccountSettings.jsx";
@@ -36,11 +32,12 @@ const Topbar = ({ socket, unseen }) => {
   const [dropdown, setDropdown] = useState(false);
   const [activeBtn, setActivebtn] = useState(true);
 
-  const [notifications, setNotifications] = useState(user?.notifications);
+  const [notifications, setNotifications] = useState([]);
   const [loadingNotification, setLoadingNotification] = useState(false);
   const [toggleNotification, setToggleNotification] = useState(false);
   const [notificationBandage, setNotificationBandage] = useState(0);
   const [unread, setunread] = useState(false);
+  const [page,setPage]=useState(1);
 
   const [friendRequestBandage, setFriendRequestBandage] = useState(0);
   const [friendRequestPanelVisible, setFriendRequestPanelVisible] =
@@ -58,19 +55,23 @@ const Topbar = ({ socket, unseen }) => {
   const fetchNotifications = async () => {
     try {
       setLoadingNotification(true);
-      const res = await axios.get(`${API}users/notifications/${user._id}`);
-      // const res = await axios.get(`http://localhost:8000/api/users/notifications/${user._id}`);
+      // const res = await axios.get(`${API}users/notifications/${user._id}`);
+      const res = await axios.get(`http://localhost:8000/api/users/notifications/${user._id}?page=${page}`);
       console.log(res.data);
       const sortedNotifications = res.data.notifications?.sort((a, b) => {
         return new Date(b.createdAt) - new Date(a.createdAt);
       });
-      setNotifications(sortedNotifications);
+      setNotifications(prevNotifications => [...prevNotifications, ...sortedNotifications]);
     } catch (error) {
       console.log(error);
     } finally {
       setLoadingNotification(false);
     }
   };
+  // fetching when page change
+  useEffect(() => {
+    fetchNotifications();
+  }, [page])
 
   //  setting bandage whenever notification change
   useEffect(() => {
@@ -136,7 +137,7 @@ const Topbar = ({ socket, unseen }) => {
     window.location.href = "/";
   };
 
-  // console.log(notifications);
+  console.log(page);
 
   return (
     <div className="topbarContainer">
@@ -202,7 +203,7 @@ const Topbar = ({ socket, unseen }) => {
               setNotificationBandage={setNotificationBandage}
               setClickedNotification={setClickedNotification}
               setShowModal={setShowModal}
-              fetchNotifications={fetchNotifications}
+              setPage={setPage}
             />
           )}
 

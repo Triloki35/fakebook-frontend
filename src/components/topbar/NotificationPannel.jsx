@@ -15,7 +15,7 @@ const NotificationPannel = ({
   setNotificationBandage,
   setClickedNotification,
   setShowModal,
-  fetchNotifications
+  setPage,
 }) => {
   const API = process.env.REACT_APP_API;
   const navigate = useNavigate();
@@ -41,6 +41,26 @@ const NotificationPannel = ({
     liked: "liked your post",
     accepted: "accepted your friend request",
   };
+
+  useEffect(() => {
+    const notificationWrapper = document.querySelector(".notificationWrapper");
+
+    const handleScroll = () => {
+      if (
+        notificationWrapper.scrollHeight - notificationWrapper.scrollTop <=
+        notificationWrapper.clientHeight + 10
+      ) {
+        console.log("innnnn");
+        setPage((prevPage) => prevPage + 1);
+      }
+    };
+
+    notificationWrapper.addEventListener("scroll", handleScroll);
+
+    return () => {
+      notificationWrapper.removeEventListener("scroll", handleScroll);
+    };
+  }, [setPage]);
 
   return (
     <div className="notificationContainer">
@@ -68,52 +88,51 @@ const NotificationPannel = ({
           </button>
         </div>
         <ul className="notificationList">
-          {loadingNotification ? (
-            <CircularProgress color="primary" />
-          ) : notifications.length === 0 ? (
-            <li>No notifiactions found</li>
-          ) : (
-            notifications?.map((n, i) => {
-              if (unread && !n.status) {
-                return (
-                  <li
-                    className="notification unread"
-                    onClick={() => handleNotificationClick(n)}
-                    key={i}
-                  >
-                    <Avatar
-                      src={`data:image/jpeg;base64,${arrayBufferToBase64(
-                        n?.senderProfilePicture?.data
-                      )}`}
-                    />
-                    <span className="notificationText">
-                      {`${n.senderName} ${notificationMessages[n.type]}`}
-                    </span>
-                  </li>
-                );
-              } else if (!unread) {
-                return (
-                  <li
-                    className={
-                      !n.status ? "notification unread" : "notification"
-                    }
-                    onClick={() => handleNotificationClick(n)}
-                    key={i}
-                  >
-                    <Avatar
-                      src={`data:image/jpeg;base64,${arrayBufferToBase64(
-                        n?.senderProfilePicture?.data
-                      )}`}
-                    />
-                    <span className="notificationText">
-                      {`${n.senderName} ${notificationMessages[n.type]}`}
-                    </span>
-                  </li>
-                );
-              }
-            })
+          {!loadingNotification && notifications.length === 0 && (
+            <li>No notifications found</li>
           )}
+
+          {notifications?.map((n, i) => {
+            if (unread && !n.status) {
+              return (
+                <li
+                  className="notification unread"
+                  onClick={() => handleNotificationClick(n)}
+                  key={i}
+                >
+                  <Avatar
+                    src={`data:image/jpeg;base64,${arrayBufferToBase64(
+                      n?.senderProfilePicture?.data
+                    )}`}
+                  />
+                  <span className="notificationText">
+                    {`${n.senderName} ${notificationMessages[n.type]}`}
+                  </span>
+                </li>
+              );
+            } else if (!unread) {
+              return (
+                <li
+                  className={!n.status ? "notification unread" : "notification"}
+                  onClick={() => handleNotificationClick(n)}
+                  key={i}
+                >
+                  <Avatar
+                    src={`data:image/jpeg;base64,${arrayBufferToBase64(
+                      n?.senderProfilePicture?.data
+                    )}`}
+                  />
+                  <span className="notificationText">
+                    {`${n.senderName} ${notificationMessages[n.type]}`}
+                  </span>
+                </li>
+              );
+            }
+          })}
         </ul>
+        {!loadingNotification && (
+          <CircularProgress color="primary" size="20px" sx={{marginLeft:"50%"}}/>
+        )}
       </div>
     </div>
   );
