@@ -37,7 +37,8 @@ const Topbar = ({ socket, unseen }) => {
   const [toggleNotification, setToggleNotification] = useState(false);
   const [notificationBandage, setNotificationBandage] = useState(0);
   const [unread, setunread] = useState(false);
-  const [page,setPage]=useState(1);
+  const [page, setPage] = useState(1);
+  const [fetchMore, setFetchMore] = useState(true);
 
   const [friendRequestBandage, setFriendRequestBandage] = useState(0);
   const [friendRequestPanelVisible, setFriendRequestPanelVisible] =
@@ -55,13 +56,19 @@ const Topbar = ({ socket, unseen }) => {
   const fetchNotifications = async () => {
     try {
       setLoadingNotification(true);
-      const res = await axios.get(`${API}users/notifications/${user._id}?page=${page}`);
+      const res = await axios.get(
+        `${API}users/notifications/${user._id}?page=${page}`
+      );
       // const res = await axios.get(`http://localhost:8000/api/users/notifications/${user._id}?page=${page}`);
-      console.log(res.data);
       const sortedNotifications = res.data.notifications?.sort((a, b) => {
         return new Date(b.createdAt) - new Date(a.createdAt);
       });
-      setNotifications(prevNotifications => [...prevNotifications, ...sortedNotifications]);
+      if (sortedNotifications.length !== 0)
+        setNotifications((prevNotifications) => [
+          ...prevNotifications,
+          ...sortedNotifications,
+        ]);
+      else setFetchMore(false);
     } catch (error) {
       console.log(error);
     } finally {
@@ -71,13 +78,15 @@ const Topbar = ({ socket, unseen }) => {
   // fetching when page change
   useEffect(() => {
     fetchNotifications();
-  }, [page])
+  }, [page]);
 
   //  setting bandage whenever notification change
   useEffect(() => {
     const getUnreadNotificationLength = async () => {
       try {
-        const res = await axios.get(`${API}users/unread-notifications-count/${user._id}`);
+        const res = await axios.get(
+          `${API}users/unread-notifications-count/${user._id}`
+        );
         // const res = await axios.get(
         //   `http://localhost:8000/api/users/unread-notifications-count/${user._id}`
         // );
@@ -204,6 +213,7 @@ const Topbar = ({ socket, unseen }) => {
               setClickedNotification={setClickedNotification}
               setShowModal={setShowModal}
               setPage={setPage}
+              fetchMore={fetchMore}
             />
           )}
 

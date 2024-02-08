@@ -74,8 +74,7 @@ const Feed = ({
       if (
         fetchMore &&
         !loading &&
-        window.innerHeight + document.documentElement.scrollTop + 1 >=
-          document.documentElement.scrollHeight
+        window.innerHeight + document.documentElement.scrollTop >= document.documentElement.scrollHeight / 2
       ) {
         setPage((prevPage) => prevPage + 1);
       }

@@ -16,6 +16,7 @@ const NotificationPannel = ({
   setClickedNotification,
   setShowModal,
   setPage,
+  fetchMore,
 }) => {
   const API = process.env.REACT_APP_API;
   const navigate = useNavigate();
@@ -47,10 +48,10 @@ const NotificationPannel = ({
 
     const handleScroll = () => {
       if (
-        notificationWrapper.scrollHeight - notificationWrapper.scrollTop <=
-        notificationWrapper.clientHeight + 10
+        fetchMore && loadingNotification &&
+        (notificationWrapper.scrollHeight - notificationWrapper.scrollTop <=
+          notificationWrapper.clientHeight + 10)
       ) {
-        console.log("innnnn");
         setPage((prevPage) => prevPage + 1);
       }
     };
@@ -131,7 +132,11 @@ const NotificationPannel = ({
           })}
         </ul>
         {!loadingNotification && (
-          <CircularProgress color="primary" size="20px" sx={{marginLeft:"50%"}}/>
+          <CircularProgress
+            color="primary"
+            size="20px"
+            sx={{ marginLeft: "50%" }}
+          />
         )}
       </div>
     </div>
