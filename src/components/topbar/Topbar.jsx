@@ -55,8 +55,8 @@ const Topbar = ({ socket, unseen }) => {
   const fetchNotifications = async () => {
     try {
       setLoadingNotification(true);
-      // const res = await axios.get(`${API}users/notifications/${user._id}`);
-      const res = await axios.get(`http://localhost:8000/api/users/notifications/${user._id}?page=${page}`);
+      const res = await axios.get(`${API}users/notifications/${user._id}?page=${page}`);
+      // const res = await axios.get(`http://localhost:8000/api/users/notifications/${user._id}?page=${page}`);
       console.log(res.data);
       const sortedNotifications = res.data.notifications?.sort((a, b) => {
         return new Date(b.createdAt) - new Date(a.createdAt);
