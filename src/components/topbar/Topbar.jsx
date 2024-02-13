@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import "./topbar.css";
 import {
   Chat,
@@ -146,8 +146,6 @@ const Topbar = ({ socket, unseen }) => {
     window.location.href = "/";
   };
 
-  console.log(page);
-
   return (
     <div className="topbarContainer">
       <div className="topbarLeft">
@@ -191,6 +189,7 @@ const Topbar = ({ socket, unseen }) => {
           </div>
           <div
             className="topbarIconItem"
+            id="notificationIcon"
             onClick={() => {
               setToggleNotification(!toggleNotification);
               fetchNotifications();
@@ -214,6 +213,8 @@ const Topbar = ({ socket, unseen }) => {
               setShowModal={setShowModal}
               setPage={setPage}
               fetchMore={fetchMore}
+              toggleNotification={toggleNotification}
+              setToggleNotification={setToggleNotification}
             />
           )}
 

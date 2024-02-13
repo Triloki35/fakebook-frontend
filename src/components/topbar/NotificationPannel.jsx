@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { Avatar, CircularProgress } from "@mui/material";
 import { arrayBufferToBase64 } from "../../base64Converter.js";
 import axios from "axios";
@@ -17,10 +17,13 @@ const NotificationPannel = ({
   setShowModal,
   setPage,
   fetchMore,
+  toggleNotification,
+  setToggleNotification,
 }) => {
   const API = process.env.REACT_APP_API;
   const navigate = useNavigate();
   const { user } = useContext(AuthContext);
+  const notificationContainerRef = useRef(null);
 
   const handleNotificationClick = async (notification) => {
     if (notification.type === "accepted") {
@@ -44,13 +47,33 @@ const NotificationPannel = ({
   };
 
   useEffect(() => {
+    const handleDocumentClick = (event) => {
+      if (
+        toggleNotification &&
+        notificationContainerRef.current &&
+        !notificationContainerRef.current.contains(event.target)
+      ) {
+        setToggleNotification(false);
+      }
+    };
+
+    document.addEventListener("click", handleDocumentClick);
+
+    return () => {
+      document.removeEventListener("click", handleDocumentClick);
+    };
+  }, [toggleNotification, setToggleNotification]);
+
+  useEffect(() => {
     const notificationWrapper = document.querySelector(".notificationWrapper");
 
     const handleScroll = () => {
       if (
-        fetchMore && loadingNotification &&
-        (notificationWrapper.scrollHeight - notificationWrapper.scrollTop <=
-          notificationWrapper.clientHeight + 10)
+        fetchMore &&
+        loadingNotification &&
+        notificationWrapper.scrollHeight -
+          notificationWrapper.scrollTop <=
+          notificationWrapper.clientHeight + 10
       ) {
         setPage((prevPage) => prevPage + 1);
       }
@@ -64,7 +87,7 @@ const NotificationPannel = ({
   }, [setPage]);
 
   return (
-    <div className="notificationContainer">
+    <div className="notificationContainer" ref={notificationContainerRef}>
       <div className="notificationWrapper">
         <h3 className="notificationHeading">Notifications</h3>
         <div className="notificationbtnContainer">
@@ -114,7 +137,9 @@ const NotificationPannel = ({
             } else if (!unread) {
               return (
                 <li
-                  className={!n.status ? "notification unread" : "notification"}
+                  className={
+                    !n.status ? "notification unread" : "notification"
+                  }
                   onClick={() => handleNotificationClick(n)}
                   key={i}
                 >
