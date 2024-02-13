@@ -191,7 +191,7 @@ const Topbar = ({ socket, unseen }) => {
             className="topbarIconItem"
             id="notificationIcon"
             onClick={() => {
-              setToggleNotification(!toggleNotification);
+              setToggleNotification((p)=>!p);
               fetchNotifications();
             }}
           >
@@ -222,6 +222,8 @@ const Topbar = ({ socket, unseen }) => {
             <FriendRequest
               socket={socket}
               setFriendRequestBandage={setFriendRequestBandage}
+              friendRequestPanelVisible={friendRequestPanelVisible}
+              setFriendRequestPanelVisible={setFriendRequestPanelVisible}
             />
           )}
         </div>

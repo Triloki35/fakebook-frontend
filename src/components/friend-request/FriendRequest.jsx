@@ -1,43 +1,60 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect, useRef } from "react";
 import "./friendRequest.css";
 import { MoreHoriz } from "@mui/icons-material";
-import { useEffect } from "react";
+import { CircularProgress, Avatar } from "@mui/material";
+import { arrayBufferToBase64 } from "../../base64Converter";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";
 import { UpdateUser } from "../../context/AuthActions";
-import { Avatar, CircularProgress } from "@mui/material";
-import { arrayBufferToBase64 } from "../../base64Converter";
 
-const FriendRequest = ({ setFriendRequestBandage, socket }) => {
+const FriendRequest = ({
+  setFriendRequestBandage,
+  socket,
+  friendRequestPanelVisible,
+  setFriendRequestPanelVisible,
+}) => {
   const API = process.env.REACT_APP_API;
   const { user, dispatch } = useContext(AuthContext);
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const [friendReq, setFriendReq] = useState([]);
-  const [loading, isLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [cnfLoading, setCnfLoading] = useState(false);
   const [canLoading, setCanLoading] = useState(false);
 
-  console.log(user);
+  const friendRequestContainerRef = useRef(null);
 
   useEffect(() => {
     const fetchFriendRq = async () => {
-      isLoading(true);
+      setLoading(true);
       try {
         const res = await axios.get(`${API}users/friend-requests/${user._id}`);
-        // const res = await axios.get(`http://localhost:8000/api/users/friend-requests/${user._id}`);
-        console.log(res.data);
         setFriendReq(res.data.friendRequests);
-        const { notifications, bookmarks, ...userInfo } = res.data;
-        localStorage.setItem("userInfo", JSON.stringify(userInfo));
-        console.log(user);
       } catch (error) {
         console.log(error);
       }
-      isLoading(false);
+      setLoading(false);
     };
     fetchFriendRq();
   }, []);
+
+  useEffect(() => {
+    const handleDocumentClick = (event) => {
+      if (
+        friendRequestPanelVisible &&
+        friendRequestContainerRef.current &&
+        !friendRequestContainerRef.current.contains(event.target)
+      ) {
+        setFriendRequestPanelVisible(false);
+      }
+    };
+
+    document.addEventListener("click", handleDocumentClick);
+
+    return () => {
+      document.removeEventListener("click", handleDocumentClick);
+    };
+  }, [friendRequestPanelVisible, setFriendRequestPanelVisible]);
 
   const handleConfirm = async (f) => {
     setCnfLoading(true);
@@ -48,19 +65,12 @@ const FriendRequest = ({ setFriendRequestBandage, socket }) => {
           friendId: f._id,
         }
       );
-      // const res = await axios.post(
-      //   `http://localhost:8000/api/users/accept-friend-request/` + user._id,
-      //   {
-      //     friendId: f._id,
-      //   }
-      // );
-      // console.log(res.data);
       const { notifications, bookmarks, ...userInfo } = res.data;
       localStorage.setItem("userInfo", JSON.stringify(userInfo));
       setFriendReq(res.data.friendRequests);
       setFriendRequestBandage(res.data?.friendRequests?.length);
       dispatch(UpdateUser(res.data));
-      socket?.emit("Notification", {receiverId: f._id});
+      socket?.emit("Notification", { receiverId: f._id });
     } catch (error) {
       console.log(error);
     }
@@ -76,7 +86,6 @@ const FriendRequest = ({ setFriendRequestBandage, socket }) => {
           friendId: f._id,
         }
       );
-      console.log(res.data);
       dispatch(UpdateUser(res.data));
       const { notifications, bookmarks, ...userInfo } = res.data;
       localStorage.setItem("userInfo", JSON.stringify(userInfo));
@@ -88,17 +97,15 @@ const FriendRequest = ({ setFriendRequestBandage, socket }) => {
     setCanLoading(false);
   };
 
-  // console.log(user);
-
   return (
-    <div className="friendRequestContainer">
+    <div className="friendRequestContainer" ref={friendRequestContainerRef}>
       <div className="fr-wrapper">
         <div className="fr-title">
           <h3>Friend Requests</h3>
           <MoreHoriz className="fr-more" />
         </div>
         {friendReq?.map((f) => (
-          <ul className="fr-list">
+          <ul className="fr-list" key={f._id}>
             <li className="fr-list-item">
               <Link
                 reloadDocument
@@ -114,18 +121,26 @@ const FriendRequest = ({ setFriendRequestBandage, socket }) => {
                 <span className="fr-name">{f.username}</span>
               </Link>
               <div className="fr-btn-container">
-                <button className="fr-confirm" onClick={() => handleConfirm(f)}>
-                  {!cnfLoading ? (
-                    "Confirm"
-                  ) : (
+                <button
+                  className="fr-confirm"
+                  onClick={() => handleConfirm(f)}
+                  disabled={cnfLoading}
+                >
+                  {cnfLoading ? (
                     <CircularProgress color="inherit" size="15px" />
+                  ) : (
+                    "Confirm"
                   )}
                 </button>
-                <button className="fr-delete" onClick={() => handleDelete(f)}>
-                  {!canLoading ? (
-                    "Delete"
-                  ) : (
+                <button
+                  className="fr-delete"
+                  onClick={() => handleDelete(f)}
+                  disabled={canLoading}
+                >
+                  {canLoading ? (
                     <CircularProgress color="inherit" size="15px" />
+                  ) : (
+                    "Delete"
                   )}
                 </button>
               </div>
@@ -136,11 +151,9 @@ const FriendRequest = ({ setFriendRequestBandage, socket }) => {
           <div className="fr-loading">
             <CircularProgress />
           </div>
-        ) : (
-          friendReq?.length === 0 && (
-            <div className="fr-loading">No request found</div>
-          )
-        )}
+        ) : friendReq?.length === 0 ? (
+          <div className="fr-loading">No request found</div>
+        ) : null}
       </div>
     </div>
   );
