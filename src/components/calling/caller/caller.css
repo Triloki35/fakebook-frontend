@@ -38,23 +38,25 @@
 }
 
 .callerbottom {
-    position: absolute;
-    bottom: 50px;
-    right: 50%;
+  position: absolute;
+  bottom: 50px;
+  /* right: 50%; */
 }
 
-.callerbottom2{
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    margin-top: 50px;
+.callerbottom2 {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  margin-top: 50px;
 }
 
-.callerbottom,.callerbottom2 button {
+.callerbottom,
+.callerbottom2 button {
   border: none;
 }
 
-.callerbottom,.callerbottom2 button:hover {
+.callerbottom,
+.callerbottom2 button:hover {
   cursor: pointer;
 }
 
@@ -76,15 +78,34 @@
   color: white;
 }
 
+.controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  background: #fcfcfc24;
+  padding: 5px 20px;
+  border-radius: 25px;
+}
+
+.controls2 {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+  background: #00000030;
+  padding: 5px 20px;
+  border-radius: 25px;
+}
+
 .endBtn {
   background-color: tomato;
   border-radius: 50%;
-  padding-top: 5px;
-  border: none;
+  padding: 5px 8px;
 }
 
-.endBtn:hover{
-    cursor: pointer;
+.controls button:hover {
+  cursor: pointer;
 }
 
 .mainVideo {

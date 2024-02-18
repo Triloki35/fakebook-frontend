@@ -38,6 +38,7 @@ const FriendList = ({ user }) => {
         <small style={{ color: "gray" }}>
           {friendList.length !== 0 && friendList.length + " friends"}
         </small>
+        {friendList.length === 0 && <h5 className="no-friend">No friends !!</h5>}
       </div>
 
       <div className="rightBarFriends">

@@ -40,6 +40,12 @@
   /* margin-bottom: 10px; */
 }
 
+.no-friend {
+  text-align: center;
+  color: gray;
+  margin: 10px 0px;
+}
+
 @media screen and (max-width: 768px) {
   .rightBarFriends {
     justify-content: flex-start;
@@ -48,5 +54,8 @@
 
   .rightBarFriend {
     margin-bottom: 0px;
+  }
+
+  .no-friend {
   }
 }

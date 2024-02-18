@@ -25,6 +25,8 @@ const ProfileInfo = ({ user }) => {
         const res = await axios.post(`${API}users/unfriend/${currUser._id}`, {
           _id: user._id,
         });
+        const { notifications, bookmarks, ...userInfo } = res.data;
+        localStorage.setItem("userInfo", JSON.stringify(userInfo));
         dispatch(UpdateUser(res.data));
         setIsFriend(false);
       } catch (error) {

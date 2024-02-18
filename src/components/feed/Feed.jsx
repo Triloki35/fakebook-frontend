@@ -105,16 +105,9 @@ const Feed = ({
         return (
           <>
             <Share socket={socket} />
-            {posts.length !== 0 ? (
-              posts.map((p) => <Post key={uuidv4()} post={p} socket={socket} />)
-            ) : (
-              <NoPost />
-            )}
-            {loading && (
-              <p className="loading-text">
-                <ClipLoader color={"#1877F2"} loading={true} speedMultiplier={2} />
-              </p>
-            )}
+            {posts?.length !==0 && posts.map((p) => <Post key={uuidv4()} post={p} socket={socket} />)}
+            {loading && <NoPost/>}
+            {!loading && posts.length ===0 && (<h3 className="no-post">No Post found !!</h3>)}
           </>
         );
     }

@@ -1,12 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import "./receiver.css";
 import ScaleLoader from "react-spinners/ScaleLoader";
-import { Call, CallEnd } from "@mui/icons-material";
+import { Call, CallEnd, Mic, MicOff, Videocam, VideocamOff, VolumeMute, VolumeUp } from "@mui/icons-material";
 import Peer from "simple-peer";
 import { arrayBufferToBase64 } from "../../../base64Converter";
 import * as process from "process";
 import Timer from "../../timer/Timer";
-import { Avatar } from "@mui/material";
+import { Avatar, IconButton } from "@mui/material";
 import axios from "axios";
 
 const Receiver = ({ socket, callProp }) => {
@@ -17,6 +17,9 @@ const Receiver = ({ socket, callProp }) => {
   const [friendProfilePic , setFriendProfilePic] = useState(null);
   const [callAccepted, setCallAccepted] = useState(false);
   const [mainVideo, setMainVideo] = useState(false);
+  const [mute, setMute] = useState(call.audio);
+  const [videoOn, setVideoOn] = useState(call.video);
+  const [speaker, setSpeaker] = useState(false);
 
   const ownVideoRef = useRef();
   const friendVideoRef = useRef();
@@ -40,7 +43,7 @@ const Receiver = ({ socket, callProp }) => {
 
   useEffect(() => {
     navigator.mediaDevices
-      .getUserMedia({ video: call.video, audio: call.audio })
+      .getUserMedia({ video: videoOn, audio: mute })
       .then((currentStream) => {
         setStream(currentStream);
         ownVideoRef.current.srcObject = currentStream;
@@ -50,6 +53,37 @@ const Receiver = ({ socket, callProp }) => {
         }
       });
   }, [call]);
+
+  useEffect(() => {
+    if (stream) {
+      const audioTracks = stream.getAudioTracks();
+      const audioElement = audioRef.current;
+      const deviceId = speaker ? "default" : "communications";
+  
+      // Check if setSinkId method is available
+      if ('sinkId' in audioElement) {
+        audioTracks.forEach(track => {
+          track.applyConstraints({ deviceId: { exact: deviceId } })
+            .then(() => {
+              // Set the sinkId to change the audio output device
+              audioElement.setSinkId(deviceId)
+                .then(() => {
+                  console.log(`Audio output device set to ${deviceId}`);
+                })
+                .catch(error => {
+                  console.error('Error setting audio output device:', error);
+                });
+            })
+            .catch(error => {
+              console.error('Error applying constraints:', error);
+            });
+        });
+      } else {
+        console.error('setSinkId is not supported in your browser');
+      }
+    }
+  }, [speaker]);
+  
 
   useEffect(() => {
     socket.on("endCall", () => {
@@ -109,6 +143,34 @@ const Receiver = ({ socket, callProp }) => {
     window.location.href = "/messenger";
   };
 
+
+  const handleToggleMute = () => {
+    if (stream) {
+      const audioTracks = stream.getAudioTracks();
+      audioTracks.forEach((track) => {
+        track.enabled = !track.enabled; // Toggle the enabled state of each audio track
+      });
+      setMute((prevMute) => !prevMute); // Toggle the mute state
+    }
+  };
+
+  const handleToggleVideo = () => {
+    if (stream) {
+      const videoTracks = stream.getVideoTracks();
+      videoTracks.forEach((track) => {
+        track.enabled = !track.enabled; // Toggle the enabled state of each video track
+      });
+      setVideoOn((prevVideoOn) => !prevVideoOn); // Toggle the video state
+    }
+  };
+
+  const handleSpeaker = () => {
+    setSpeaker(prevSpeaker => !prevSpeaker);
+  };
+  
+
+  console.log(callProp);
+
   return (
     <div className="receiverContainer">
       <div className="receiverWrapper">
@@ -126,16 +188,46 @@ const Receiver = ({ socket, callProp }) => {
             )}
           </div>
         )}
-        <div className={callAccepted ? "receiverBottom" : "receiverBottom2"}>
+        {callAccepted ? (
+          <div className={call.video ? "rcv-controls" : "rcv-controls2"}>
+              <IconButton onClick={()=>handleToggleMute()}>
+                {mute ? (
+                  <Mic htmlColor="white" />
+                ) : (
+                  <MicOff htmlColor="white" />
+                )}
+              </IconButton>
+              <IconButton onClick={()=> handleCallEnd()}>
+                <CallEnd color="error" />
+              </IconButton>
+              {call.video ? (
+                <IconButton onClick={() => handleToggleVideo()}>
+                  {videoOn ? (
+                    <Videocam htmlColor="white" />
+                  ) : (
+                    <VideocamOff htmlColor="white" />
+                  )}
+                </IconButton>
+              ) : (
+                <IconButton onClick={() => handleSpeaker()}>
+                  {speaker ? (
+                    <VolumeUp htmlColor="white" />
+                  ) : (
+                    <VolumeMute htmlColor="white" />
+                  )}
+                </IconButton>
+              )}
+            </div>
+        ) : (
+          <div className="receiverBottom2">
           <button className="rb-end" onClick={() => handleCallEnd()}>
             <CallEnd htmlColor="white" />
           </button>
-          {!callAccepted && (
             <button className="rb-ans" onClick={() => answerCall()}>
               <Call htmlColor="white" />
             </button>
-          )}
         </div>
+        )}
       </div>
 
       <video

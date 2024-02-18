@@ -4,15 +4,21 @@ import ScaleLoader from "react-spinners/ScaleLoader";
 import {
   Call,
   CallEnd,
+  Mic,
+  MicNone,
+  MicOff,
   PhoneDisabled,
+  Speaker,
   Videocam,
   VideocamOff,
+  VolumeMute,
+  VolumeUp,
 } from "@mui/icons-material";
 import Peer from "simple-peer";
 import { AuthContext } from "../../../context/AuthContext";
 import * as process from "process";
 import Timer from "../../timer/Timer";
-import { Avatar } from "@mui/material";
+import { Avatar, Button, IconButton } from "@mui/material";
 import { arrayBufferToBase64 } from "../../../base64Converter";
 
 const Caller = ({ friend, socket, audio, video }) => {
@@ -22,6 +28,9 @@ const Caller = ({ friend, socket, audio, video }) => {
   const [callAccepted, setCallAccepted] = useState(false);
   const [callProgress, setCallProgress] = useState(false);
   const [mainVideo, setMainVideo] = useState(false);
+  const [mute, setMute] = useState(audio);
+  const [videoOn, setVideoOn] = useState(video);
+  const [speaker, setSpeaker] = useState(false);
 
   const ownVideoRef = useRef();
   const friendVideoRef = useRef();
@@ -31,7 +40,7 @@ const Caller = ({ friend, socket, audio, video }) => {
 
   useEffect(() => {
     navigator.mediaDevices
-      .getUserMedia({ video: video, audio: audio })
+      .getUserMedia({ video: videoOn, audio: mute })
       .then((currentStream) => {
         setStream(currentStream);
         ownVideoRef.current.srcObject = currentStream;
@@ -77,6 +86,27 @@ const Caller = ({ friend, socket, audio, video }) => {
     });
   };
 
+  // Inside your Caller component
+  const handleToggleMute = () => {
+    if (stream) {
+      const audioTracks = stream.getAudioTracks();
+      audioTracks.forEach((track) => {
+        track.enabled = !track.enabled;
+      });
+      setMute((prevMute) => !prevMute);
+    }
+  };
+
+  const handleToggleVideo = () => {
+    if (stream) {
+      const videoTracks = stream.getVideoTracks();
+      videoTracks.forEach((track) => {
+        track.enabled = !track.enabled; // Toggle the enabled state of each video track
+      });
+      setVideoOn((prevVideoOn) => !prevVideoOn); // Toggle the video state
+    }
+  };
+
   const handleCallEnd = () => {
     if (peerRef.current) {
       peerRef.current.destroy();
@@ -85,13 +115,50 @@ const Caller = ({ friend, socket, audio, video }) => {
     window.location.href = "/messenger";
   };
 
+  const handleSpeaker = () => {
+    if (stream) {
+      const audioTracks = stream.getAudioTracks();
+      const audioElement = ownVideoRef.current;
+      const deviceId = speaker ? "default" : "communications";
+  
+      // Check if setSinkId method is available
+      if ('sinkId' in audioElement) {
+        audioTracks.forEach(track => {
+          track.applyConstraints({ deviceId: { exact: deviceId } })
+            .then(() => {
+              // Set the sinkId to change the audio output device
+              audioElement.setSinkId(deviceId)
+                .then(() => {
+                  console.log(`Audio output device set to ${deviceId}`);
+                })
+                .catch(error => {
+                  console.error('Error setting audio output device:', error);
+                });
+            })
+            .catch(error => {
+              console.error('Error applying constraints:', error);
+            });
+        });
+        // Toggle the speaker state
+        setSpeaker(prevSpeaker => !prevSpeaker);
+      } else {
+        console.error('setSinkId is not supported in your browser');
+      }
+    }
+  };
+  
+
   return (
     <div className="callerContainer">
       <div className="callerWrapper">
         {(!callAccepted || !video) && (
           <div className="callerTop">
-            <Avatar src={`data:image/jpeg;base64,${arrayBufferToBase64(friend?.profilePicture?.data)}`}/>
-            <h4 style={!video ? { color: "black" } : {}}>{friend.username}</h4>
+            <Avatar
+              src={`data:image/jpeg;base64,${arrayBufferToBase64(
+                friend?.profilePicture?.data
+              )}`}
+            />
+            <h4 style={!video ? { color: "black" } : {}}>{friend?.username}</h4>
             {callProgress && (
               <small style={!video ? { color: "black" } : {}}>
                 Ringing
@@ -120,7 +187,7 @@ const Caller = ({ friend, socket, audio, video }) => {
                   <Call htmlColor="white" />
                 ) : (
                   <Videocam htmlColor="white" />
-                )}{" "}
+                )}
                 <span>&nbsp; Call</span>
               </button>
               <button className="abortBtn" onClick={() => handleCallEnd()}>
@@ -133,9 +200,37 @@ const Caller = ({ friend, socket, audio, video }) => {
               </button>
             </>
           ) : (
-            <button className="endBtn" onClick={() => handleCallEnd()}>
-              <CallEnd htmlColor="white" />
-            </button>
+            <div className={video ? "controls" : "controls2"}>
+              <IconButton onClick={() => handleToggleMute()}>
+                {mute ? (
+                  <Mic htmlColor="white" />
+                ) : (
+                  <MicOff htmlColor="white" />
+                )}
+              </IconButton>
+              <IconButton onClick={() => handleCallEnd()}>
+                <CallEnd color="error" />
+              </IconButton>
+
+              {video ? (
+                <IconButton onClick={() => handleToggleVideo()}>
+                  {videoOn ? (
+                    <Videocam htmlColor="white" />
+                  ) : (
+                    <VideocamOff htmlColor="white" />
+                  )}
+                </IconButton>
+              ) : (
+                <IconButton onClick={() => handleSpeaker()}>
+                  {speaker ? (
+                    <VolumeUp htmlColor="white" />
+                  ) : (
+                    <VolumeMute htmlColor="white" />
+                  )}
+                </IconButton>
+              )}
+
+            </div>
           )}
         </div>
       </div>
