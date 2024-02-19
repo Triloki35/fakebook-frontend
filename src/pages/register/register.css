@@ -164,6 +164,8 @@ select option :disabled {
 
 .pass-error{
   color: red;
+  font-size: small;
+  padding-left: 5px;
 }
 
 @media (max-width: 768px) {
