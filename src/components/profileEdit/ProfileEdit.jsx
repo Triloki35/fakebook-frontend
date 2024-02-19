@@ -12,7 +12,12 @@ export default function ProfileEdit({ isOpen, onClose, onChange }) {
   const API = process.env.REACT_APP_API;
   const { user, dispatch } = useContext(AuthContext);
 
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState({
+    profilePic: false,
+    coverPic: false,
+    about: false,
+    bio: false,
+  });
 
   const [selectedProfilePic, setSelectedProfilePic] = useState(null);
   const [profilePicEdit, setProfilePicEdit] = useState(false);
@@ -38,7 +43,7 @@ export default function ProfileEdit({ isOpen, onClose, onChange }) {
   };
 
   const ProfilePicSave = async () => {
-    setLoading(true);
+    setLoading((prevLoading) => ({ ...prevLoading, profilePic: true }));
     if (!selectedProfilePic) {
       console.error("No profile picture selected.");
       return;
@@ -62,7 +67,7 @@ export default function ProfileEdit({ isOpen, onClose, onChange }) {
     } catch (error) {
       setError("Error uploading profile picture");
     }
-    setLoading(false);
+    setLoading((prevLoading) => ({ ...prevLoading, profilePic: false }));
     setProfilePicEdit(false);
   };
 
@@ -72,7 +77,7 @@ export default function ProfileEdit({ isOpen, onClose, onChange }) {
   };
 
   const CoverPicSave = async () => {
-    setLoading(true);
+    setLoading((prevLoading) => ({ ...prevLoading, coverPic: true }));
     if (!selectedCoverPic) {
       console.error("No Cover picture selected.");
       return;
@@ -93,7 +98,7 @@ export default function ProfileEdit({ isOpen, onClose, onChange }) {
       setError("Error uploading cover picture");
     }
 
-    setLoading(false);
+    setLoading((prevLoading) => ({ ...prevLoading, coverPic: true }));
     setCoverPicEdit(false);
   };
 
@@ -102,7 +107,7 @@ export default function ProfileEdit({ isOpen, onClose, onChange }) {
   };
 
   const handleSaveAbout = async () => {
-    setLoading(true);
+    setLoading((prevLoading) => ({ ...prevLoading, about: true }));
     const aboutData = {
       city: editedAbout.city,
       from: editedAbout.from,
@@ -120,7 +125,7 @@ export default function ProfileEdit({ isOpen, onClose, onChange }) {
       setError("Error uploading about");
     }
 
-    setLoading(false);
+    setLoading((prevLoading) => ({ ...prevLoading, about: false }));
     setIsEditingAbout(false);
   };
 
@@ -129,7 +134,7 @@ export default function ProfileEdit({ isOpen, onClose, onChange }) {
   };
 
   const handleSaveBio = async () => {
-    setLoading(true);
+    setLoading((prevLoading) => ({ ...prevLoading, bio: true }));
     try {
       const res = await axios.post(`${API}users/updateDesc`, {
         desc: editedBio,
@@ -143,7 +148,7 @@ export default function ProfileEdit({ isOpen, onClose, onChange }) {
     } catch (error) {
       setError("Error uploading about");
     }
-    setLoading(false);
+    setLoading((prevLoading) => ({ ...prevLoading, bio: false }));
     setIsEditingBio(false);
   };
 
@@ -164,7 +169,7 @@ export default function ProfileEdit({ isOpen, onClose, onChange }) {
               {profilePicEdit ? (
                 <div className="edit-buttons profile-buttons">
                   <button className="save" onClick={ProfilePicSave}>
-                    {!loading ? "Save" : <CircularProgress color="inherit" size="17px"/>}
+                    {!loading.profilePic ? "Save" : <CircularProgress color="inherit" size="17px"/>}
                   </button>
                   <button
                     className="cancel"
@@ -212,7 +217,7 @@ export default function ProfileEdit({ isOpen, onClose, onChange }) {
               {coverPicEdit ? (
                 <div className="edit-buttons">
                   <button className="save" onClick={CoverPicSave}>
-                    {!loading ? "Save" : <CircularProgress color="inherit" size="17px" />}
+                    {!loading.coverPic ? "Save" : <CircularProgress color="inherit" size="17px" />}
                   </button>
                   <button
                     className="cancel"
@@ -267,7 +272,7 @@ export default function ProfileEdit({ isOpen, onClose, onChange }) {
               {isEditingAbout ? (
                 <div className="edit-buttons">
                   <button className="save" onClick={handleSaveAbout}>
-                    {!loading ? "Save" : <CircularProgress color="inherit" size="17px"/>}
+                    {!loading.about ? "Save" : <CircularProgress color="inherit" size="17px"/>}
                   </button>
                   <button
                     className="cancel"
@@ -360,7 +365,7 @@ export default function ProfileEdit({ isOpen, onClose, onChange }) {
               {isEditingBio ? (
                 <div className="edit-buttons">
                   <button className="save" onClick={handleSaveBio}>
-                    {!loading ? "Save" : <CircularProgress color="inherit" size="17px" />}
+                    {!loading.bio ? "Save" : <CircularProgress color="inherit" size="17px" />}
                   </button>
                   <button
                     className="cancel"
