@@ -9,51 +9,39 @@ import { CircularProgress } from "@mui/material";
 const RegisterUser = () => {
   const API = process.env.REACT_APP_API;
   const username = useRef();
-  const [email,setEmail] = useState("");
-  const password = useRef();
-  const matchPassword = useRef();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [matchPassword, setMatchPassword] = useState("");
   const [dob, setDob] = useState(null);
   const [gender, setGender] = useState("");
   const [error, setError] = useState(null);
   const [otpSent, setOtpSent] = useState(false);
-  const [loading,setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const handleRegister = async (e) => {
-    setLoading(true);
     e.preventDefault();
-  
-    // console.log("Match Password:", matchPassword.current.value);
-    // console.log("Password:", password.current.value);
-  
-    if (matchPassword.current.value !== password.current.value) {
-      // matchPassword.current.setCustomValidity("Password doesn't match");
-      console.log("Custom Validity Set:", matchPassword.current.validity.valid);
-    } else {
-      matchPassword.current.setCustomValidity("");
-      // console.log("Custom Validity Reset:", matchPassword.current.validity.valid);
-  
+    if (matchPassword === password) {
       const user = {
         username: username.current.value,
         email: email,
-        password: password.current.value,
+        password: password,
         dob: dob,
         gender: gender,
       };
-  
+
       try {
+        setLoading(true);
         const res = await axios.post(`${API}auth/register`, user);
-        // const res = await axios.post(`http://localhost:8000/api/auth/register`, user);
         console.log(res.data);
         setOtpSent(true);
       } catch (error) {
         setError(error.response.data.error);
         console.log(error);
+      } finally {
+        setLoading(false);
       }
     }
-    setLoading(false);
   };
-  
-  
 
   return (
     <>
@@ -82,9 +70,10 @@ const RegisterUser = () => {
             type="email"
             className="registerInput"
             placeholder="Email"
-            onChange={(e)=>setEmail(e.target.value)}
+            onChange={(e) => setEmail(e.target.value)}
           />
           <div className="dob-gender-wrapper">
+            {/* replace with input date */}
             <DatePicker
               selected={dob}
               onChange={(date) => setDob(date)}
@@ -115,17 +104,26 @@ const RegisterUser = () => {
             type="password"
             className="registerInput"
             placeholder="Password"
-            ref={password}
+            onChange={(e) => setPassword(e.target.value)}
           />
           <input
             required
             type="password"
             className="registerInput"
             placeholder="Repeat Password"
-            ref={matchPassword}
+            onChange={(e) => setMatchPassword(e.target.value)}
           />
+          <span className="pass-error">
+            {matchPassword &&
+              matchPassword !== password &&
+              "Passwords do not match. Please re-enter your passwords correctly."}
+          </span>
           <button className="registerButton" type="submit">
-            {loading ? <CircularProgress color="inherit" size={"35px"} /> :"Sign Up"}
+            {loading ? (
+              <CircularProgress color="inherit" size={"35px"} />
+            ) : (
+              "Sign Up"
+            )}
           </button>
           <hr />
           <Link
