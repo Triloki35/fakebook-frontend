@@ -92,9 +92,11 @@ const ProfileInfo = ({ user }) => {
   useEffect(() => {
     if (user) {
       // console.log(user);
-      setIsFriend(currUser.friends.includes(user._id));
-      setIsRequested(currUser.sentRequest.includes(user._id));
-      setIsAsked(currUser.friendRequests.some((rq) => rq._id === user._id));
+      setIsFriend(user.friends.includes(currUser._id));
+      // setIsRequested(currUser.sentRequest.includes(user._id));
+      // setIsAsked(currUser.friendRequests.some((rq) => rq._id === user._id));
+      setIsRequested(user.friendRequests?.some((rq) => rq._id === currUser._id));
+      setIsAsked(user.sentRequest.includes(currUser._id));
     }
   }, [user, currUser]);
 
