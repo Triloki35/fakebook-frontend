@@ -8,6 +8,7 @@ import { ArrowBack, ArrowForward } from "@mui/icons-material";
 import { AuthContext } from "../../context/AuthContext";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { Alert } from "@mui/material";
 
 function Home({ socket, unseenProp, callProp }) {
   const API = process.env.REACT_APP_API;
@@ -22,7 +23,8 @@ function Home({ socket, unseenProp, callProp }) {
   const [news, setNews] = useState(false);
   const [events, setEvents] = useState(false);
   const [showBookmark, setShowBookmark] = useState(false);
-  const [help,setHelp] = useState(false);
+  const [help, setHelp] = useState(false);
+  const [alert, setAlert] = useState(true);
 
   const navigate = useNavigate();
 
@@ -69,6 +71,13 @@ function Home({ socket, unseenProp, callProp }) {
     };
   }, []);
 
+  useEffect(() => {
+    const alertTimeout = setTimeout(() => {
+      setAlert(false);
+    }, 5000);
+    return () => clearTimeout(alertTimeout);
+  }, []);
+
   const sidebarOpenBtn = {
     left: "0px",
   };
@@ -109,7 +118,7 @@ function Home({ socket, unseenProp, callProp }) {
           newsProp={{ news, setNews }}
           eventsProp={{ events, setEvents }}
           bookmarksProp={{ showBookmark, setShowBookmark }}
-          helpProp={{help,setHelp}}
+          helpProp={{ help, setHelp }}
         />
         <Rightbar
           isMobile={isMobile}
@@ -136,6 +145,20 @@ function Home({ socket, unseenProp, callProp }) {
               {openRightBar ? <ArrowForward /> : <ArrowBack />}
             </button>
           </>
+        )}
+        {alert && (
+          <Alert
+            style={{
+              position: "absolute",
+           
+            }}
+            severity="info"
+            onClose={() => setAlert(false)}
+          >
+            Please be patient. Our server is hosted on a free instance, which
+            may take extra time to fetch data if it has turned off due to
+            inactivity.
+          </Alert>
         )}
       </div>
     </>
