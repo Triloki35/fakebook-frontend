@@ -3,7 +3,7 @@ import axios from "axios";
 import { format } from "timeago.js";
 import "./chat.css";
 import { Avatar } from "@mui/material";
-import { arrayBufferToBase64 } from "../../base64Converter"
+import { arrayBufferToBase64 } from "../../services/base64Converter"
 
 const Chat = ({ message, own, friend }) => {
   const API = process.env.REACT_APP_API;

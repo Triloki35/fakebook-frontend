@@ -3,7 +3,7 @@ import "./receiver.css";
 import ScaleLoader from "react-spinners/ScaleLoader";
 import { Call, CallEnd, Mic, MicOff, Videocam, VideocamOff, VolumeMute, VolumeUp } from "@mui/icons-material";
 import Peer from "simple-peer";
-import { arrayBufferToBase64 } from "../../../base64Converter";
+import { arrayBufferToBase64 } from "../../../services/base64Converter";
 import * as process from "process";
 import Timer from "../../timer/Timer";
 import { Avatar, IconButton } from "@mui/material";

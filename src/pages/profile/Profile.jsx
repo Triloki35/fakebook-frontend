@@ -6,7 +6,7 @@ import Rightbar from "../../components/rightbar/Rightbar";
 import Sidebar from "../../components/sidebar/Sidebar";
 import Topbar from "../../components/topbar/Topbar";
 import { useNavigate, useParams } from "react-router-dom";
-import CoverAndProfilePics from "../../coverAndprofile/CoverAndProfilePics";
+import CoverAndProfilePics from "../../components/coverAndprofile/CoverAndProfilePics";
 import ProfileInfo from "../../components/profileInfo/ProfileInfo";
 import { AuthContext } from "../../context/AuthContext";
 import ProfileDetails from "../../components/profileDetails/ProfileDetails";

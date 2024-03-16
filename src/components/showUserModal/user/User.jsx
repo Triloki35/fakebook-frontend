@@ -3,7 +3,7 @@ import "./user.css";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { Avatar, Skeleton } from "@mui/material";
-import { arrayBufferToBase64 } from "../../../base64Converter";
+import { arrayBufferToBase64 } from "../../../services/base64Converter";
 
 const LikedUser = ({userId}) => {
   const API = process.env.REACT_APP_API;

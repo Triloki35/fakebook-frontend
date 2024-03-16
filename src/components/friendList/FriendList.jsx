@@ -3,7 +3,7 @@ import "./friendList.css";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { Avatar } from "@mui/material";
-import { arrayBufferToBase64 } from "../../base64Converter";
+import { arrayBufferToBase64 } from "../../services/base64Converter";
 
 const FriendList = ({ user }) => {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;

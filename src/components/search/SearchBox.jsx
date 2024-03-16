@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import Post from "../post/Post";
 import { Avatar } from "@mui/material";
-import { arrayBufferToBase64 } from "../../base64Converter";
+import { arrayBufferToBase64 } from "../../services/base64Converter";
 
 const SearchBox = ({ socket }) => {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;

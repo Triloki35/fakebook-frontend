@@ -1,9 +1,9 @@
 import React ,{useEffect , useState }from 'react';
 import "./onlineFriend.css";
 import axios from 'axios';
-import { fetchFriendList } from '../../apiCalls';
+import { fetchFriendList } from '../../services/apiCalls';
 import { Avatar } from "@mui/material";
-import { arrayBufferToBase64 } from "../../base64Converter";
+import { arrayBufferToBase64 } from "../../services/base64Converter";
 
 const OnlineFriend = ({user , onlineUsers, setCurrentConversation, setMessengerCenterVisible}) => {
   const API = process.env.REACT_APP_API;

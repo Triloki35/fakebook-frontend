@@ -7,7 +7,7 @@ import { AuthContext } from "../../context/AuthContext";
 import Picker from "@emoji-mart/react";
 import { Alert, Avatar } from "@mui/material";
 import ScaleLoader from "react-spinners/ScaleLoader";
-import { arrayBufferToBase64 } from "../../base64Converter";
+import { arrayBufferToBase64 } from "../../services/base64Converter";
 
 const Share = ({ socket }) => {
   new Picker({

@@ -4,7 +4,7 @@ import { Cancel, Favorite, Home, LocationOn } from "@mui/icons-material";
 import { AuthContext } from "../../context/AuthContext";
 import axios from "axios";
 import { Alert, Avatar, CircularProgress } from "@mui/material";
-import { arrayBufferToBase64 } from "../../base64Converter";
+import { arrayBufferToBase64 } from "../../services/base64Converter";
 import { UpdateUser } from "../../context/AuthActions";
 
 export default function ProfileEdit({ isOpen, onClose, onChange }) {

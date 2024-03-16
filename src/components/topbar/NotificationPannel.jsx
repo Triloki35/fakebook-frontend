@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { Avatar, CircularProgress } from "@mui/material";
-import { arrayBufferToBase64 } from "../../base64Converter.js";
+import { arrayBufferToBase64 } from "../../services/base64Converter.js";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext.js";

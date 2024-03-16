@@ -3,7 +3,7 @@ import "./searchFriend.css";
 import { Search } from "@mui/icons-material";
 import axios from "axios";
 import { Avatar } from "@mui/material";
-import { arrayBufferToBase64 } from "../../base64Converter";
+import { arrayBufferToBase64 } from "../../services/base64Converter";
 
 const SearchFriend = ({ userId, setCurrentConversation, setMessengerCenterVisible }) => {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;

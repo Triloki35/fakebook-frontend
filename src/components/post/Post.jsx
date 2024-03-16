@@ -6,7 +6,7 @@ import { format } from "timeago.js";
 import { AuthContext } from "../../context/AuthContext";
 import UsersModal from "../showUserModal/UsersModal";
 import { Avatar, CircularProgress, LinearProgress, Skeleton } from "@mui/material";
-import { arrayBufferToBase64 } from "../../base64Converter";
+import { arrayBufferToBase64 } from "../../services/base64Converter";
 import PostTop from "./PostTop";
 import PostCenter from "./PostCenter";
 import PostBottom from "./PostBottom";

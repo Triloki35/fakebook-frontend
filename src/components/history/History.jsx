@@ -5,7 +5,7 @@ import { format } from "timeago.js";
 import Stack from "@mui/material/Stack";
 import LinearProgress from "@mui/material/LinearProgress";
 import { Avatar, Skeleton } from "@mui/material";
-import { arrayBufferToBase64 } from "../../base64Converter";
+import { arrayBufferToBase64 } from "../../services/base64Converter";
 
 const History = ({ conversation, lastMessage, curruser }) => {
   const API = process.env.REACT_APP_API;

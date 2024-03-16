@@ -16,7 +16,7 @@ import {
 import { AuthContext } from "../../context/AuthContext";
 import { Link } from "react-router-dom";
 import { Alert} from "@mui/material";
-import { arrayBufferToBase64 } from "../../base64Converter";
+import { arrayBufferToBase64 } from "../../services/base64Converter";
 
 const Sidebar = ({ isMobile, openSideBar, setJobs, setShowVideos, setNews, setEvents, setShowBookmark, setHelp}) => {
   const { user } = useContext(AuthContext);

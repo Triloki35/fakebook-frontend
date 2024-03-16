@@ -6,7 +6,7 @@ import { AuthContext } from "../../../context/AuthContext";
 import axios from "axios";
 import { UpdateUser } from "../../../context/AuthActions";
 import UsersModal from "../../showUserModal/UsersModal";
-import { arrayBufferToBase64 } from "../../../base64Converter";
+import { arrayBufferToBase64 } from "../../../services/base64Converter";
 
 const Suggestion = ({
   suggestion,

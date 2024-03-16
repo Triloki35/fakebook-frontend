@@ -1,7 +1,7 @@
 import React from "react";
 import "./CoverAndProfilePics.css";
 import { Avatar } from "@mui/material";
-import { arrayBufferToBase64 } from "../base64Converter";
+import { arrayBufferToBase64 } from "../../services/base64Converter";
 
 const CoverAndProfilePics = ({ user }) => {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;

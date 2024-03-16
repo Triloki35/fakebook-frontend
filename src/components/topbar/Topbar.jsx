@@ -20,7 +20,7 @@ import FriendRequest from "../friend-request/FriendRequest";
 import SearchBox from "../search/SearchBox";
 import { Avatar } from "@mui/material";
 import HelpCompo from "../help/Help.jsx";
-import { arrayBufferToBase64 } from "../../base64Converter.js";
+import { arrayBufferToBase64 } from "../../services/base64Converter.js";
 import AccountSettings from "./AccountSettings.jsx";
 import NotificationPannel from "./NotificationPannel.jsx";
 

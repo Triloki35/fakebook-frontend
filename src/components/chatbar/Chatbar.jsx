@@ -3,7 +3,7 @@ import "./chatbar.css";
 import { Link } from "react-router-dom";
 import { Call, ChevronLeft, Info, Videocam } from "@mui/icons-material";
 import { Avatar } from "@mui/material";
-import { arrayBufferToBase64 } from "../../base64Converter";
+import { arrayBufferToBase64 } from "../../services/base64Converter";
 
 function Chatbar({ friend, isMobile, setMessengerCenterVisible }) {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;

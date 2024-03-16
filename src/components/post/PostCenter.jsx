@@ -1,5 +1,5 @@
 import React from "react";
-import { arrayBufferToBase64 } from "../../base64Converter";
+import { arrayBufferToBase64 } from "../../services/base64Converter";
 
 function PostCenter({post}) {
   return (

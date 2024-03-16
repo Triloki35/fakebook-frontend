@@ -2,7 +2,7 @@ import React, { useState, useContext, useEffect, useRef } from "react";
 import "./friendRequest.css";
 import { MoreHoriz } from "@mui/icons-material";
 import { CircularProgress, Avatar } from "@mui/material";
-import { arrayBufferToBase64 } from "../../base64Converter";
+import { arrayBufferToBase64 } from "../../services/base64Converter";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import { AuthContext } from "../../context/AuthContext";

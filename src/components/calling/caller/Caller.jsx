@@ -19,7 +19,7 @@ import { AuthContext } from "../../../context/AuthContext";
 import * as process from "process";
 import Timer from "../../timer/Timer";
 import { Avatar, Button, IconButton } from "@mui/material";
-import { arrayBufferToBase64 } from "../../../base64Converter";
+import { arrayBufferToBase64 } from "../../../services/base64Converter";
 
 const Caller = ({ friend, socket, audio, video }) => {
   const { user } = useContext(AuthContext);
